@@ -1,25 +1,18 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
-import { SeederOptions, createDatabase, runSeeders } from 'typeorm-extension';
+import { SeederOptions } from 'typeorm-extension';
+import { User } from './users/entities/user.entity';
 
-(async () => {
-  const options: DataSourceOptions & SeederOptions = {
-    type: 'postgres',
-    database: 'template_postgres',
-    seeds: ['src/database/seeds/**/*{.ts,.js}'],
-    seedTracking: false,
-    factories: ['src/database/factories/**/*{.ts,.js}'],
-  };
+const options: DataSourceOptions & SeederOptions = {
+  type: 'postgres',
+  host: 'localhost',
+  username: 'postgres',
+  password: '12345679',
+  database: 'datn',
+  port: 5432,
+  entities: [User],
+  seeds: ['src/database/seeds/**/*{.ts,.js}'],
+  seedTracking: true,
+  factories: ['src/database/factories/**/*{.ts,.js}'],
+};
 
-  // Create the database with specification of the DataSource options
-  await createDatabase({
-    options,
-  });
-
-  const dataSource = new DataSource(options);
-  await dataSource.initialize();
-
-  runSeeders(dataSource, {
-    seeds: ['src/database/seeds/**/*{.ts,.js}'],
-    factories: ['src/database/factories/**/*{.ts,.js}'],
-  });
-})();
+export default new DataSource(options);

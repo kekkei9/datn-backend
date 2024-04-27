@@ -23,7 +23,9 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto | CreateAdminDto) {
     const user = await this.userRepository.findOne({
-      email: createUserDto.email,
+      where: {
+        email: createUserDto.email,
+      },
     });
 
     if (user) {
@@ -49,11 +51,19 @@ export class UsersService {
   }
 
   async findOne(id: number) {
-    return await this.userRepository.findOne(id);
+    return await this.userRepository.findOne({
+      where: {
+        id,
+      },
+    });
   }
 
   async findById(userId: number) {
-    return await this.userRepository.findOneOrFail(userId);
+    return await this.userRepository.findOneOrFail({
+      where: {
+        id: userId,
+      },
+    });
   }
 
   async findByEmail(email: string) {
@@ -74,7 +84,11 @@ export class UsersService {
   }
 
   async remove(id: number) {
-    const user = await this.userRepository.findOne(id);
+    const user = await this.userRepository.findOne({
+      where: {
+        id,
+      },
+    });
 
     if (!user) {
       throw new NotFoundException(`User with id ${id} does not exist`);
