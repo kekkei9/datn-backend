@@ -18,6 +18,7 @@ import {
   FriendRequest_Status,
 } from '../entities/friend-request.interface';
 import { User } from '../entities/user.entity';
+import { PayloadToken } from 'src/auth/models/token.model';
 
 @Injectable()
 export class UsersService {
@@ -28,6 +29,8 @@ export class UsersService {
     @InjectRepository(FriendRequestEntity)
     private readonly friendRequestRepository: Repository<FriendRequestEntity>,
   ) {}
+
+  //-------------------------------------COMMON----------------------------------------------
 
   async create(createUserDto: CreateUserDto | CreateAdminDto) {
     const user = await this.userRepository.findOne({
@@ -140,8 +143,8 @@ export class UsersService {
   }
 
   async hasRequestBeenSentOrReceived(
-    creator: { id: number },
-    receiver: { id: number },
+    creator: PayloadToken,
+    receiver: PayloadToken,
   ) {
     const friendRequest = await this.friendRequestRepository.findOne({
       where: [
@@ -154,10 +157,9 @@ export class UsersService {
     return true;
   }
 
-  async sendFriendRequest(
-    receiverId: number,
-    { id: creatorId }: { id: number },
-  ) {
+  //-------------------------------------FRIEND REQUEST----------------------------------------------
+
+  async sendFriendRequest(receiverId: number, { id: creatorId }: PayloadToken) {
     if (receiverId === creatorId)
       return { error: 'It is not possible to add yourself!' };
 
@@ -181,7 +183,7 @@ export class UsersService {
 
   async getFriendRequestStatus(
     receiverId: number,
-    { id: currentUserId }: { id: number },
+    { id: currentUserId }: PayloadToken,
   ) {
     const receiver = await this.findUserById(receiverId);
     const currentUser = await this.findUserById(currentUserId);
@@ -219,7 +221,7 @@ export class UsersService {
     });
   }
 
-  async getFriendRequestsFromRecipients({ id: currentUserId }: { id: number }) {
+  async getFriendRequestsFromRecipients({ id: currentUserId }: PayloadToken) {
     return await this.friendRequestRepository.find({
       where: {
         receiver: {
@@ -230,7 +232,7 @@ export class UsersService {
     });
   }
 
-  async getFriends({ id: currentUserId }: { id: number }) {
+  async getFriends({ id: currentUserId }: PayloadToken) {
     const friends = await this.friendRequestRepository.find({
       where: [
         { creator: { id: currentUserId }, status: 'accepted' },
@@ -251,4 +253,6 @@ export class UsersService {
 
     return await this.userRepository.findBy({ id: In(userIds) });
   }
+
+  //-------------------------------------DOCTOR REGISTER----------------------------------------------
 }

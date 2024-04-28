@@ -29,7 +29,6 @@ import {
   UpdateUserDto,
 } from '../dto/create-user.dto';
 import { ResponseFriendRequestDto } from '../dto/friend-request.dto';
-import { FriendRequestStatus } from '../entities/friend-request.interface';
 import { UsersService } from '../services/users.service';
 
 @ApiTags('users') // put the name of the controller in swagger
@@ -49,6 +48,7 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
+  @ApiTags('cms')
   @ApiOperation({ summary: 'create a user with admin role' })
   @ApiResponse({
     status: 201,
@@ -61,6 +61,7 @@ export class UsersController {
     return this.usersService.create(creatAdminDto);
   }
 
+  @ApiTags('cms')
   @ApiResponse({
     status: 200,
     isArray: true,
@@ -80,6 +81,7 @@ export class UsersController {
     return this.usersService.findUserById(userId);
   }
 
+  @ApiTags('cms')
   @ApiBearerAuth('access-token')
   @ApiResponse({
     status: 200,
@@ -91,6 +93,7 @@ export class UsersController {
     return this.usersService.findOne(+id);
   }
 
+  @ApiTags('cms')
   @ApiBearerAuth('access-token')
   @Roles(Role.ADMIN)
   @Patch(':id')
@@ -98,6 +101,7 @@ export class UsersController {
     return this.usersService.update(+id, updateUserDto);
   }
 
+  @ApiTags('cms')
   @ApiBearerAuth('access-token')
   @Roles(Role.ADMIN)
   @Delete(':id')
@@ -105,6 +109,7 @@ export class UsersController {
     return this.usersService.remove(+id);
   }
 
+  @ApiTags('friend-request')
   @ApiBearerAuth('access-token')
   @Post('friend-request/send/:receiverId')
   sendFriendRequest(
@@ -115,6 +120,7 @@ export class UsersController {
     return this.usersService.sendFriendRequest(receiverId, req.user);
   }
 
+  @ApiTags('friend-request')
   @ApiBearerAuth('access-token')
   @Get('friend-request/status/:receiverId')
   getFriendRequestStatus(
@@ -125,29 +131,60 @@ export class UsersController {
     return this.usersService.getFriendRequestStatus(receiverId, req.user);
   }
 
-  @ApiBody({ type: ResponseFriendRequestDto })
+  @ApiTags('friend-request')
+  @ApiBody({
+    type: ResponseFriendRequestDto,
+  })
   @ApiBearerAuth('access-token')
   @Put('friend-request/response/:friendRequestId')
   respondToFriendRequest(
     @Param('friendRequestId') friendRequestStringId: string,
-    @Body() statusResponse: FriendRequestStatus,
+    @Body() responseFriendRequestDto: ResponseFriendRequestDto,
   ) {
     const friendRequestId = parseInt(friendRequestStringId);
     return this.usersService.respondToFriendRequest(
-      statusResponse.status,
+      responseFriendRequestDto.status,
       friendRequestId,
     );
   }
 
+  @ApiTags('friend-request')
   @ApiBearerAuth('access-token')
   @Get('friend-request/me/received-requests')
   getFriendRequestsFromRecipients(@Request() req) {
     return this.usersService.getFriendRequestsFromRecipients(req.user);
   }
 
+  @ApiTags('friend-request')
   @ApiBearerAuth('access-token')
   @Get('friends/my')
   async getFriends(@Request() req) {
     return await this.usersService.getFriends(req.user);
+  }
+
+  @ApiTags('doctor-register')
+  @ApiBearerAuth('access-token')
+  @Post('doctor-register')
+  async registerToBeADoctor(
+    @Request() req,
+    // @Body() metadata: Record<string, any>,
+  ) {
+    return await this.usersService.getFriends(req.user);
+  }
+
+  @ApiTags('doctor-register', 'cms')
+  @ApiBearerAuth('access-token')
+  @Post('doctor-register/requests')
+  async getDoctorRequests() {
+    return;
+    // return await this.usersService.getFriends(req.user);
+  }
+
+  @ApiTags('doctor-register', 'cms')
+  @ApiBearerAuth('access-token')
+  @Post('doctor-register/accept/:doctorRequestId')
+  async acceptDoctorRegistration() {
+    return;
+    // return await this.usersService.getFriends(req.user);
   }
 }
