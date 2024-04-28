@@ -6,10 +6,13 @@ import {
   Param,
   Patch,
   Post,
+  Put,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
+  ApiBody,
   ApiOperation,
   ApiResponse,
   ApiTags,
@@ -25,6 +28,8 @@ import {
   DefaultColumnsResponse,
   UpdateUserDto,
 } from '../dto/create-user.dto';
+import { ResponseFriendRequestDto } from '../dto/friend-request.dto';
+import { FriendRequestStatus } from '../entities/friend-request.interface';
 import { UsersService } from '../services/users.service';
 
 @ApiTags('users') // put the name of the controller in swagger
@@ -69,6 +74,13 @@ export class UsersController {
   }
 
   @ApiBearerAuth('access-token')
+  @Get(':userId')
+  findUserById(@Param('userId') userStringId: string) {
+    const userId = parseInt(userStringId);
+    return this.usersService.findUserById(userId);
+  }
+
+  @ApiBearerAuth('access-token')
   @ApiResponse({
     status: 200,
     type: DefaultColumnsResponse,
@@ -91,5 +103,51 @@ export class UsersController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
+  }
+
+  @ApiBearerAuth('access-token')
+  @Post('friend-request/send/:receiverId')
+  sendFriendRequest(
+    @Param('receiverId') receiverStringId: string,
+    @Request() req,
+  ) {
+    const receiverId = parseInt(receiverStringId);
+    return this.usersService.sendFriendRequest(receiverId, req.user);
+  }
+
+  @ApiBearerAuth('access-token')
+  @Get('friend-request/status/:receiverId')
+  getFriendRequestStatus(
+    @Param('receiverId') receiverStringId: string,
+    @Request() req,
+  ) {
+    const receiverId = parseInt(receiverStringId);
+    return this.usersService.getFriendRequestStatus(receiverId, req.user);
+  }
+
+  @ApiBody({ type: ResponseFriendRequestDto })
+  @ApiBearerAuth('access-token')
+  @Put('friend-request/response/:friendRequestId')
+  respondToFriendRequest(
+    @Param('friendRequestId') friendRequestStringId: string,
+    @Body() statusResponse: FriendRequestStatus,
+  ) {
+    const friendRequestId = parseInt(friendRequestStringId);
+    return this.usersService.respondToFriendRequest(
+      statusResponse.status,
+      friendRequestId,
+    );
+  }
+
+  @ApiBearerAuth('access-token')
+  @Get('friend-request/me/received-requests')
+  getFriendRequestsFromRecipients(@Request() req) {
+    return this.usersService.getFriendRequestsFromRecipients(req.user);
+  }
+
+  @ApiBearerAuth('access-token')
+  @Get('friends/my')
+  async getFriends(@Request() req) {
+    return await this.usersService.getFriends(req.user);
   }
 }

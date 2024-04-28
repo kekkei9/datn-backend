@@ -26,6 +26,13 @@ export default class UserSeeder implements Seeder {
         role: Role.PATIENT,
       },
       {
+        firstName: 'Caleb',
+        lastName: 'Barrows',
+        email: 'admin@gmail.com',
+        password: await bcrypt.hash('admin', 10),
+        role: Role.ADMIN,
+      },
+      {
         firstName: 'Leanne',
         lastName: 'Graham',
         email: 'doctor@gmail.com',

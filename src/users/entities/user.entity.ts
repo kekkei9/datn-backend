@@ -1,10 +1,20 @@
 import * as bcrypt from 'bcrypt';
-import { BeforeInsert, Column, Entity } from 'typeorm';
+import {
+  BeforeInsert,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Role } from '../../auth/models/roles.model';
 import { DefaultEntity } from '../../utils/entities/default.entity';
+import { FriendRequestEntity } from './friend-request.entity';
 
 @Entity('users')
 export class User extends DefaultEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
+
   @Column({ unique: true })
   email: string;
 
@@ -30,6 +40,18 @@ export class User extends DefaultEntity {
     default: Role.PATIENT,
   })
   role: Role;
+
+  @OneToMany(
+    () => FriendRequestEntity,
+    (friendRequestEntity) => friendRequestEntity.creator,
+  )
+  sentFriendRequests: FriendRequestEntity[];
+
+  @OneToMany(
+    () => FriendRequestEntity,
+    (friendRequestEntity) => friendRequestEntity.receiver,
+  )
+  receivedFriendRequests: FriendRequestEntity[];
 
   @BeforeInsert()
   async hashPassword() {

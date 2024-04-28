@@ -35,6 +35,7 @@ import { UsersModule } from './users/users.module';
           password: configService.postgres.password,
           autoLoadEntities: true,
           keepConnectionAlive: true,
+          synchronize: true,
         };
       },
     }),
