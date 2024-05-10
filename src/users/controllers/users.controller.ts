@@ -163,13 +163,16 @@ export class UsersController {
   }
 
   @ApiTags('doctor-register')
+  @ApiBody({
+    type: ResponseFriendRequestDto,
+  })
   @ApiBearerAuth('access-token')
   @Post('doctor-register')
   async registerToBeADoctor(
     @Request() req,
-    // @Body() metadata: Record<string, any>,
+    @Body() metadata: Record<string, any>,
   ) {
-    return await this.usersService.getFriends(req.user);
+    return await this.usersService.registerToBeADoctor(req.user, metadata);
   }
 
   @ApiTags('doctor-register', 'cms')

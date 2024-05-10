@@ -19,6 +19,8 @@ import {
 } from '../entities/friend-request.interface';
 import { User } from '../entities/user.entity';
 import { PayloadToken } from 'src/auth/models/token.model';
+import { Role } from 'src/auth/models/roles.model';
+import { DoctorRequestEntity } from '../entities/doctor-request.entity';
 
 @Injectable()
 export class UsersService {
@@ -28,6 +30,9 @@ export class UsersService {
 
     @InjectRepository(FriendRequestEntity)
     private readonly friendRequestRepository: Repository<FriendRequestEntity>,
+
+    @InjectRepository(DoctorRequestEntity)
+    private readonly doctorRequestRepository: Repository<DoctorRequestEntity>,
   ) {}
 
   //-------------------------------------COMMON----------------------------------------------
@@ -254,5 +259,17 @@ export class UsersService {
     return await this.userRepository.findBy({ id: In(userIds) });
   }
 
+  async registerToBeADoctor(
+    { id: userId }: PayloadToken,
+    metadata: Record<string, any>,
+  ) {
+    const currentUser = await this.findUserById(userId);
+
+    if (currentUser.role !== Role.PATIENT) {
+      return { error: 'You are already a doctor/admin!' };
+    }
+
+    return this.doctorRequestRepository.save({ id: userId, metadata });
+  }
   //-------------------------------------DOCTOR REGISTER----------------------------------------------
 }

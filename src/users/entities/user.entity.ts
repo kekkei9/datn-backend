@@ -4,13 +4,11 @@ import {
   Column,
   Entity,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Role } from '../../auth/models/roles.model';
 import { DefaultEntity } from '../../utils/entities/default.entity';
 import { FriendRequestEntity } from './friend-request.entity';
-import { DoctorRequestEntity } from './doctor-request.entity';
 
 @Entity('users')
 export class User extends DefaultEntity {
@@ -55,17 +53,17 @@ export class User extends DefaultEntity {
   )
   receivedFriendRequests: FriendRequestEntity[];
 
-  @OneToOne(
-    () => DoctorRequestEntity,
-    (doctorRequestEntity) => doctorRequestEntity.requestUser,
-  )
-  sentDoctorRequest: DoctorRequestEntity;
+  // @OneToOne(
+  //   () => DoctorRequestEntity,
+  //   (doctorRequestEntity) => doctorRequestEntity.requestUser,
+  // )
+  // sentDoctorRequest: DoctorRequestEntity;
 
-  @OneToMany(
-    () => DoctorRequestEntity,
-    (doctorRequestEntity) => doctorRequestEntity.confirmUser,
-  )
-  confirmedDoctorRequests: DoctorRequestEntity;
+  // @OneToMany(
+  //   () => DoctorRequestEntity,
+  //   (doctorRequestEntity) => doctorRequestEntity.confirmUser,
+  // )
+  // confirmedDoctorRequests: DoctorRequestEntity;
 
   @BeforeInsert()
   async hashPassword() {
