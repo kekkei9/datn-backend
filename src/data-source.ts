@@ -8,7 +8,7 @@ const options: DataSourceOptions & SeederOptions = {
   host: 'localhost',
   username: 'postgres',
   password: '12345679',
-  database: 'datn',
+  database: 'datn-backend',
   port: 5432,
   entities: [User, FriendRequestEntity],
   seeds: ['src/database/seeds/**/*{.ts,.js}'],
