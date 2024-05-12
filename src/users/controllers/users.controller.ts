@@ -30,6 +30,7 @@ import {
 } from '../dto/create-user.dto';
 import { ResponseFriendRequestDto } from '../dto/friend-request.dto';
 import { UsersService } from '../services/users.service';
+import { RegisterDoctorRequestDto } from '../dto/doctor-request.dto';
 
 @ApiTags('users') // put the name of the controller in swagger
 @Controller('users')
@@ -158,36 +159,37 @@ export class UsersController {
   @ApiTags('friend-request')
   @ApiBearerAuth('access-token')
   @Get('friends/my')
-  async getFriends(@Request() req) {
-    return await this.usersService.getFriends(req.user);
+  getFriends(@Request() req) {
+    return this.usersService.getFriends(req.user);
   }
 
   @ApiTags('doctor-register')
   @ApiBody({
-    type: ResponseFriendRequestDto,
+    type: RegisterDoctorRequestDto,
   })
   @ApiBearerAuth('access-token')
   @Post('doctor-register')
-  async registerToBeADoctor(
-    @Request() req,
-    @Body() metadata: Record<string, any>,
-  ) {
-    return await this.usersService.registerToBeADoctor(req.user, metadata);
+  registerToBeADoctor(@Request() req, @Body() metadata: Record<string, any>) {
+    return this.usersService.registerToBeADoctor(req.user, metadata);
   }
 
   @ApiTags('doctor-register', 'cms')
   @ApiBearerAuth('access-token')
+  @Roles(Role.ADMIN)
   @Post('doctor-register/requests')
-  async getDoctorRequests() {
-    return;
-    // return await this.usersService.getFriends(req.user);
+  getDoctorRequests() {
+    return this.usersService.getDoctorRequests();
   }
 
   @ApiTags('doctor-register', 'cms')
   @ApiBearerAuth('access-token')
+  @Roles(Role.ADMIN)
   @Post('doctor-register/accept/:doctorRequestId')
-  async acceptDoctorRegistration() {
-    return;
-    // return await this.usersService.getFriends(req.user);
+  async acceptDoctorRegistration(
+    @Param('doctorRequestId') doctorRequestStringId: string,
+  ) {
+    return this.usersService.acceptDoctorRegistration(
+      parseInt(doctorRequestStringId),
+    );
   }
 }
