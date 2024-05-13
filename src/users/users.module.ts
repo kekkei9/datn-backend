@@ -6,10 +6,16 @@ import { User } from './entities/user.entity';
 import { UsersService } from './services/users.service';
 import { FriendRequestEntity } from './entities/friend-request.entity';
 import { DoctorRequestEntity } from './entities/doctor-request.entity';
+import { ConversationEntity } from '../chat/models/conversation.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, FriendRequestEntity, DoctorRequestEntity]),
+    TypeOrmModule.forFeature([
+      User,
+      FriendRequestEntity,
+      DoctorRequestEntity,
+      ConversationEntity,
+    ]),
   ],
   controllers: [UsersController],
   providers: [UsersService, JwtStrategy],

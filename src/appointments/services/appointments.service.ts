@@ -1,8 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Role } from 'src/auth/models/roles.model';
-import { PayloadToken } from 'src/auth/models/token.model';
-import { UsersService } from 'src/users/services/users.service';
 import { Repository } from 'typeorm';
 import {
   CreateAppointmentRequestDto,
@@ -11,6 +8,9 @@ import {
   UpdateAppointmentDto,
 } from '../dto/create-appointment.dto';
 import { AppointmentEntity } from '../entities/appointment.entity';
+import { UsersService } from '../../users/services/users.service';
+import { PayloadToken } from '../../auth/models/token.model';
+import { Role } from '../../auth/models/roles.model';
 
 @Injectable()
 export class AppointmentsService {

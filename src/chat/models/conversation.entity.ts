@@ -1,4 +1,3 @@
-import { UserEntity } from 'src/auth/models/user.entity';
 import {
   Entity,
   JoinTable,
@@ -8,15 +7,16 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { MessageEntity } from './message.entity';
+import { User } from '../../users/entities/user.entity';
 
 @Entity('conversation')
 export class ConversationEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToMany(() => UserEntity)
+  @ManyToMany(() => User)
   @JoinTable()
-  users: UserEntity[];
+  users: User[];
 
   @OneToMany(() => MessageEntity, (messageEntity) => messageEntity.conversation)
   messages: MessageEntity[];

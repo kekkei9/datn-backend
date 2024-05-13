@@ -8,8 +8,8 @@ import {
 
 import { Role } from './role.enum';
 import { FriendRequestEntity } from './friend-request.entity';
-import { ConversationEntity } from 'src/chat/models/conversation.entity';
-import { MessageEntity } from 'src/chat/models/message.entity';
+import { ConversationEntity } from '../../chat/models/conversation.entity';
+import { MessageEntity } from '../../chat/models/message.entity';
 
 @Entity('user')
 export class UserEntity {

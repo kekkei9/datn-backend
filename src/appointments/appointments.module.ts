@@ -1,10 +1,10 @@
 import { AppointmentEntity } from './entities/appointment.entity';
-import { JwtStrategy } from 'src/auth/strategies/jwt.strategy';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppointmentsService } from './services/appointments.service';
 import { Module } from '@nestjs/common';
 import { AppointmentsController } from './controllers/appointments.controller';
-import { UsersModule } from 'src/users/users.module';
+import { UsersModule } from '../users/users.module';
+import { JwtStrategy } from '../auth/strategies/jwt.strategy';
 
 @Module({
   imports: [UsersModule, TypeOrmModule.forFeature([AppointmentEntity])],

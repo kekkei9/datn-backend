@@ -3,6 +3,9 @@ import { SeederOptions } from 'typeorm-extension';
 import { User } from './users/entities/user.entity';
 import { FriendRequestEntity } from './users/entities/friend-request.entity';
 import { DoctorRequestEntity } from './users/entities/doctor-request.entity';
+import { AppointmentEntity } from './appointments/entities/appointment.entity';
+import { ConversationEntity } from './chat/models/conversation.entity';
+import { MessageEntity } from './chat/models/message.entity';
 
 const options: DataSourceOptions & SeederOptions = {
   type: 'postgres',
@@ -11,7 +14,14 @@ const options: DataSourceOptions & SeederOptions = {
   password: '12345679',
   database: 'datn-backend',
   port: 5432,
-  entities: [User, FriendRequestEntity, DoctorRequestEntity],
+  entities: [
+    User,
+    FriendRequestEntity,
+    DoctorRequestEntity,
+    AppointmentEntity,
+    ConversationEntity,
+    MessageEntity,
+  ],
   seeds: ['src/database/seeds/**/*{.ts,.js}'],
   seedTracking: true,
   factories: ['src/database/factories/**/*{.ts,.js}'],

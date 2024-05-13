@@ -18,7 +18,7 @@ import JwtRefreshGuard from '../guards/jwt-refresh.guard';
 import { LocalAuthGuard } from '../guards/local-auth.guard';
 import { PayloadToken } from '../models/token.model';
 import { AuthService } from '../services/auth.service';
-import { UsersService } from 'src/users/services/users.service';
+import { UsersService } from '../../users/services/users.service';
 
 type AuthorizedRequest = Express.Request & {
   headers: { authorization: string };

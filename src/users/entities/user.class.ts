@@ -1,5 +1,5 @@
 import { IsEmail, IsString } from 'class-validator';
-import { Role } from 'src/auth/models/roles.model';
+import { Role } from '../../auth/models/roles.model';
 
 export class User {
   id?: number;

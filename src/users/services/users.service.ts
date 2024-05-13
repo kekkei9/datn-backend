@@ -18,9 +18,9 @@ import {
   FriendRequest_Status,
 } from '../entities/friend-request.interface';
 import { User } from '../entities/user.entity';
-import { PayloadToken } from 'src/auth/models/token.model';
-import { Role } from 'src/auth/models/roles.model';
 import { DoctorRequestEntity } from '../entities/doctor-request.entity';
+import { PayloadToken } from '../../auth/models/token.model';
+import { Role } from '../../auth/models/roles.model';
 
 @Injectable()
 export class UsersService {

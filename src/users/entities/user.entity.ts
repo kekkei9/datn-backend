@@ -3,6 +3,7 @@ import {
   BeforeInsert,
   Column,
   Entity,
+  ManyToMany,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -11,7 +12,9 @@ import { Role } from '../../auth/models/roles.model';
 import { DefaultEntity } from '../../utils/entities/default.entity';
 import { FriendRequestEntity } from './friend-request.entity';
 import { DoctorRequestEntity } from './doctor-request.entity';
-import { AppointmentEntity } from 'src/appointments/entities/appointment.entity';
+import { AppointmentEntity } from '../../appointments/entities/appointment.entity';
+import { MessageEntity } from '../../chat/models/message.entity';
+import { ConversationEntity } from '../../chat/models/conversation.entity';
 
 @Entity('users')
 export class User extends DefaultEntity {
@@ -79,6 +82,15 @@ export class User extends DefaultEntity {
     (doctorRequestEntity) => doctorRequestEntity.confirmUser,
   )
   confirmedAppointments: AppointmentEntity[];
+
+  @OneToMany(() => MessageEntity, (messageEntity) => messageEntity.user)
+  messages: MessageEntity[];
+
+  @ManyToMany(
+    () => ConversationEntity,
+    (conversationEntity) => conversationEntity.users,
+  )
+  conversations: ConversationEntity[];
 
   @BeforeInsert()
   async hashPassword() {

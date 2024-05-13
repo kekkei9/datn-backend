@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { from, map, mergeMap, Observable, of, switchMap, take } from 'rxjs';
-import { User } from 'src/auth/models/user.class';
 import { DeleteResult, Repository } from 'typeorm';
 import { ActiveConversationEntity } from '../models/active-conversation.entity';
 import { ActiveConversation } from '../models/active-conversation.interface';
@@ -9,6 +8,7 @@ import { ConversationEntity } from '../models/conversation.entity';
 import { Conversation } from '../models/conversation.interface';
 import { MessageEntity } from '../models/message.entity';
 import { Message } from '../models/message.interface';
+import { User } from '../../users/entities/user.entity';
 
 @Injectable()
 export class ConversationService {

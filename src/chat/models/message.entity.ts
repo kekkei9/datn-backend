@@ -1,4 +1,3 @@
-import { UserEntity } from 'src/auth/models/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -7,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ConversationEntity } from './conversation.entity';
+import { User } from '../../users/entities/user.entity';
 
 @Entity('message')
 export class MessageEntity {
@@ -16,8 +16,8 @@ export class MessageEntity {
   @Column()
   message: string;
 
-  @ManyToOne(() => UserEntity, (userEntity) => userEntity.messages)
-  user: UserEntity;
+  @ManyToOne(() => User, (userEntity) => userEntity.messages)
+  user: User;
 
   @ManyToOne(
     () => ConversationEntity,

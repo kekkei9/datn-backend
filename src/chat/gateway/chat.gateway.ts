@@ -10,13 +10,12 @@ import { of, Subscription, take, tap } from 'rxjs';
 import { Server, Socket } from 'socket.io';
 
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { UsersService } from 'src/users/services/users.service';
-import { User } from 'src/auth/models/user.class';
-import { AuthService } from 'src/auth/services/auth.service';
 import { ActiveConversation } from '../models/active-conversation.interface';
 import { Message } from '../models/message.interface';
 import { ConversationService } from '../services/conversation.service';
-import { PayloadToken } from 'src/auth/models/token.model';
+import { UsersService } from '../../users/services/users.service';
+import { PayloadToken } from '../../auth/models/token.model';
+import { User } from '../../users/entities/user.entity';
 
 @WebSocketGateway({ cors: { origin: ['http://localhost:8100'] } })
 export class ChatGateway
@@ -24,7 +23,6 @@ export class ChatGateway
 {
   constructor(
     private userService: UsersService,
-    private authService: AuthService,
     private conversationService: ConversationService,
   ) {}
 
