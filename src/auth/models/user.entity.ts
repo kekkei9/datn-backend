@@ -6,10 +6,10 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { Role } from './role.enum';
 import { FriendRequestEntity } from './friend-request.entity';
 import { ConversationEntity } from '../../chat/models/conversation.entity';
 import { MessageEntity } from '../../chat/models/message.entity';
+import { Role } from './roles.model';
 
 @Entity('user')
 export class UserEntity {
@@ -31,7 +31,7 @@ export class UserEntity {
   @Column({ nullable: true })
   imagePath: string;
 
-  @Column({ type: 'enum', enum: Role, default: Role.USER })
+  @Column({ type: 'enum', enum: Role, default: Role.PATIENT })
   role: Role;
 
   @OneToMany(

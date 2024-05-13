@@ -1,6 +1,6 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { SeederOptions } from 'typeorm-extension';
-import { User } from './users/entities/user.entity';
+import { UserEntity } from './users/entities/user.entity';
 import { FriendRequestEntity } from './users/entities/friend-request.entity';
 import { DoctorRequestEntity } from './users/entities/doctor-request.entity';
 import { AppointmentEntity } from './appointments/entities/appointment.entity';
@@ -15,7 +15,7 @@ const options: DataSourceOptions & SeederOptions = {
   database: 'datn-backend',
   port: 5432,
   entities: [
-    User,
+    UserEntity,
     FriendRequestEntity,
     DoctorRequestEntity,
     AppointmentEntity,

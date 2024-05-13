@@ -1,16 +1,16 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { User } from '../../users/entities/user.entity';
+import { UserEntity } from '../../users/entities/user.entity';
 
 @Entity('appointment')
 export class AppointmentEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, (userEntity) => userEntity.sentAppointments)
-  requestUser: User;
+  @ManyToOne(() => UserEntity, (userEntity) => userEntity.sentAppointments)
+  requestUser: UserEntity;
 
-  @ManyToOne(() => User, (userEntity) => userEntity.confirmedAppointments)
-  confirmUser: User;
+  @ManyToOne(() => UserEntity, (userEntity) => userEntity.confirmedAppointments)
+  confirmUser: UserEntity;
 
   @Column()
   status: 'pending' | 'ongoing' | 'declined' | 'completed';

@@ -1,6 +1,6 @@
 import { Seeder } from 'typeorm-extension';
 import { DataSource } from 'typeorm';
-import { User } from '../../users/entities/user.entity';
+import { UserEntity } from '../../users/entities/user.entity';
 import { Role } from '../../auth/models/roles.model';
 import * as bcrypt from 'bcrypt';
 
@@ -16,7 +16,7 @@ export default class UserSeeder implements Seeder {
     dataSource: DataSource,
     // factoryManager: SeederFactoryManager,
   ): Promise<any> {
-    const repository = dataSource.getRepository(User);
+    const repository = dataSource.getRepository(UserEntity);
     await repository.insert([
       {
         firstName: 'Caleb',
@@ -43,7 +43,7 @@ export default class UserSeeder implements Seeder {
 
     // ---------------------------------------------------
 
-    // const userFactory = await factoryManager.get(User);
+    // const userFactory = await factoryManager.get(UserEntity);
     // // save 1 factory generated entity, to the database
     // await userFactory.save();
 

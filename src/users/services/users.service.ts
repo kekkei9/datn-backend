@@ -17,7 +17,7 @@ import {
   FriendRequest,
   FriendRequest_Status,
 } from '../entities/friend-request.interface';
-import { User } from '../entities/user.entity';
+import { UserEntity } from '../entities/user.entity';
 import { DoctorRequestEntity } from '../entities/doctor-request.entity';
 import { PayloadToken } from '../../auth/models/token.model';
 import { Role } from '../../auth/models/roles.model';
@@ -25,8 +25,8 @@ import { Role } from '../../auth/models/roles.model';
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
+    @InjectRepository(UserEntity)
+    private userRepository: Repository<UserEntity>,
 
     @InjectRepository(FriendRequestEntity)
     private readonly friendRequestRepository: Repository<FriendRequestEntity>,

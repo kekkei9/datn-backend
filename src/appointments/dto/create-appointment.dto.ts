@@ -1,15 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { User } from '../../users/entities/user.entity';
+import { UserEntity } from '../../users/entities/user.entity';
 
 export class CreateApppointmentDto {
   @ApiProperty()
   @IsNotEmpty()
-  readonly requestUser: User;
+  readonly requestUser: UserEntity;
 
   @ApiProperty()
   @IsNotEmpty()
-  readonly confirmUser: User;
+  readonly confirmUser: UserEntity;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -50,8 +50,8 @@ export class UpdateAppointmentDto {
   readonly beginTimestamp?: number;
 
   @ApiProperty()
-  readonly requestUser?: User;
+  readonly requestUser?: UserEntity;
 
   @ApiProperty()
-  readonly confirmUser?: User;
+  readonly confirmUser?: UserEntity;
 }

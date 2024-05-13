@@ -8,7 +8,7 @@ import { ConversationEntity } from '../models/conversation.entity';
 import { Conversation } from '../models/conversation.interface';
 import { MessageEntity } from '../models/message.entity';
 import { Message } from '../models/message.interface';
-import { User } from '../../users/entities/user.entity';
+import { UserEntity } from '../../users/entities/user.entity';
 
 @Injectable()
 export class ConversationService {
@@ -37,7 +37,10 @@ export class ConversationService {
     ).pipe(map((conversation: Conversation) => conversation || undefined));
   }
 
-  createConversation(creator: User, friend: User): Observable<Conversation> {
+  createConversation(
+    creator: UserEntity,
+    friend: UserEntity,
+  ): Observable<Conversation> {
     return this.getConversation(creator.id, friend.id).pipe(
       switchMap((conversation: Conversation) => {
         const doesConversationExist = !!conversation;

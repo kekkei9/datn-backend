@@ -5,18 +5,21 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { User } from './user.entity';
+import { UserEntity } from './user.entity';
 
 @Entity('doctor-request')
 export class DoctorRequestEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => User, (userEntity) => userEntity.sentDoctorRequest)
-  requestUser: User;
+  @OneToOne(() => UserEntity, (userEntity) => userEntity.sentDoctorRequest)
+  requestUser: UserEntity;
 
-  @ManyToOne(() => User, (userEntity) => userEntity.confirmedDoctorRequests)
-  confirmUser: User;
+  @ManyToOne(
+    () => UserEntity,
+    (userEntity) => userEntity.confirmedDoctorRequests,
+  )
+  confirmUser: UserEntity;
 
   @Column('jsonb', { nullable: true })
   metadata: object;

@@ -1,16 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Role } from '../../auth/models/roles.model';
+import { PayloadToken } from '../../auth/models/token.model';
+import { UsersService } from '../../users/services/users.service';
 import {
   CreateAppointmentRequestDto,
-  CreateApppointmentDto,
   ResponseAppointmentRequestDto,
   UpdateAppointmentDto,
 } from '../dto/create-appointment.dto';
 import { AppointmentEntity } from '../entities/appointment.entity';
-import { UsersService } from '../../users/services/users.service';
-import { PayloadToken } from '../../auth/models/token.model';
-import { Role } from '../../auth/models/roles.model';
 
 @Injectable()
 export class AppointmentsService {
@@ -22,7 +21,10 @@ export class AppointmentsService {
   ) {}
 
   findAppointmentById(id: number) {
-    return this.appointmentRepository.findOne({ where: { id } });
+    return this.appointmentRepository.findOne({
+      where: { id },
+      relations: ['confirmUser', 'requestUser'],
+    });
   }
 
   async update(id: number, updateAppointmentDto: UpdateAppointmentDto) {
@@ -41,6 +43,7 @@ export class AppointmentsService {
       where: {
         status: 'pending',
       },
+      relations: ['confirmUser', 'requestUser'],
     });
   }
 
@@ -52,6 +55,7 @@ export class AppointmentsService {
         },
         status: 'pending',
       },
+      relations: ['confirmUser', 'requestUser'],
     });
   }
 
@@ -76,7 +80,7 @@ export class AppointmentsService {
       };
     }
 
-    return this.createAppointment({
+    return this.appointmentRepository.save({
       beginTimestamp: createAppointmentRequestDto.beginTimestamp,
       confirmUser: user,
       requestUser: currentUser,
@@ -100,6 +104,7 @@ export class AppointmentsService {
           status: 'ongoing',
         },
       ],
+      relations: ['confirmUser', 'requestUser'],
     });
   }
 
@@ -109,13 +114,24 @@ export class AppointmentsService {
     responseAppointmentRequestDto: ResponseAppointmentRequestDto,
   ) {
     const appointment = await this.findAppointmentById(appointmentId);
+    const { action, beginTimestamp } = responseAppointmentRequestDto;
+    if (
+      ![appointment.confirmUser.id, appointment.requestUser.id].includes(
+        user.id,
+      )
+    ) {
+      return { message: 'You cannot respond to this appointment request' };
+    }
+
+    if (action === 'COMPLETE') {
+      return this.update(appointmentId, { status: 'completed' });
+    }
+
     if (user.id !== appointment.confirmUser.id)
       return { message: 'You cannot respond to this appointment request' };
 
     if (appointment.status !== 'pending')
       return { message: 'Appointment request is not pending' };
-
-    const { action, beginTimestamp } = responseAppointmentRequestDto;
 
     if (action === 'ACCEPT') {
       return this.update(appointmentId, { status: 'ongoing' });
@@ -123,10 +139,6 @@ export class AppointmentsService {
 
     if (action === 'DECLINE') {
       return this.update(appointmentId, { status: 'declined' });
-    }
-
-    if (action === 'COMPLETE') {
-      return this.update(appointmentId, { status: 'completed' });
     }
 
     if (action === 'RESCHEDULE') {
@@ -142,10 +154,6 @@ export class AppointmentsService {
         requestUser: appointment.confirmUser,
       });
     }
-  }
-
-  createAppointment(appointment: CreateApppointmentDto) {
-    return this.appointmentRepository.create(appointment);
   }
 
   async acceptAppointmentRequestById(

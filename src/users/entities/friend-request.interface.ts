@@ -1,4 +1,4 @@
-import { User } from './user.entity';
+import { UserEntity } from './user.entity';
 
 export type FriendRequest_Status =
   | 'not-sent'
@@ -13,7 +13,7 @@ export interface FriendRequestStatus {
 
 export interface FriendRequest {
   id?: number;
-  creator?: User;
-  receiver?: User;
+  creator?: UserEntity;
+  receiver?: UserEntity;
   status?: FriendRequest_Status;
 }

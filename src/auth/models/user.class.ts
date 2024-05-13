@@ -1,7 +1,7 @@
 import { IsEmail, IsString } from 'class-validator';
-import { Role } from './role.enum';
+import { Role } from './roles.model';
 
-export class User {
+export class UserEntity {
   id?: number;
   firstName?: string;
   lastName?: string;

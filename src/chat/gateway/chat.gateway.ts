@@ -15,7 +15,7 @@ import { Message } from '../models/message.interface';
 import { ConversationService } from '../services/conversation.service';
 import { UsersService } from '../../users/services/users.service';
 import { PayloadToken } from '../../auth/models/token.model';
-import { User } from '../../users/entities/user.entity';
+import { UserEntity } from '../../users/entities/user.entity';
 
 @WebSocketGateway({ cors: { origin: ['http://localhost:8100'] } })
 export class ChatGateway
@@ -69,7 +69,7 @@ export class ChatGateway
   }
 
   @SubscribeMessage('createConversation')
-  createConversation(socket: Socket, friend: User) {
+  createConversation(socket: Socket, friend: UserEntity) {
     this.conversationService
       .createConversation(socket.data.user, friend)
       .pipe(take(1))

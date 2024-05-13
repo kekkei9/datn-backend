@@ -7,16 +7,16 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { MessageEntity } from './message.entity';
-import { User } from '../../users/entities/user.entity';
+import { UserEntity } from '../../users/entities/user.entity';
 
 @Entity('conversation')
 export class ConversationEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToMany(() => User)
+  @ManyToMany(() => UserEntity)
   @JoinTable()
-  users: User[];
+  users: UserEntity[];
 
   @OneToMany(() => MessageEntity, (messageEntity) => messageEntity.conversation)
   messages: MessageEntity[];

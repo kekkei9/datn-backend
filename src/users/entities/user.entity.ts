@@ -17,7 +17,7 @@ import { MessageEntity } from '../../chat/models/message.entity';
 import { ConversationEntity } from '../../chat/models/conversation.entity';
 
 @Entity('users')
-export class User extends DefaultEntity {
+export class UserEntity extends DefaultEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
