@@ -11,6 +11,7 @@ import { Role } from '../../auth/models/roles.model';
 import { DefaultEntity } from '../../utils/entities/default.entity';
 import { FriendRequestEntity } from './friend-request.entity';
 import { DoctorRequestEntity } from './doctor-request.entity';
+import { AppointmentEntity } from 'src/appointments/entities/appointment.entity';
 
 @Entity('users')
 export class User extends DefaultEntity {
@@ -66,6 +67,18 @@ export class User extends DefaultEntity {
     (doctorRequestEntity) => doctorRequestEntity.confirmUser,
   )
   confirmedDoctorRequests: DoctorRequestEntity[];
+
+  @OneToMany(
+    () => AppointmentEntity,
+    (appointmentEntity) => appointmentEntity.requestUser,
+  )
+  sentAppointments: AppointmentEntity[];
+
+  @OneToMany(
+    () => AppointmentEntity,
+    (doctorRequestEntity) => doctorRequestEntity.confirmUser,
+  )
+  confirmedAppointments: AppointmentEntity[];
 
   @BeforeInsert()
   async hashPassword() {

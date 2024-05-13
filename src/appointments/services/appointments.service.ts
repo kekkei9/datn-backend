@@ -1,8 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Role } from 'src/auth/models/roles.model';
 import { PayloadToken } from 'src/auth/models/token.model';
+import { UsersService } from 'src/users/services/users.service';
 import { Repository } from 'typeorm';
-import { CreateApppointmentDto } from '../dto/create-appointment.dto';
+import {
+  CreateAppointmentRequestDto,
+  CreateApppointmentDto,
+  ResponseAppointmentRequestDto,
+  UpdateAppointmentDto,
+} from '../dto/create-appointment.dto';
 import { AppointmentEntity } from '../entities/appointment.entity';
 
 @Injectable()
@@ -10,10 +17,23 @@ export class AppointmentsService {
   constructor(
     @InjectRepository(AppointmentEntity)
     private appointmentRepository: Repository<AppointmentEntity>,
+
+    private userService: UsersService,
   ) {}
 
   findAppointmentById(id: number) {
     return this.appointmentRepository.findOne({ where: { id } });
+  }
+
+  async update(id: number, updateAppointmentDto: UpdateAppointmentDto) {
+    const user = await this.appointmentRepository.preload({
+      id,
+      ...updateAppointmentDto,
+    });
+    if (!user) {
+      throw new NotFoundException(`Appointment with id ${id} does not exist`);
+    }
+    return this.appointmentRepository.save(user);
   }
 
   getAppointmentRequests() {
@@ -32,6 +52,35 @@ export class AppointmentsService {
         },
         status: 'pending',
       },
+    });
+  }
+
+  async sendAppointmentRequest(
+    { id: currentUserId }: PayloadToken,
+    userId: number,
+    createAppointmentRequestDto: CreateAppointmentRequestDto,
+  ) {
+    const user = await this.userService.findUserById(userId);
+    const currentUser = await this.userService.findUserById(currentUserId);
+
+    if (user.role === currentUser.role) {
+      return {
+        message:
+          'You cannot send appointment request to user with the same role',
+      };
+    }
+
+    if ([user.role, currentUser.role].includes(Role.ADMIN)) {
+      return {
+        message: 'You cannot send appointment request to admin',
+      };
+    }
+
+    return this.createAppointment({
+      beginTimestamp: createAppointmentRequestDto.beginTimestamp,
+      confirmUser: user,
+      requestUser: currentUser,
+      status: 'pending',
     });
   }
 
@@ -54,17 +103,56 @@ export class AppointmentsService {
     });
   }
 
+  async updateAppointmentRequestById(
+    user: PayloadToken,
+    appointmentId: number,
+    responseAppointmentRequestDto: ResponseAppointmentRequestDto,
+  ) {
+    const appointment = await this.findAppointmentById(appointmentId);
+    if (user.id !== appointment.confirmUser.id)
+      return { message: 'You cannot respond to this appointment request' };
+
+    if (appointment.status !== 'pending')
+      return { message: 'Appointment request is not pending' };
+
+    const { action, beginTimestamp } = responseAppointmentRequestDto;
+
+    if (action === 'ACCEPT') {
+      return this.update(appointmentId, { status: 'ongoing' });
+    }
+
+    if (action === 'DECLINE') {
+      return this.update(appointmentId, { status: 'declined' });
+    }
+
+    if (action === 'COMPLETE') {
+      return this.update(appointmentId, { status: 'completed' });
+    }
+
+    if (action === 'RESCHEDULE') {
+      if (!beginTimestamp) {
+        return { message: 'Begin timestamp is required' };
+      }
+      if (user.id !== appointment.confirmUser.id) {
+        return { message: 'You cannot reschedule this appointment' };
+      }
+      return this.update(appointmentId, {
+        beginTimestamp,
+        confirmUser: appointment.requestUser,
+        requestUser: appointment.confirmUser,
+      });
+    }
+  }
+
   createAppointment(appointment: CreateApppointmentDto) {
-    return this.appointmentRepository.save(appointment);
+    return this.appointmentRepository.create(appointment);
   }
 
   async acceptAppointmentRequestById(
-    appointmentRequestId: number,
+    appointmentId: number,
     user: PayloadToken,
   ) {
-    const appointmentRequest = await this.findAppointmentById(
-      appointmentRequestId,
-    );
+    const appointmentRequest = await this.findAppointmentById(appointmentId);
 
     if (user.id !== appointmentRequest.confirmUser.id)
       return {
@@ -78,7 +166,7 @@ export class AppointmentsService {
 
     const { beginTimestamp, confirmUser, requestUser } = appointmentRequest;
 
-    return this.createAppointment({
+    return this.update(appointmentId, {
       beginTimestamp,
       confirmUser,
       requestUser,
