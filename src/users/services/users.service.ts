@@ -259,6 +259,7 @@ export class UsersService {
     return await this.userRepository.findBy({ id: In(userIds) });
   }
 
+  //-------------------------------------DOCTOR REGISTER----------------------------------------------
   async registerToBeADoctor(
     { id: userId }: PayloadToken,
     metadata: Record<string, any>,
@@ -271,5 +272,18 @@ export class UsersService {
 
     return this.doctorRequestRepository.save({ id: userId, metadata });
   }
-  //-------------------------------------DOCTOR REGISTER----------------------------------------------
+
+  async getDoctorRequests() {
+    return this.doctorRequestRepository.find();
+  }
+
+  async acceptDoctorRegistration(doctorRequestId: number) {
+    const doctorRequest = await this.doctorRequestRepository.findOne({
+      where: { id: doctorRequestId },
+    });
+
+    //set user role to doctor
+    await this.userRepository.update(doctorRequest.id, { role: Role.DOCTOR });
+    return this.doctorRequestRepository.remove(doctorRequest);
+  }
 }

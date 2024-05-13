@@ -5,10 +5,10 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { User } from './user.entity';
+import { User } from '../../users/entities/user.entity';
 
-@Entity('doctor-request')
-export class DoctorRequestEntity {
+@Entity('appointment')
+export class AppointmentEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -18,6 +18,9 @@ export class DoctorRequestEntity {
   @ManyToOne(() => User, (userEntity) => userEntity.confirmedDoctorRequests)
   confirmUser: User;
 
-  @Column('jsonb', { nullable: true })
-  metadata: object;
+  @Column()
+  status: 'pending' | 'ongoing' | 'declined' | 'completed';
+
+  @Column()
+  beginTimestamp: number;
 }

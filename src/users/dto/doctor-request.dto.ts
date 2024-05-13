@@ -1,6 +1,8 @@
-export class RegisterFriendRequestDto {
-  // @ApiProperty()
-  // @IsString()
-  // @IsNotEmpty()
-  // readonly status: FriendRequest_Status;
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty } from 'class-validator';
+
+export class RegisterDoctorRequestDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  readonly status: object;
 }
