@@ -7,6 +7,7 @@ import config from './config';
 import { enviroments } from './environments';
 import { UsersModule } from './users/users.module';
 import { AppointmentsModule } from './appointments/appointments.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { AppointmentsModule } from './appointments/appointments.module';
     UsersModule,
     AuthModule,
     AppointmentsModule,
+    ChatModule,
   ],
   controllers: [],
   providers: [],
