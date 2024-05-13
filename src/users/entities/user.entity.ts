@@ -79,7 +79,7 @@ export class User extends DefaultEntity {
 
   @OneToMany(
     () => AppointmentEntity,
-    (doctorRequestEntity) => doctorRequestEntity.confirmUser,
+    (appointmentEntity) => appointmentEntity.confirmUser,
   )
   confirmedAppointments: AppointmentEntity[];
 
