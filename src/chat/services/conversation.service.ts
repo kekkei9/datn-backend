@@ -97,7 +97,9 @@ export class ConversationService {
           return of();
         }
         const conversationId = conversation.id;
-        return from(this.activeConversationRepository.findOne({ userId })).pipe(
+        return from(
+          this.activeConversationRepository.findOne({ where: { userId } }),
+        ).pipe(
           switchMap((activeConversation: ActiveConversation) => {
             if (activeConversation) {
               return from(

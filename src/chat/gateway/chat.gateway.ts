@@ -9,18 +9,21 @@ import {
 import { of, Subscription, take, tap } from 'rxjs';
 import { Server, Socket } from 'socket.io';
 
-import { JwtGuard } from 'src/auth/guards/jwt.guard';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { UsersService } from 'src/users/services/users.service';
 import { User } from 'src/auth/models/user.class';
 import { AuthService } from 'src/auth/services/auth.service';
 import { ActiveConversation } from '../models/active-conversation.interface';
 import { Message } from '../models/message.interface';
 import { ConversationService } from '../services/conversation.service';
+import { PayloadToken } from 'src/auth/models/token.model';
 
 @WebSocketGateway({ cors: { origin: ['http://localhost:8100'] } })
 export class ChatGateway
   implements OnGatewayConnection, OnGatewayDisconnect, OnModuleInit
 {
   constructor(
+    private userService: UsersService,
     private authService: AuthService,
     private conversationService: ConversationService,
   ) {}
@@ -38,19 +41,17 @@ export class ChatGateway
   @WebSocketServer()
   server: Server;
 
-  @UseGuards(JwtGuard)
-  handleConnection(socket: Socket) {
+  @UseGuards(JwtAuthGuard)
+  async handleConnection(socket: Socket, user: PayloadToken) {
     console.log('HANDLE CONNECTION');
-    const jwt = socket.handshake.headers.authorization || null;
-    this.authService.getJwtUser(jwt).subscribe((user: User) => {
-      if (!user) {
-        console.log('No USER');
-        this.handleDisconnect(socket);
-      } else {
-        socket.data.user = user;
-        this.getConversations(socket, user.id);
-      }
-    });
+    const FoundUser = await this.userService.findUserById(user.id);
+    if (!FoundUser) {
+      console.log('No USER');
+      this.handleDisconnect(socket);
+    } else {
+      socket.data.user = FoundUser;
+      this.getConversations(socket, FoundUser.id);
+    }
   }
 
   getConversations(socket: Socket, userId: number): Subscription {
