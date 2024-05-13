@@ -6,7 +6,6 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { FeedPostEntity } from '../../feed/models/post.entity';
 import { Role } from './role.enum';
 import { FriendRequestEntity } from './friend-request.entity';
 import { ConversationEntity } from 'src/chat/models/conversation.entity';
@@ -34,9 +33,6 @@ export class UserEntity {
 
   @Column({ type: 'enum', enum: Role, default: Role.USER })
   role: Role;
-
-  @OneToMany(() => FeedPostEntity, (feedPostEntity) => feedPostEntity.author)
-  feedPosts: FeedPostEntity[];
 
   @OneToMany(
     () => FriendRequestEntity,

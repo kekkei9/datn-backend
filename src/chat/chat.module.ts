@@ -6,9 +6,11 @@ import { ActiveConversationEntity } from './models/active-conversation.entity';
 import { ConversationEntity } from './models/conversation.entity';
 import { MessageEntity } from './models/message.entity';
 import { ConversationService } from './services/conversation.service';
+import { UsersService } from 'src/users/services/users.service';
 
 @Module({
   imports: [
+    UsersService,
     AuthModule,
     TypeOrmModule.forFeature([
       ConversationEntity,
