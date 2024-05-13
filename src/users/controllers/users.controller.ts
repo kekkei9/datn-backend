@@ -79,6 +79,7 @@ export class UsersController {
   @Get(':userId')
   findUserById(@Param('userId') userStringId: string) {
     const userId = parseInt(userStringId);
+    //filter unessary data
     return this.usersService.findUserById(userId);
   }
 
@@ -176,7 +177,7 @@ export class UsersController {
   @ApiTags('doctor-register', 'cms')
   @ApiBearerAuth('access-token')
   @Roles(Role.ADMIN)
-  @Post('doctor-register/requests')
+  @Get('doctor-register/requests')
   getDoctorRequests() {
     return this.usersService.getDoctorRequests();
   }
