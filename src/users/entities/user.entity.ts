@@ -21,8 +21,11 @@ export class UserEntity extends DefaultEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
+  @Column()
   email: string;
+
+  @Column({ unique: true })
+  public phoneNumber: string;
 
   @Column({ select: false })
   password: string;

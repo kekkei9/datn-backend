@@ -24,6 +24,7 @@ export default class UserSeeder implements Seeder {
         email: 'patient@gmail.com',
         password: await bcrypt.hash('patient', 10),
         role: Role.PATIENT,
+        phoneNumber: '+84961209275',
       },
       {
         firstName: 'Caleb',
@@ -31,6 +32,7 @@ export default class UserSeeder implements Seeder {
         email: 'admin@gmail.com',
         password: await bcrypt.hash('admin', 10),
         role: Role.ADMIN,
+        phoneNumber: '+11111',
       },
       {
         firstName: 'Leanne',
@@ -38,6 +40,7 @@ export default class UserSeeder implements Seeder {
         email: 'doctor@gmail.com',
         password: await bcrypt.hash('doctor', 10),
         role: Role.DOCTOR,
+        phoneNumber: '+1',
       },
     ]);
 

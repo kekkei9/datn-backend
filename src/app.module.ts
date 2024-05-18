@@ -8,6 +8,7 @@ import { enviroments } from './environments';
 import { UsersModule } from './users/users.module';
 import { AppointmentsModule } from './appointments/appointments.module';
 import { ChatModule } from './chat/chat.module';
+import { SmsModule } from './sms/sms.module';
 
 @Module({
   imports: [
@@ -20,6 +21,10 @@ import { ChatModule } from './chat/chat.module';
         JWT_REFRESH_SECRET: Joi.string().required(),
         ACCESS_TOKEN_EXPIRATION: Joi.string().required(),
         REFRESH_TOKEN_EXPIRATION: Joi.string().required(),
+        INFOBIP_BASE_URL: Joi.string().required(),
+        INFOBIP_API_KEY: Joi.string().required(),
+        INFOBIP_MESSAGE_ID: Joi.string().required(),
+        INFOBIP_APPLICATION_ID: Joi.string().required(),
       }),
       validationOptions: {
         abortEarly: true, //when true, stops validation on the first error, otherwise returns all the errors found. Defaults to true.
@@ -45,6 +50,7 @@ import { ChatModule } from './chat/chat.module';
     AuthModule,
     AppointmentsModule,
     ChatModule,
+    SmsModule,
   ],
   controllers: [],
   providers: [],
