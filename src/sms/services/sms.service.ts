@@ -13,8 +13,8 @@ export default class SmsService {
     private httpService: HttpService,
   ) {}
 
-  initiatePhoneNumberVerification(phoneNumber: string) {
-    return this.httpService.post(
+  async initiatePhoneNumberVerification(phoneNumber: string) {
+    const sendResult = await this.httpService.axiosRef.post(
       this.configService.get('INFOBIP_BASE_URL') + '/2fa/2/pin',
       {
         applicationId: this.configService.get('INFOBIP_APPLICATION_ID'),
@@ -28,37 +28,33 @@ export default class SmsService {
         },
       },
     );
+    return sendResult.data;
   }
 
-  confirmPhoneNumber(pinId: string, verificationCode: string) {
-    return this.httpService
-      .post<{
-        pinId: string;
-        msisdn: string;
-        verified: boolean;
-        attemptsRemaining: number;
-      }>(
-        `${this.configService.get(
-          'INFOBIP_BASE_URL',
-        )}/2fa/2/pin/${pinId}/verify`,
-        {
-          pin: verificationCode,
+  async confirmPhoneNumber(pinId: string, verificationCode: string) {
+    const result = await this.httpService.axiosRef.post<{
+      pinId: string;
+      msisdn: string;
+      verified: boolean;
+      attemptsRemaining: number;
+    }>(
+      `${this.configService.get('INFOBIP_BASE_URL')}/2fa/2/pin/${pinId}/verify`,
+      {
+        pin: verificationCode,
+      },
+      {
+        headers: {
+          Authorization: `App ${this.configService.get('INFOBIP_API_KEY')}`,
         },
-        {
-          headers: {
-            Authorization: `App ${this.configService.get('INFOBIP_API_KEY')}`,
-          },
-        },
-      )
-      .subscribe((response) => {
-        if (!response.data.verified) {
-          throw new BadRequestException('Wrong code provided');
-        }
+      },
+    );
+    if (!result.data.verified) {
+      throw new BadRequestException('Wrong code provided');
+    }
 
-        // generate a JWT token and return it
-        return {
-          token: this.jwtService.sign({ phoneNumber: response.data.msisdn }),
-        };
-      });
+    // generate a JWT token and return it
+    return {
+      token: this.jwtService.sign({ phoneNumber: result.data.msisdn }),
+    };
   }
 }
