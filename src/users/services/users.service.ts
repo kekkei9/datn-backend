@@ -6,21 +6,21 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { createHash } from 'crypto';
-import { In, Repository } from 'typeorm';
+import { In, Not, Repository } from 'typeorm';
+import { Role } from '../../auth/models/roles.model';
+import { PayloadToken } from '../../auth/models/token.model';
 import {
   CreateAdminDto,
   CreateUserDto,
   UpdateUserDto,
 } from '../dto/create-user.dto';
+import { DoctorRequestEntity } from '../entities/doctor-request.entity';
 import { FriendRequestEntity } from '../entities/friend-request.entity';
 import {
   FriendRequest,
   FriendRequest_Status,
 } from '../entities/friend-request.interface';
 import { UserEntity } from '../entities/user.entity';
-import { DoctorRequestEntity } from '../entities/doctor-request.entity';
-import { PayloadToken } from '../../auth/models/token.model';
-import { Role } from '../../auth/models/roles.model';
 
 @Injectable()
 export class UsersService {
@@ -37,10 +37,16 @@ export class UsersService {
 
   //-------------------------------------COMMON----------------------------------------------
 
-  async create(createUserDto: CreateUserDto | CreateAdminDto) {
+  async create(
+    createUserDto:
+      | (Omit<CreateUserDto, 'token'> & {
+          phoneNumber: string;
+        })
+      | (CreateAdminDto & { phoneNumber: string }),
+  ) {
     const user = await this.userRepository.findOne({
       where: {
-        email: createUserDto.email,
+        phoneNumber: createUserDto.phoneNumber,
       },
     });
 
@@ -78,9 +84,12 @@ export class UsersService {
     return await this.userRepository.findOneOrFail({ where: { id } });
   }
 
-  async findByEmail(email: string) {
-    return await this.userRepository.findOneOrFail({
-      where: { email },
+  async findUserByText(text: string) {
+    return await this.userRepository.find({
+      where: {
+        phoneNumber: text,
+        role: Not(Role.ADMIN),
+      },
     });
   }
 

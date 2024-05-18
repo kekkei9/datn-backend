@@ -1,3 +1,4 @@
+import { JwtService } from '@nestjs/jwt';
 import {
   Body,
   Controller,
@@ -7,6 +8,7 @@ import {
   Patch,
   Post,
   Put,
+  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -14,6 +16,7 @@ import {
   ApiBearerAuth,
   ApiBody,
   ApiOperation,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -31,12 +34,16 @@ import {
 import { ResponseFriendRequestDto } from '../dto/friend-request.dto';
 import { UsersService } from '../services/users.service';
 import { RegisterDoctorRequestDto } from '../dto/doctor-request.dto';
+import { SearchUserDto } from '../dto/search-user.dto';
 
 @ApiTags('users') // put the name of the controller in swagger
 @Controller('users')
 @UseGuards(JwtAuthGuard, RolesGuard) //  makes the all routs as private by default
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   @ApiOperation({ summary: 'create a user with patient role' })
   @ApiResponse({
@@ -46,7 +53,9 @@ export class UsersController {
   @Public() // makes the endpoint accessible to all
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+    const { token, ...restProps } = createUserDto;
+    const phoneNumber = this.jwtService.decode(token)['phoneNumber'];
+    return this.usersService.create({ phoneNumber, ...restProps });
   }
 
   @ApiTags('cms')
@@ -58,8 +67,8 @@ export class UsersController {
   @ApiBearerAuth('access-token') // in the swagger documentation, a bearer token is required to access this endpoint
   @Roles(Role.ADMIN) // makes the endpoint accessible only by the admin
   @Post('admin')
-  createAdmin(@Body() creatAdminDto: CreateAdminDto) {
-    return this.usersService.create(creatAdminDto);
+  createAdmin(@Body() createAdminDto: CreateAdminDto) {
+    return this.usersService.create(createAdminDto);
   }
 
   @ApiTags('cms')
@@ -73,6 +82,13 @@ export class UsersController {
   @Get()
   findAll() {
     return this.usersService.findAll();
+  }
+
+  @ApiBearerAuth('access-token')
+  @Get('search')
+  @ApiQuery({ type: SearchUserDto })
+  findUserByText(@Query() query) {
+    return this.usersService.findUserByText(query.text);
   }
 
   @ApiBearerAuth('access-token')

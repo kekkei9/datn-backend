@@ -7,9 +7,23 @@ import { UsersService } from './services/users.service';
 import { FriendRequestEntity } from './entities/friend-request.entity';
 import { DoctorRequestEntity } from './entities/doctor-request.entity';
 import { ConversationEntity } from '../chat/models/conversation.entity';
+import { JwtModule } from '@nestjs/jwt';
+import config from '../config';
+import { ConfigType } from '@nestjs/config';
 
 @Module({
   imports: [
+    JwtModule.registerAsync({
+      inject: [config.KEY],
+      useFactory: (configService: ConfigType<typeof config>) => {
+        return {
+          secret: configService.jwt.jwtSecret,
+          signOptions: {
+            expiresIn: configService.jwt.accessTokenExpiration,
+          },
+        };
+      },
+    }),
     TypeOrmModule.forFeature([
       UserEntity,
       FriendRequestEntity,

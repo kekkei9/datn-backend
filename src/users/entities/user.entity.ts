@@ -21,7 +21,7 @@ export class UserEntity extends DefaultEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: true })
   email: string;
 
   @Column({ unique: true })
