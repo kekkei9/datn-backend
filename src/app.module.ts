@@ -9,6 +9,7 @@ import { UsersModule } from './users/users.module';
 import { AppointmentsModule } from './appointments/appointments.module';
 import { ChatModule } from './chat/chat.module';
 import { SmsModule } from './sms/sms.module';
+import { DrugsModule } from './drugs/drugs.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { SmsModule } from './sms/sms.module';
     AppointmentsModule,
     ChatModule,
     SmsModule,
+    DrugsModule,
   ],
   controllers: [],
   providers: [],

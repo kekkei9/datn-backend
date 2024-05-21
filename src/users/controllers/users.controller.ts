@@ -1,4 +1,3 @@
-import { JwtService } from '@nestjs/jwt';
 import {
   Body,
   Controller,
@@ -14,11 +13,11 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import {
   ApiBearerAuth,
   ApiBody,
   ApiOperation,
-  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -33,10 +32,10 @@ import {
   DefaultColumnsResponse,
   UpdateUserDto,
 } from '../dto/create-user.dto';
-import { ResponseFriendRequestDto } from '../dto/friend-request.dto';
-import { UsersService } from '../services/users.service';
 import { RegisterDoctorRequestDto } from '../dto/doctor-request.dto';
+import { ResponseFriendRequestDto } from '../dto/friend-request.dto';
 import { SearchUserDto } from '../dto/search-user.dto';
+import { UsersService } from '../services/users.service';
 
 @ApiTags('users') // put the name of the controller in swagger
 @Controller('users')
@@ -91,8 +90,7 @@ export class UsersController {
 
   @ApiBearerAuth('access-token')
   @Get('search')
-  @ApiQuery({ type: SearchUserDto })
-  findUserByText(@Query() query) {
+  findUserByText(@Query() query: SearchUserDto) {
     return this.usersService.findUserByText(query.text);
   }
 
