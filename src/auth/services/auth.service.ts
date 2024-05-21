@@ -15,12 +15,12 @@ export class AuthService {
     private configService: ConfigType<typeof config>,
   ) {}
 
-  async validateUser(email: string, password: string) {
+  async validateUser(phoneNumber: string, password: string) {
     const user: {
       password: string;
       id: number;
       role: string;
-    } = await this.usersService.findByEmailAndGetPassword(email);
+    } = await this.usersService.findByPhoneNumberAndGetPassword(phoneNumber);
 
     if (user) {
       const isMatch = await bcrypt.compare(password, user.password);

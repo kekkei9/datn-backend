@@ -65,10 +65,10 @@ export class UsersService {
     return this.userRepository.find();
   }
 
-  async findByEmailAndGetPassword(email: string) {
+  async findByPhoneNumberAndGetPassword(phoneNumber: string) {
     return await this.userRepository.findOne({
       select: ['id', 'password', 'role'],
-      where: { email },
+      where: { phoneNumber },
     });
   }
 

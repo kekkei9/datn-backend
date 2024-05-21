@@ -4,6 +4,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -54,6 +56,9 @@ export class UsersController {
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     const { token, ...restProps } = createUserDto;
+    if (!this.jwtService.decode(token)) {
+      throw new HttpException('Invalid token', HttpStatus.BAD_REQUEST);
+    }
     const phoneNumber = this.jwtService.decode(token)['phoneNumber'];
     return this.usersService.create({ phoneNumber, ...restProps });
   }
