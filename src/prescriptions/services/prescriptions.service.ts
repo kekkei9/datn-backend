@@ -100,4 +100,29 @@ export class PrescriptionsService {
       },
     });
   }
+
+  async getUserPrescriptions(currentUser: PayloadToken, targetUserId: number) {
+    const friends = await this.usersService.getFriends(currentUser);
+
+    if (
+      !friends.find((friend) => friend.id === targetUserId) &&
+      currentUser.role !== Role.ADMIN
+    ) {
+      throw new HttpException(
+        'Cannot view prescriptions of this user',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    return this.prescriptionRepository.find({
+      where: {
+        belongTo: {
+          id: targetUserId,
+        },
+      },
+      order: {
+        updatedAt: 'DESC',
+      },
+    });
+  }
 }

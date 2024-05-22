@@ -49,6 +49,20 @@ export class PrescriptionsController {
     return this.prescriptionsService.getMyPrescriptions(req.user);
   }
 
+  @Get('/user-prescriptions/:userId')
+  @ApiBearerAuth('access-token')
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.DOCTOR, Role.ADMIN)
+  getUserMyPrescriptions(
+    @Request() req,
+    @Param('userId') userStringId: string,
+  ) {
+    return this.prescriptionsService.getUserPrescriptions(
+      req.user,
+      Number(userStringId),
+    );
+  }
+
   @Post()
   @ApiBody({ type: CreatePrescriptionDto })
   @ApiBearerAuth('access-token')

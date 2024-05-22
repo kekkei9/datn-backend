@@ -156,14 +156,25 @@ export class UsersService {
     }
   }
 
-  async hasRequestBeenSentOrReceived(
-    creator: PayloadToken,
-    receiver: PayloadToken,
-  ) {
+  async hasRequestBeenSentOrReceived(creatorId: number, receiverId: number) {
     const friendRequest = await this.friendRequestRepository.findOne({
       where: [
-        { creator, receiver },
-        { creator: receiver, receiver: creator },
+        {
+          creator: {
+            id: creatorId,
+          },
+          receiver: {
+            id: creatorId,
+          },
+        },
+        {
+          creator: {
+            id: receiverId,
+          },
+          receiver: {
+            id: creatorId,
+          },
+        },
       ],
     });
 
@@ -177,22 +188,23 @@ export class UsersService {
     if (receiverId === creatorId)
       return { error: 'It is not possible to add yourself!' };
 
-    const receiver = await this.findUserById(receiverId);
-    const creator = await this.findUserById(creatorId);
     const hasRequestBeenSentOrReceived =
-      await this.hasRequestBeenSentOrReceived(creator, receiver);
+      await this.hasRequestBeenSentOrReceived(creatorId, receiverId);
 
     if (hasRequestBeenSentOrReceived)
       return {
         error:
           'A friend request has already been sent of received to your account!',
       };
-    const friendRequest: FriendRequest = {
-      creator,
-      receiver,
+    return await this.friendRequestRepository.save({
+      creator: {
+        id: creatorId,
+      },
+      receiver: {
+        id: receiverId,
+      },
       status: 'pending',
-    };
-    return await this.friendRequestRepository.save(friendRequest);
+    });
   }
 
   async getFriendRequestStatus(
