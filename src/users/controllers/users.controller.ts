@@ -39,7 +39,7 @@ import { UsersService } from '../services/users.service';
 
 @ApiTags('users') // put the name of the controller in swagger
 @Controller('users')
-@UseGuards(JwtAuthGuard, RolesGuard) //  makes the all routs as private by default
+@UseGuards(JwtAuthGuard, RolesGuard) //  makes the all routes as private by default
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
@@ -188,6 +188,7 @@ export class UsersController {
     type: RegisterDoctorRequestDto,
   })
   @ApiBearerAuth('access-token')
+  @Roles(Role.PATIENT)
   @Post('doctor-register')
   registerToBeADoctor(@Request() req, @Body() metadata: Record<string, any>) {
     return this.usersService.registerToBeADoctor(req.user, metadata);

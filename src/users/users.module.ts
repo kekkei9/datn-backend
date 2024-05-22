@@ -10,6 +10,7 @@ import { ConversationEntity } from '../chat/models/conversation.entity';
 import { JwtModule } from '@nestjs/jwt';
 import config from '../config';
 import { ConfigType } from '@nestjs/config';
+import { PrescriptionEntity } from '../prescriptions/entities/prescription.entity';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { ConfigType } from '@nestjs/config';
       FriendRequestEntity,
       DoctorRequestEntity,
       ConversationEntity,
+      PrescriptionEntity,
     ]),
   ],
   controllers: [UsersController],

@@ -34,6 +34,7 @@ async function bootstrap() {
       { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
       'access-token',
     )
+    .addSecurityRequirements('bearer')
     .addBearerAuth(
       { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
       'refresh-token',

@@ -15,6 +15,7 @@ import { DoctorRequestEntity } from './doctor-request.entity';
 import { AppointmentEntity } from '../../appointments/entities/appointment.entity';
 import { MessageEntity } from '../../chat/models/message.entity';
 import { ConversationEntity } from '../../chat/models/conversation.entity';
+import { PrescriptionEntity } from '../../prescriptions/entities/prescription.entity';
 
 @Entity('users')
 export class UserEntity extends DefaultEntity {
@@ -94,6 +95,18 @@ export class UserEntity extends DefaultEntity {
     (conversationEntity) => conversationEntity.users,
   )
   conversations: ConversationEntity[];
+
+  @OneToMany(
+    () => PrescriptionEntity,
+    (prescriptionEntity) => prescriptionEntity.createdBy,
+  )
+  createdPrescriptions: PrescriptionEntity[];
+
+  @OneToMany(
+    () => PrescriptionEntity,
+    (prescriptionEntity) => prescriptionEntity.belongTo,
+  )
+  prescriptions: PrescriptionEntity[];
 
   @BeforeInsert()
   async hashPassword() {

@@ -10,6 +10,7 @@ import { AppointmentsModule } from './appointments/appointments.module';
 import { ChatModule } from './chat/chat.module';
 import { SmsModule } from './sms/sms.module';
 import { DrugsModule } from './drugs/drugs.module';
+import { PrescriptionsModule } from './prescriptions/prescriptions.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { DrugsModule } from './drugs/drugs.module';
     ChatModule,
     SmsModule,
     DrugsModule,
+    PrescriptionsModule,
   ],
   controllers: [],
   providers: [],

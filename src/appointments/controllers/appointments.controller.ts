@@ -3,21 +3,21 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
-  Put,
   Request,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { AppointmentsService } from '../services/appointments.service';
+import { Roles } from '../../auth/decorators/roles.decorator';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../auth/guards/roles.guard';
+import { Role } from '../../auth/models/roles.model';
 import {
   CreateAppointmentRequestDto,
   ResponseAppointmentRequestDto,
 } from '../dto/create-appointment.dto';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../../auth/guards/roles.guard';
-import { Roles } from '../../auth/decorators/roles.decorator';
-import { Role } from '../../auth/models/roles.model';
+import { AppointmentsService } from '../services/appointments.service';
 
 @ApiTags('appointments') // put the name of the controller in swagger
 @Controller('appointments')
@@ -59,7 +59,7 @@ export class AppointmentsController {
   }
 
   @ApiBearerAuth('access-token')
-  @Put('/response/:apppointmentId')
+  @Patch('/response/:apppointmentId')
   updateAppointmentRequest(
     @Request() req,
     @Param('apppointmentId') apppointmentStringId: string,

@@ -273,12 +273,6 @@ export class UsersService {
     { id: userId }: PayloadToken,
     metadata: Record<string, any>,
   ) {
-    const currentUser = await this.findUserById(userId);
-
-    if (currentUser.role !== Role.PATIENT) {
-      return { error: 'You are already a doctor/admin!' };
-    }
-
     return this.doctorRequestRepository.save({ id: userId, metadata });
   }
 
