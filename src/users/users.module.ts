@@ -11,6 +11,7 @@ import { JwtModule } from '@nestjs/jwt';
 import config from '../config';
 import { ConfigType } from '@nestjs/config';
 import { PrescriptionEntity } from '../prescriptions/entities/prescription.entity';
+import { DiariesModule } from '../diaries/diaries.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { PrescriptionEntity } from '../prescriptions/entities/prescription.entit
       DoctorRequestEntity,
       ConversationEntity,
       PrescriptionEntity,
+      DiariesModule,
     ]),
   ],
   controllers: [UsersController],

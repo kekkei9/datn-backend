@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { ConfigModule, ConfigType } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as Joi from 'joi';
@@ -11,6 +11,7 @@ import { ChatModule } from './chat/chat.module';
 import { SmsModule } from './sms/sms.module';
 import { DrugsModule } from './drugs/drugs.module';
 import { PrescriptionsModule } from './prescriptions/prescriptions.module';
+import { DiariesModule } from './diaries/diaries.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { PrescriptionsModule } from './prescriptions/prescriptions.module';
     SmsModule,
     DrugsModule,
     PrescriptionsModule,
+    forwardRef(() => DiariesModule),
   ],
   controllers: [],
   providers: [],
