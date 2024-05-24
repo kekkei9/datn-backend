@@ -1,17 +1,18 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigType } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as Joi from 'joi';
-import { AuthModule } from './auth/auth.module';
-import config from './config';
-import { enviroments } from './environments';
-import { UsersModule } from './users/users.module';
 import { AppointmentsModule } from './appointments/appointments.module';
+import { AuthModule } from './auth/auth.module';
 import { ChatModule } from './chat/chat.module';
-import { SmsModule } from './sms/sms.module';
-import { DrugsModule } from './drugs/drugs.module';
-import { PrescriptionsModule } from './prescriptions/prescriptions.module';
+import config from './config';
 import { DiariesModule } from './diaries/diaries.module';
+import { DrugsModule } from './drugs/drugs.module';
+import { enviroments } from './environments';
+import { NotificationsModule } from './notifications/notifications.module';
+import { PrescriptionsModule } from './prescriptions/prescriptions.module';
+import { SmsModule } from './sms/sms.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -56,7 +57,8 @@ import { DiariesModule } from './diaries/diaries.module';
     SmsModule,
     DrugsModule,
     PrescriptionsModule,
-    forwardRef(() => DiariesModule),
+    DiariesModule,
+    NotificationsModule,
   ],
   controllers: [],
   providers: [],

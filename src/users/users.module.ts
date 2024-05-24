@@ -1,17 +1,18 @@
 import { Module } from '@nestjs/common';
+import { ConfigType } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtStrategy } from '../auth/strategies/jwt.strategy';
+import { ConversationEntity } from '../chat/models/conversation.entity';
+import config from '../config';
+import { DiaryEntity } from '../diaries/entities/diary.entity';
+import { NotificationEntity } from '../notifications/entities/notification.entity';
+import { PrescriptionEntity } from '../prescriptions/entities/prescription.entity';
 import { UsersController } from './controllers/users.controller';
+import { DoctorRequestEntity } from './entities/doctor-request.entity';
+import { FriendRequestEntity } from './entities/friend-request.entity';
 import { UserEntity } from './entities/user.entity';
 import { UsersService } from './services/users.service';
-import { FriendRequestEntity } from './entities/friend-request.entity';
-import { DoctorRequestEntity } from './entities/doctor-request.entity';
-import { ConversationEntity } from '../chat/models/conversation.entity';
-import { JwtModule } from '@nestjs/jwt';
-import config from '../config';
-import { ConfigType } from '@nestjs/config';
-import { PrescriptionEntity } from '../prescriptions/entities/prescription.entity';
-import { DiariesModule } from '../diaries/diaries.module';
 
 @Module({
   imports: [
@@ -32,7 +33,8 @@ import { DiariesModule } from '../diaries/diaries.module';
       DoctorRequestEntity,
       ConversationEntity,
       PrescriptionEntity,
-      DiariesModule,
+      NotificationEntity,
+      DiaryEntity,
     ]),
   ],
   controllers: [UsersController],

@@ -17,6 +17,7 @@ import { MessageEntity } from '../../chat/models/message.entity';
 import { ConversationEntity } from '../../chat/models/conversation.entity';
 import { PrescriptionEntity } from '../../prescriptions/entities/prescription.entity';
 import { DiaryEntity } from '../../diaries/entities/diary.entity';
+import { NotificationEntity } from '../../notifications/entities/notification.entity';
 
 @Entity('users')
 export class UserEntity extends DefaultEntity {
@@ -120,6 +121,12 @@ export class UserEntity extends DefaultEntity {
     (prescriptionEntity) => prescriptionEntity.belongTo,
   )
   diaries: DiaryEntity[];
+
+  @OneToMany(
+    () => NotificationEntity,
+    (notificationEntity) => notificationEntity.user,
+  )
+  notifications: NotificationEntity[];
 
   @BeforeInsert()
   async hashPassword() {
