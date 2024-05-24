@@ -24,7 +24,9 @@ export class CreateUserDto {
 }
 
 export class CreateAdminDto extends CreateUserDto {
-  @ApiProperty()
+  @ApiProperty({
+    enum: Role,
+  })
   @IsEnum(Role)
   readonly role: Role;
 

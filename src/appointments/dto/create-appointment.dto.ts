@@ -17,7 +17,9 @@ export class CreateApppointmentDto {
   @IsNotEmpty()
   readonly confirmUser: UserEntity;
 
-  @ApiProperty()
+  @ApiProperty({
+    enum: ['pending', 'ongoing', 'declined', 'completed'],
+  })
   @IsNotEmpty()
   @IsEnum(['pending', 'ongoing', 'declined', 'completed'])
   readonly status: 'pending' | 'ongoing' | 'declined' | 'completed';
@@ -29,7 +31,9 @@ export class CreateApppointmentDto {
 }
 
 export class ResponseAppointmentRequestDto {
-  @ApiProperty()
+  @ApiProperty({
+    enum: ['RESCHEDULE', 'ACCEPT', 'DECLINE', 'COMPLETE'],
+  })
   @IsNotEmpty()
   @IsEnum(['RESCHEDULE', 'ACCEPT', 'DECLINE', 'COMPLETE'])
   readonly action: 'RESCHEDULE' | 'ACCEPT' | 'DECLINE' | 'COMPLETE';
