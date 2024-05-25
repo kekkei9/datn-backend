@@ -13,6 +13,7 @@ import { DoctorRequestEntity } from './entities/doctor-request.entity';
 import { FriendRequestEntity } from './entities/friend-request.entity';
 import { UserEntity } from './entities/user.entity';
 import { UsersService } from './services/users.service';
+import { SmsModule } from '../sms/sms.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { UsersService } from './services/users.service';
       NotificationEntity,
       DiaryEntity,
     ]),
+    SmsModule,
   ],
   controllers: [UsersController],
   providers: [UsersService, JwtStrategy],

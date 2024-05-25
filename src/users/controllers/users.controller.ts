@@ -33,7 +33,10 @@ import {
   UpdateUserDto,
 } from '../dto/create-user.dto';
 import { RegisterDoctorRequestDto } from '../dto/doctor-request.dto';
-import { ResponseFriendRequestDto } from '../dto/friend-request.dto';
+import {
+  ResponseFriendRequestDto,
+  SendFriendRequestDto,
+} from '../dto/friend-request.dto';
 import { SearchUserDto } from '../dto/search-user.dto';
 import { UsersService } from '../services/users.service';
 
@@ -90,8 +93,8 @@ export class UsersController {
 
   @ApiBearerAuth('access-token')
   @Get('search')
-  findUserByText(@Query() query: SearchUserDto) {
-    return this.usersService.findUserByText(query.text);
+  findUserByPhoneNumber(@Query() query: SearchUserDto) {
+    return this.usersService.findUserByPhoneNumber(query.text);
   }
 
   @ApiBearerAuth('access-token')
@@ -132,13 +135,21 @@ export class UsersController {
 
   @ApiTags('friend-request')
   @ApiBearerAuth('access-token')
+  @ApiBody({
+    type: SendFriendRequestDto,
+  })
   @Post('friend-request/send/:receiverId')
   sendFriendRequest(
     @Param('receiverId') receiverStringId: string,
     @Request() req,
+    @Body() sendFriendRequestDto: SendFriendRequestDto,
   ) {
     const receiverId = parseInt(receiverStringId);
-    return this.usersService.sendFriendRequest(receiverId, req.user);
+    return this.usersService.sendFriendRequest(
+      receiverId,
+      req.user,
+      sendFriendRequestDto.method,
+    );
   }
 
   @ApiTags('friend-request')
@@ -164,7 +175,7 @@ export class UsersController {
   ) {
     const friendRequestId = parseInt(friendRequestStringId);
     return this.usersService.respondToFriendRequest(
-      responseFriendRequestDto.status,
+      responseFriendRequestDto,
       friendRequestId,
     );
   }

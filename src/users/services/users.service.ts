@@ -1,12 +1,14 @@
 import {
   BadRequestException,
+  HttpException,
+  HttpStatus,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { createHash } from 'crypto';
-import { In, Not, Repository } from 'typeorm';
+import { DeepPartial, In, Not, Repository } from 'typeorm';
 import { Role } from '../../auth/models/roles.model';
 import { PayloadToken } from '../../auth/models/token.model';
 import {
@@ -21,6 +23,8 @@ import {
   FriendRequest_Status,
 } from '../entities/friend-request.interface';
 import { UserEntity } from '../entities/user.entity';
+import SmsService from '../../sms/services/sms.service';
+import { ResponseFriendRequestDto } from '../dto/friend-request.dto';
 
 @Injectable()
 export class UsersService {
@@ -33,6 +37,8 @@ export class UsersService {
 
     @InjectRepository(DoctorRequestEntity)
     private readonly doctorRequestRepository: Repository<DoctorRequestEntity>,
+
+    private readonly smsService: SmsService,
   ) {}
 
   //-------------------------------------COMMON----------------------------------------------
@@ -84,7 +90,7 @@ export class UsersService {
     return await this.userRepository.findOneOrFail({ where: { id } });
   }
 
-  async findUserByText(text: string) {
+  async findUserByPhoneNumber(text: string) {
     return await this.userRepository.find({
       where: {
         phoneNumber: text,
@@ -184,7 +190,11 @@ export class UsersService {
 
   //-------------------------------------FRIEND REQUEST----------------------------------------------
 
-  async sendFriendRequest(receiverId: number, { id: creatorId }: PayloadToken) {
+  async sendFriendRequest(
+    receiverId: number,
+    { id: creatorId }: PayloadToken,
+    method?: 'OTP',
+  ) {
     if (receiverId === creatorId)
       return { error: 'It is not possible to add yourself!' };
 
@@ -196,7 +206,8 @@ export class UsersService {
         error:
           'A friend request has already been sent of received to your account!',
       };
-    return await this.friendRequestRepository.save({
+
+    const saveRequest: DeepPartial<FriendRequestEntity> = {
       creator: {
         id: creatorId,
       },
@@ -204,7 +215,19 @@ export class UsersService {
         id: receiverId,
       },
       status: 'pending',
-    });
+    };
+
+    if (method === 'OTP') {
+      const receiver = await this.findUserById(receiverId);
+
+      const result = await this.smsService.initiatePhoneNumberVerification(
+        receiver.phoneNumber,
+      );
+
+      saveRequest.pinId = result.pinId;
+    }
+
+    return await this.friendRequestRepository.save(saveRequest);
   }
 
   async getFriendRequestStatus(
@@ -236,14 +259,29 @@ export class UsersService {
   }
 
   async respondToFriendRequest(
-    statusResponse: FriendRequest_Status,
+    responseFriendRequestDto: ResponseFriendRequestDto,
     friendRequestId: number,
   ) {
     const friendRequest = await this.getFriendRequestUserById(friendRequestId);
 
+    if (friendRequest.pinId) {
+      if (!responseFriendRequestDto.code) {
+        throw new HttpException('Code is required', HttpStatus.BAD_REQUEST);
+      }
+      //check if the code is correct
+      const isCodeCorrect = await this.smsService.confirmPhoneNumber(
+        friendRequest.pinId,
+        responseFriendRequestDto.code,
+      );
+
+      if (!isCodeCorrect.token) {
+        throw new HttpException('Code is incorrect', HttpStatus.BAD_REQUEST);
+      }
+    }
+
     return await this.friendRequestRepository.save({
       ...friendRequest,
-      status: statusResponse,
+      status: responseFriendRequestDto.status,
     });
   }
 
@@ -253,8 +291,10 @@ export class UsersService {
         receiver: {
           id: currentUserId,
         },
+        status: Not('accepted'),
       },
       relations: ['receiver', 'creator'],
+      select: ['id', 'status', 'creator'],
     });
   }
 
