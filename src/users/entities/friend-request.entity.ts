@@ -19,4 +19,9 @@ export class FriendRequestEntity {
 
   @Column()
   status: FriendRequest_Status;
+
+  @Column({
+    nullable: true,
+  })
+  pinId: FriendRequest_Status;
 }
