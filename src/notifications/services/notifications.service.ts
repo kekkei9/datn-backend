@@ -16,4 +16,19 @@ export class NotificationsService {
       user: { id: user.id },
     });
   }
+
+  getUserNotifications(user: PayloadToken) {
+    return this.notificationRepository.find({
+      where: { user: { id: user.id } },
+      order: { createdAt: 'DESC' },
+    });
+  }
+
+  markNotificationAsRead(id: number) {
+    return this.notificationRepository.update(id, { isRead: true });
+  }
+
+  getAllNotifications() {
+    return this.notificationRepository.find();
+  }
 }

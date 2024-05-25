@@ -10,6 +10,7 @@ import {
   UpdateAppointmentDto,
 } from '../dto/create-appointment.dto';
 import { AppointmentEntity } from '../entities/appointment.entity';
+import { NotificationsService } from '../../notifications/services/notifications.service';
 
 @Injectable()
 export class AppointmentsService {
@@ -18,6 +19,8 @@ export class AppointmentsService {
     private appointmentRepository: Repository<AppointmentEntity>,
 
     private userService: UsersService,
+
+    private notificationsService: NotificationsService,
   ) {}
 
   findAppointmentById(id: number) {
@@ -80,12 +83,25 @@ export class AppointmentsService {
       };
     }
 
-    return this.appointmentRepository.save({
+    const createAppointment = this.appointmentRepository.save({
       beginTimestamp: createAppointmentRequestDto.beginTimestamp,
       confirmUser: user,
       requestUser: currentUser,
       status: 'pending',
     });
+
+    try {
+      this.notificationsService.create(
+        {
+          message: `You have a new appointment request from ${currentUser.firstName} ${currentUser.lastName}`,
+        },
+        user,
+      );
+    } catch (e) {
+      console.error(e);
+    }
+
+    return createAppointment;
   }
 
   getAppointmentsByUser({ id }: PayloadToken) {

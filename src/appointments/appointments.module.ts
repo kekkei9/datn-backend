@@ -5,9 +5,14 @@ import { Module } from '@nestjs/common';
 import { AppointmentsController } from './controllers/appointments.controller';
 import { UsersModule } from '../users/users.module';
 import { JwtStrategy } from '../auth/strategies/jwt.strategy';
+import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
-  imports: [UsersModule, TypeOrmModule.forFeature([AppointmentEntity])],
+  imports: [
+    UsersModule,
+    NotificationsModule,
+    TypeOrmModule.forFeature([AppointmentEntity]),
+  ],
   controllers: [AppointmentsController],
   providers: [AppointmentsService, JwtStrategy],
   exports: [AppointmentsService],
