@@ -6,6 +6,9 @@ import { DoctorRequestEntity } from './users/entities/doctor-request.entity';
 import { AppointmentEntity } from './appointments/entities/appointment.entity';
 import { ConversationEntity } from './chat/models/conversation.entity';
 import { MessageEntity } from './chat/models/message.entity';
+import { PrescriptionEntity } from './prescriptions/entities/prescription.entity';
+import { DiaryEntity } from './diaries/entities/diary.entity';
+import { NotificationEntity } from './notifications/entities/notification.entity';
 
 const options: DataSourceOptions & SeederOptions = {
   type: 'postgres',
@@ -21,6 +24,9 @@ const options: DataSourceOptions & SeederOptions = {
     AppointmentEntity,
     ConversationEntity,
     MessageEntity,
+    PrescriptionEntity,
+    DiaryEntity,
+    NotificationEntity,
   ],
   seeds: ['src/database/seeds/**/*{.ts,.js}'],
   seedTracking: true,
