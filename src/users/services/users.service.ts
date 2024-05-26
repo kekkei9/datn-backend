@@ -25,6 +25,7 @@ import {
 import { UserEntity } from '../entities/user.entity';
 import SmsService from '../../sms/services/sms.service';
 import { ResponseFriendRequestDto } from '../dto/friend-request.dto';
+import { isPhoneNumber } from 'class-validator';
 
 @Injectable()
 export class UsersService {
@@ -42,6 +43,24 @@ export class UsersService {
   ) {}
 
   //-------------------------------------COMMON----------------------------------------------
+
+  async checkPhoneAvailability(phoneNumber: string) {
+    if (!isPhoneNumber('+' + phoneNumber)) {
+      return {
+        status: 'INVALID-PHONE-NUMBER',
+      };
+    }
+
+    const user = await this.userRepository.findOne({
+      where: {
+        phoneNumber,
+      },
+    });
+
+    return {
+      status: !!user ? 'ALREADY-IN-USE' : 'AVAILABLE',
+    };
+  }
 
   async create(
     createUserDto:

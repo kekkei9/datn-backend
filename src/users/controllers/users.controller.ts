@@ -242,4 +242,10 @@ export class UsersController {
       parseInt(doctorRequestStringId),
     );
   }
+
+  @Get('/check-phone-availability/:phoneNumber')
+  @Public()
+  checkPhoneAvailability(@Param('phoneNumber') phoneNumber: string) {
+    return this.usersService.checkPhoneAvailability(phoneNumber);
+  }
 }
