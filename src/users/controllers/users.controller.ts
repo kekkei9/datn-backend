@@ -61,7 +61,7 @@ export class UsersController {
     if (!this.jwtService.decode(token)) {
       throw new HttpException('Invalid token', HttpStatus.BAD_REQUEST);
     }
-    const phoneNumber = this.jwtService.decode(token)['phoneNumber'];
+    const phoneNumber = '+' + this.jwtService.decode(token)['phoneNumber'];
 
     const createdUser = await this.usersService.create({
       phoneNumber,
@@ -80,7 +80,8 @@ export class UsersController {
         },
       });
     }
-    return;
+
+    return createdUser;
   }
 
   @ApiTags('cms')

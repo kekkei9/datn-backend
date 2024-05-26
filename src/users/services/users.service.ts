@@ -45,7 +45,7 @@ export class UsersService {
   //-------------------------------------COMMON----------------------------------------------
 
   async checkPhoneAvailability(phoneNumber: string) {
-    if (!isPhoneNumber('+' + phoneNumber)) {
+    if (!isPhoneNumber(phoneNumber)) {
       return {
         status: 'INVALID-PHONE-NUMBER',
       };

@@ -18,15 +18,12 @@ import SmsService from '../services/sms.service';
 export default class SmsController {
   constructor(private readonly smsService: SmsService) {}
 
-  @ApiBody({
-    type: InitVerificationDto,
-  })
   @Post('phone-verification')
   initiatePhoneNumberVerification(
-    @Body() verificationData: { phoneNumber: string },
+    @Body() initVerificationDto: InitVerificationDto,
   ) {
     return this.smsService.initiatePhoneNumberVerification(
-      verificationData.phoneNumber,
+      initVerificationDto.phoneNumber,
     );
   }
 
