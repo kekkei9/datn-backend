@@ -45,7 +45,7 @@ export class UsersService {
 
   async create(
     createUserDto:
-      | (Omit<CreateUserDto, 'token'> & {
+      | (Omit<CreateUserDto, 'token' | 'refererToken'> & {
           phoneNumber: string;
         })
       | (CreateAdminDto & { phoneNumber: string }),
@@ -189,6 +189,10 @@ export class UsersService {
   }
 
   //-------------------------------------FRIEND REQUEST----------------------------------------------
+
+  createFriendRequest(friendRequest: DeepPartial<FriendRequestEntity>) {
+    return this.friendRequestRepository.save(friendRequest);
+  }
 
   async sendFriendRequest(
     receiverId: number,

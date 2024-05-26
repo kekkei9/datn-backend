@@ -49,20 +49,38 @@ export class UsersController {
     private readonly jwtService: JwtService,
   ) {}
 
+  @Post()
+  @Public()
   @ApiOperation({ summary: 'create a user with patient role' })
   @ApiResponse({
     status: 201,
     type: DefaultColumnsResponse,
   })
-  @Public() // makes the endpoint accessible to all
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    const { token, ...restProps } = createUserDto;
+  async create(@Body() createUserDto: CreateUserDto) {
+    const { token, refererToken, ...restProps } = createUserDto;
     if (!this.jwtService.decode(token)) {
       throw new HttpException('Invalid token', HttpStatus.BAD_REQUEST);
     }
     const phoneNumber = this.jwtService.decode(token)['phoneNumber'];
-    return this.usersService.create({ phoneNumber, ...restProps });
+
+    const createdUser = await this.usersService.create({
+      phoneNumber,
+      ...restProps,
+    });
+
+    if (refererToken) {
+      const refererId = this.jwtService.decode(refererToken)['id'];
+      return this.usersService.createFriendRequest({
+        status: 'accepted',
+        creator: {
+          id: refererId,
+        },
+        receiver: {
+          id: createdUser.id,
+        },
+      });
+    }
+    return;
   }
 
   @ApiTags('cms')
