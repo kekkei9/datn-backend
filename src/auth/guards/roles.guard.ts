@@ -38,10 +38,7 @@ export class RolesGuard implements CanActivate {
   handleRequest(err, user) {
     if (err || !user) {
       throw new HttpException(
-        {
-          status: HttpStatus.UNAUTHORIZED,
-          error: 'This user does not have the required permissions',
-        },
+        'This user does not have the required permissions',
         HttpStatus.UNAUTHORIZED,
       );
     }
