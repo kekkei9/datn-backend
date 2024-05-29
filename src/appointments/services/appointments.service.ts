@@ -16,6 +16,8 @@ import {
 } from '../entities/appointment.entity';
 import { NotificationsService } from '../../notifications/services/notifications.service';
 import { NotificationType } from '../../notifications/entities/notification.entity';
+import dayjs from 'dayjs';
+import { ReportsService } from '../../reports/services/reports.service';
 
 @Injectable()
 export class AppointmentsService {
@@ -26,6 +28,8 @@ export class AppointmentsService {
     private userService: UsersService,
 
     private notificationsService: NotificationsService,
+
+    private reportsService: ReportsService,
   ) {}
 
   findAppointmentById(id: number) {
@@ -157,6 +161,13 @@ export class AppointmentsService {
     }
 
     if (action === ResponseAppointmentAction.DECLINE) {
+      if (appointment.beginTimestamp - dayjs().unix() < 24 * 60 * 60 * 1000) {
+        this.reportsService.create({
+          reason:
+            'Declined appointment request less than 24 hours before the appointment',
+          userId: user.id,
+        });
+      }
       return this.update(appointmentId, { status: AppointmentStatus.DECLINED });
     }
 

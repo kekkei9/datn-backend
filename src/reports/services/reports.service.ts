@@ -10,7 +10,7 @@ export class ReportsService {
     private reportRepository: Repository<ReportEntity>,
   ) {}
 
-  create({ reason, userId }: CreateReportDto, createdBy: PayloadToken) {
+  create({ reason, userId }: CreateReportDto, createdBy?: PayloadToken) {
     return this.reportRepository.save({
       reason,
       belongTo: { id: userId },
