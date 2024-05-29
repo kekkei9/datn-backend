@@ -14,6 +14,7 @@ import { FriendRequestEntity } from './entities/friend-request.entity';
 import { UserEntity } from './entities/user.entity';
 import { UsersService } from './services/users.service';
 import { SmsModule } from '../sms/sms.module';
+import { ReportEntity } from '../reports/entities/report.entity';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { SmsModule } from '../sms/sms.module';
       PrescriptionEntity,
       NotificationEntity,
       DiaryEntity,
+      ReportEntity,
     ]),
     SmsModule,
   ],

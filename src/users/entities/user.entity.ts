@@ -8,6 +8,7 @@ import {
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
+  VirtualColumn,
 } from 'typeorm';
 import { Role } from '../../auth/models/roles.model';
 import { DefaultEntity } from '../../utils/entities/default.entity';
@@ -19,6 +20,7 @@ import { ConversationEntity } from '../../chat/models/conversation.entity';
 import { PrescriptionEntity } from '../../prescriptions/entities/prescription.entity';
 import { DiaryEntity } from '../../diaries/entities/diary.entity';
 import { NotificationEntity } from '../../notifications/entities/notification.entity';
+import { ReportEntity } from '../../reports/entities/report.entity';
 
 @Entity('users')
 export class UserEntity extends DefaultEntity {
@@ -134,6 +136,25 @@ export class UserEntity extends DefaultEntity {
     (notificationEntity) => notificationEntity.belongTo,
   )
   notifications: NotificationEntity[];
+
+  @OneToMany(
+    () => ReportEntity,
+    (notificationEntity) => notificationEntity.belongTo,
+  )
+  createdReports: ReportEntity[];
+
+  @OneToMany(
+    () => ReportEntity,
+    (notificationEntity) => notificationEntity.belongTo,
+  )
+  reports: ReportEntity[];
+
+  @VirtualColumn({
+    type: 'int',
+    query: (entity) =>
+      `SELECT SUM(balance) FROM account WHERE ownerId = ${entity}.id AND deleted_at IS NULL`,
+  })
+  reportsCount: number;
 
   @BeforeInsert()
   @BeforeUpdate()

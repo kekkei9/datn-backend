@@ -13,6 +13,7 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { PrescriptionsModule } from './prescriptions/prescriptions.module';
 import { SmsModule } from './sms/sms.module';
 import { UsersModule } from './users/users.module';
+import { ReportsModule } from './reports/reports.module';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { UsersModule } from './users/users.module';
     PrescriptionsModule,
     DiariesModule,
     NotificationsModule,
+    ReportsModule,
   ],
   controllers: [],
   providers: [],
