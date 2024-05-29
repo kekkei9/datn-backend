@@ -1,7 +1,10 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PayloadToken } from '../../auth/models/token.model';
-import { NotificationEntity } from '../entities/notification.entity';
+import {
+  NotificationEntity,
+  NotificationType,
+} from '../entities/notification.entity';
 
 export class NotificationsService {
   constructor(
@@ -13,15 +16,18 @@ export class NotificationsService {
     message,
     belongTo,
     createdBy,
+    type,
   }: {
     message: string;
     belongTo: PayloadToken;
     createdBy: PayloadToken;
+    type: NotificationType;
   }) {
     return this.notificationRepository.save({
       message,
       belongTo,
       createdBy,
+      type,
     });
   }
 

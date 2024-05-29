@@ -15,6 +15,7 @@ import {
   AppointmentStatus,
 } from '../entities/appointment.entity';
 import { NotificationsService } from '../../notifications/services/notifications.service';
+import { NotificationType } from '../../notifications/entities/notification.entity';
 
 @Injectable()
 export class AppointmentsService {
@@ -95,9 +96,10 @@ export class AppointmentsService {
     });
 
     this.notificationsService.create({
-      message: `You have a new appointment request from ${currentUser.firstName} ${currentUser.lastName}`,
+      message: `You have a new appointment request from {{createdBy.firstName}} {{createdBy.lastName}`,
       belongTo: user,
       createdBy: currentUser,
+      type: NotificationType.APPOINTMENT,
     });
 
     return createAppointment;
