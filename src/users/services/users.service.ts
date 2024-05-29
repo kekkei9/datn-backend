@@ -26,6 +26,7 @@ import { UserEntity } from '../entities/user.entity';
 import SmsService from '../../sms/services/sms.service';
 import { ResponseFriendRequestDto } from '../dto/friend-request.dto';
 import { isPhoneNumber } from 'class-validator';
+import { DeactivateUserDto } from '../dto/deactivate-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -62,6 +63,10 @@ export class UsersService {
     };
   }
 
+  deactivateUser(userId: number, deactivateUserDto: DeactivateUserDto) {
+    return this.userRepository.update(userId, deactivateUserDto);
+  }
+
   async create(
     createUserDto:
       | (Omit<CreateUserDto, 'token' | 'refererToken'> & {
@@ -94,7 +99,7 @@ export class UsersService {
 
   async findByPhoneNumberAndGetPassword(phoneNumber: string) {
     return await this.userRepository.findOne({
-      select: ['id', 'password', 'role'],
+      select: ['id', 'password', 'role', 'deactivated'],
       where: { phoneNumber },
     });
   }

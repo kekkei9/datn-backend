@@ -38,6 +38,7 @@ import {
 } from '../dto/friend-request.dto';
 import { SearchUserDto } from '../dto/search-user.dto';
 import { UsersService } from '../services/users.service';
+import { DeactivateUserDto } from '../dto/deactivate-user.dto';
 
 @ApiTags('users') // put the name of the controller in swagger
 @Controller('users')
@@ -238,5 +239,18 @@ export class UsersController {
   @Public()
   checkPhoneAvailability(@Param('phoneNumber') phoneNumber: string) {
     return this.usersService.checkPhoneAvailability(phoneNumber);
+  }
+
+  @Post('deactivate/:userId')
+  @ApiBearerAuth('access-token')
+  @Roles(Role.ADMIN)
+  deactivateUser(
+    @Param('userId') userStringId: string,
+    @Body() deactivateUserDto: DeactivateUserDto,
+  ) {
+    return this.usersService.deactivateUser(
+      parseInt(userStringId),
+      deactivateUserDto,
+    );
   }
 }

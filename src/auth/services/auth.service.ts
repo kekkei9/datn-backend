@@ -20,6 +20,7 @@ export class AuthService {
       password: string;
       id: number;
       role: string;
+      deactivated: boolean;
     } = await this.usersService.findByPhoneNumberAndGetPassword(phoneNumber);
 
     if (user) {
