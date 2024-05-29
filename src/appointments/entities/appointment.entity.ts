@@ -1,6 +1,13 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UserEntity } from '../../users/entities/user.entity';
 
+export enum AppointmentStatus {
+  PENDING = 'pending',
+  ONGOING = 'ongoing',
+  DECLINED = 'declined',
+  COMPLETED = 'completed',
+}
+
 @Entity('appointment')
 export class AppointmentEntity {
   @PrimaryGeneratedColumn()
@@ -12,8 +19,10 @@ export class AppointmentEntity {
   @ManyToOne(() => UserEntity, (userEntity) => userEntity.confirmedAppointments)
   confirmUser: UserEntity;
 
-  @Column()
-  status: 'pending' | 'ongoing' | 'declined' | 'completed';
+  @Column({
+    enum: AppointmentStatus,
+  })
+  status: AppointmentStatus;
 
   @Column()
   beginTimestamp: number;

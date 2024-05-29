@@ -1,12 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsEnum,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 import { UserEntity } from '../../users/entities/user.entity';
+import { AppointmentStatus } from '../entities/appointment.entity';
 
 export class CreateApppointmentDto {
   @ApiProperty()
@@ -18,11 +13,11 @@ export class CreateApppointmentDto {
   readonly confirmUser: UserEntity;
 
   @ApiProperty({
-    enum: ['pending', 'ongoing', 'declined', 'completed'],
+    enum: AppointmentStatus,
   })
   @IsNotEmpty()
-  @IsEnum(['pending', 'ongoing', 'declined', 'completed'])
-  readonly status: 'pending' | 'ongoing' | 'declined' | 'completed';
+  @IsEnum(AppointmentStatus)
+  readonly status: AppointmentStatus;
 
   @ApiProperty()
   @IsNumber()
@@ -30,13 +25,20 @@ export class CreateApppointmentDto {
   readonly beginTimestamp: number;
 }
 
+export enum ResponseAppointmentAction {
+  RESCHEDULE = 'reschedule',
+  ACCEPT = 'accept',
+  DECLINE = 'decline',
+  COMPLETE = 'complete',
+}
+
 export class ResponseAppointmentRequestDto {
   @ApiProperty({
-    enum: ['RESCHEDULE', 'ACCEPT', 'DECLINE', 'COMPLETE'],
+    enum: ResponseAppointmentAction,
   })
   @IsNotEmpty()
-  @IsEnum(['RESCHEDULE', 'ACCEPT', 'DECLINE', 'COMPLETE'])
-  readonly action: 'RESCHEDULE' | 'ACCEPT' | 'DECLINE' | 'COMPLETE';
+  @IsEnum(ResponseAppointmentAction)
+  readonly action: ResponseAppointmentAction;
 
   @ApiProperty()
   @IsNumber()
@@ -53,8 +55,8 @@ export class CreateAppointmentRequestDto {
 
 export class UpdateAppointmentDto {
   @ApiProperty()
-  @IsString()
-  readonly status?: 'pending' | 'ongoing' | 'declined' | 'completed';
+  @IsEnum(AppointmentStatus)
+  readonly status?: AppointmentStatus;
 
   @ApiProperty()
   @IsNumber()

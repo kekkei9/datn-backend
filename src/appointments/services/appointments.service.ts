@@ -6,10 +6,14 @@ import { PayloadToken } from '../../auth/models/token.model';
 import { UsersService } from '../../users/services/users.service';
 import {
   CreateAppointmentRequestDto,
+  ResponseAppointmentAction,
   ResponseAppointmentRequestDto,
   UpdateAppointmentDto,
 } from '../dto/create-appointment.dto';
-import { AppointmentEntity } from '../entities/appointment.entity';
+import {
+  AppointmentEntity,
+  AppointmentStatus,
+} from '../entities/appointment.entity';
 import { NotificationsService } from '../../notifications/services/notifications.service';
 
 @Injectable()
@@ -44,7 +48,7 @@ export class AppointmentsService {
   getAppointmentRequests() {
     return this.appointmentRepository.find({
       where: {
-        status: 'pending',
+        status: AppointmentStatus.PENDING,
       },
       relations: ['confirmUser', 'requestUser'],
     });
@@ -56,7 +60,7 @@ export class AppointmentsService {
         confirmUser: {
           id,
         },
-        status: 'pending',
+        status: AppointmentStatus.PENDING,
       },
       relations: ['confirmUser', 'requestUser'],
     });
@@ -87,19 +91,14 @@ export class AppointmentsService {
       beginTimestamp: createAppointmentRequestDto.beginTimestamp,
       confirmUser: user,
       requestUser: currentUser,
-      status: 'pending',
+      status: AppointmentStatus.PENDING,
     });
 
-    try {
-      this.notificationsService.create(
-        {
-          message: `You have a new appointment request from ${currentUser.firstName} ${currentUser.lastName}`,
-        },
-        user,
-      );
-    } catch (e) {
-      console.error(e);
-    }
+    this.notificationsService.create({
+      message: `You have a new appointment request from ${currentUser.firstName} ${currentUser.lastName}`,
+      belongTo: user,
+      createdBy: currentUser,
+    });
 
     return createAppointment;
   }
@@ -111,13 +110,13 @@ export class AppointmentsService {
           confirmUser: {
             id,
           },
-          status: 'ongoing',
+          status: AppointmentStatus.ONGOING,
         },
         {
           requestUser: {
             id,
           },
-          status: 'ongoing',
+          status: AppointmentStatus.ONGOING,
         },
       ],
       relations: ['confirmUser', 'requestUser'],
@@ -139,25 +138,27 @@ export class AppointmentsService {
       return { message: 'You cannot respond to this appointment request' };
     }
 
-    if (action === 'COMPLETE') {
-      return this.update(appointmentId, { status: 'completed' });
+    if (action === ResponseAppointmentAction.COMPLETE) {
+      return this.update(appointmentId, {
+        status: AppointmentStatus.COMPLETED,
+      });
     }
 
     if (user.id !== appointment.confirmUser.id)
       return { message: 'You cannot respond to this appointment request' };
 
-    if (appointment.status !== 'pending')
+    if (appointment.status !== AppointmentStatus.PENDING)
       return { message: 'Appointment request is not pending' };
 
-    if (action === 'ACCEPT') {
-      return this.update(appointmentId, { status: 'ongoing' });
+    if (action === ResponseAppointmentAction.ACCEPT) {
+      return this.update(appointmentId, { status: AppointmentStatus.ONGOING });
     }
 
-    if (action === 'DECLINE') {
-      return this.update(appointmentId, { status: 'declined' });
+    if (action === ResponseAppointmentAction.DECLINE) {
+      return this.update(appointmentId, { status: AppointmentStatus.DECLINED });
     }
 
-    if (action === 'RESCHEDULE') {
+    if (action === ResponseAppointmentAction.RESCHEDULE) {
       if (!beginTimestamp) {
         return { message: 'Begin timestamp is required' };
       }
@@ -194,7 +195,7 @@ export class AppointmentsService {
       beginTimestamp,
       confirmUser,
       requestUser,
-      status: 'ongoing',
+      status: AppointmentStatus.ONGOING,
     });
   }
 }

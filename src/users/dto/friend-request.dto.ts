@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { FriendRequest_Status } from '../entities/friend-request.interface';
 
 export class ResponseFriendRequestDto {
@@ -26,7 +26,7 @@ export class SendFriendRequestDto {
   @ApiProperty({
     enum: ['OTP'],
   })
-  @IsString()
+  @IsEnum(['OTP'])
   @IsOptional()
   readonly method: 'OTP';
 }

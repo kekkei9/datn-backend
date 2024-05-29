@@ -1,8 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { NotificationEntity } from '../entities/notification.entity';
 import { Repository } from 'typeorm';
-import { CreateNotificationDto } from '../dto/create-notification.dto';
 import { PayloadToken } from '../../auth/models/token.model';
+import { NotificationEntity } from '../entities/notification.entity';
 
 export class NotificationsService {
   constructor(
@@ -10,16 +9,25 @@ export class NotificationsService {
     private notificationRepository: Repository<NotificationEntity>,
   ) {}
 
-  create({ message }: CreateNotificationDto, user: PayloadToken) {
+  create({
+    message,
+    belongTo,
+    createdBy,
+  }: {
+    message: string;
+    belongTo: PayloadToken;
+    createdBy: PayloadToken;
+  }) {
     return this.notificationRepository.save({
       message,
-      user: { id: user.id },
+      belongTo,
+      createdBy,
     });
   }
 
   getUserNotifications(user: PayloadToken) {
     return this.notificationRepository.find({
-      where: { user: { id: user.id } },
+      where: { belongTo: { id: user.id } },
       order: { createdAt: 'DESC' },
     });
   }

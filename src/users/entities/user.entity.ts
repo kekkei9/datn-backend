@@ -124,7 +124,13 @@ export class UserEntity extends DefaultEntity {
 
   @OneToMany(
     () => NotificationEntity,
-    (notificationEntity) => notificationEntity.user,
+    (notificationEntity) => notificationEntity.belongTo,
+  )
+  createdNotifications: NotificationEntity[];
+
+  @OneToMany(
+    () => NotificationEntity,
+    (notificationEntity) => notificationEntity.belongTo,
   )
   notifications: NotificationEntity[];
 
