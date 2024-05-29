@@ -1,16 +1,16 @@
 import {
-  CheckVerificationDto,
-  InitVerificationDto,
-} from './../dto/check-verification.dto';
-import {
   Body,
   ClassSerializerInterceptor,
   Controller,
   Post,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import SmsService from '../services/sms.service';
+import {
+  CheckVerificationDto,
+  InitVerificationDto,
+} from './../dto/check-verification.dto';
 
 @ApiTags('sms')
 @Controller('sms')
@@ -27,13 +27,8 @@ export default class SmsController {
     );
   }
 
-  @ApiBody({
-    type: CheckVerificationDto,
-  })
   @Post('check-verification-code')
-  checkVerificationCode(
-    @Body() verificationData: { pinId: string; code: string },
-  ) {
+  checkVerificationCode(@Body() verificationData: CheckVerificationDto) {
     return this.smsService.confirmPhoneNumber(
       verificationData.pinId,
       verificationData.code,

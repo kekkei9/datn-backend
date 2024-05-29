@@ -9,7 +9,7 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { Role } from '../../auth/models/roles.model';
@@ -64,22 +64,20 @@ export class PrescriptionsController {
   }
 
   @Post()
-  @ApiBody({ type: CreatePrescriptionDto })
   @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   @Roles(Role.DOCTOR, Role.ADMIN)
-  createAPrescription(@Request() req, @Body() body) {
+  createAPrescription(@Request() req, @Body() body: CreatePrescriptionDto) {
     return this.prescriptionsService.create(body, req.user);
   }
 
   @Patch('/:prescriptionId')
-  @ApiBody({ type: PatchPrescriptionDto })
   @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   @Roles(Role.DOCTOR, Role.ADMIN)
   patchPrescription(
     @Request() req,
-    @Body() body,
+    @Body() body: PatchPrescriptionDto,
     @Param('prescriptionId') prescriptionStringId: string,
   ) {
     return this.prescriptionsService.patch(

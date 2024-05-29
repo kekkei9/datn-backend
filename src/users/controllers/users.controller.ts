@@ -16,7 +16,6 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import {
   ApiBearerAuth,
-  ApiBody,
   ApiOperation,
   ApiResponse,
   ApiTags,
@@ -154,9 +153,6 @@ export class UsersController {
 
   @ApiTags('friend-request')
   @ApiBearerAuth('access-token')
-  @ApiBody({
-    type: SendFriendRequestDto,
-  })
   @Post('friend-request/send/:receiverId')
   sendFriendRequest(
     @Param('receiverId') receiverStringId: string,
@@ -183,9 +179,6 @@ export class UsersController {
   }
 
   @ApiTags('friend-request')
-  @ApiBody({
-    type: ResponseFriendRequestDto,
-  })
   @ApiBearerAuth('access-token')
   @Put('friend-request/response/:friendRequestId')
   respondToFriendRequest(
@@ -214,14 +207,11 @@ export class UsersController {
   }
 
   @ApiTags('doctor-register')
-  @ApiBody({
-    type: RegisterDoctorRequestDto,
-  })
   @ApiBearerAuth('access-token')
   @Roles(Role.PATIENT)
   @Post('doctor-register')
-  registerToBeADoctor(@Request() req, @Body() metadata: Record<string, any>) {
-    return this.usersService.registerToBeADoctor(req.user, metadata);
+  registerToBeADoctor(@Request() req, @Body() body: RegisterDoctorRequestDto) {
+    return this.usersService.registerToBeADoctor(req.user, body);
   }
 
   @ApiTags('doctor-register', 'cms')

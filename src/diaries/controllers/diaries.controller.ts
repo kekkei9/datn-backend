@@ -9,7 +9,7 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { Role } from '../../auth/models/roles.model';
@@ -55,22 +55,20 @@ export class DiariesController {
   }
 
   @Post()
-  @ApiBody({ type: CreateDiaryDto })
   @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   @Roles(Role.DOCTOR, Role.ADMIN)
-  createADiary(@Request() req, @Body() body) {
+  createADiary(@Request() req, @Body() body: CreateDiaryDto) {
     return this.diariesService.create(body, req.user);
   }
 
   @Patch('/:diaryId')
-  @ApiBody({ type: PatchDiaryDto })
   @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   @Roles(Role.DOCTOR, Role.ADMIN)
   patchDiary(
     @Request() req,
-    @Body() body,
+    @Body() body: PatchDiaryDto,
     @Param('diaryId') diaryStringId: string,
   ) {
     return this.diariesService.patch(body, Number(diaryStringId), req.user);
