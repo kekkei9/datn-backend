@@ -105,8 +105,33 @@ export class UsersService {
     });
   }
 
-  async findUserById(id: number) {
-    return await this.userRepository.findOneOrFail({ where: { id } });
+  findUserById(id: number) {
+    return this.userRepository.findOneOrFail({ where: { id } });
+  }
+
+  async forgotPassword(phoneNumber: string) {
+    const foundUserWithPhoneNumber = await this.userRepository.findOne({
+      where: {
+        phoneNumber,
+      },
+    });
+
+    if (!foundUserWithPhoneNumber) {
+      throw new NotFoundException('User with this phone number does not exist');
+    }
+
+    return this.smsService.initiatePhoneNumberVerification(phoneNumber);
+  }
+
+  resetPassword(phoneNumber: string, newPassword: string) {
+    return this.userRepository.update(
+      {
+        phoneNumber,
+      },
+      {
+        password: newPassword,
+      },
+    );
   }
 
   async findUserByPhoneNumber(text: string) {

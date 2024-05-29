@@ -1,6 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import {
   BeforeInsert,
+  BeforeUpdate,
   Column,
   Entity,
   ManyToMany,
@@ -135,6 +136,7 @@ export class UserEntity extends DefaultEntity {
   notifications: NotificationEntity[];
 
   @BeforeInsert()
+  @BeforeUpdate()
   async hashPassword() {
     if (this.password) {
       this.password = await bcrypt.hash(this.password, 10);

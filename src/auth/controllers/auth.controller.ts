@@ -1,7 +1,10 @@
 import {
+  Body,
   Controller,
   Get,
   HttpCode,
+  HttpException,
+  HttpStatus,
   Post,
   Req,
   Request,
@@ -19,6 +22,11 @@ import { LocalAuthGuard } from '../guards/local-auth.guard';
 import { PayloadToken } from '../models/token.model';
 import { AuthService } from '../services/auth.service';
 import { UsersService } from '../../users/services/users.service';
+import {
+  ForgotPasswordDto,
+  ResetPasswordDto,
+} from '../dto/forgot-password.dto';
+import { JwtService } from '@nestjs/jwt';
 
 type AuthorizedRequest = Express.Request & {
   headers: { authorization: string };
@@ -31,6 +39,7 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
   ) {}
 
   @ApiBody({ type: LoginDto })
@@ -64,5 +73,19 @@ export class AuthController {
   @Get('me')
   getMyAccountInformation(@Request() req: { user: PayloadToken }) {
     return this.usersService.findUserById(req.user.id);
+  }
+
+  @Post('forgot-password')
+  forgotPassword(@Body() body: ForgotPasswordDto) {
+    return this.usersService.forgotPassword(body.phoneNumber);
+  }
+
+  @Post('reset-password')
+  resetPassword(@Body() { token, newPassword }: ResetPasswordDto) {
+    if (!this.jwtService.decode(token)) {
+      throw new HttpException('Invalid token', HttpStatus.BAD_REQUEST);
+    }
+    const phoneNumber = '+' + this.jwtService.decode(token)['phoneNumber'];
+    return this.usersService.resetPassword(phoneNumber, newPassword);
   }
 }
