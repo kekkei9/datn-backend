@@ -23,6 +23,10 @@ export class NotificationEntity extends DefaultEntity {
   @Column()
   message: string;
 
+  //represents reference id number ie: appointmentId, diaryId, prescriptionId, ...
+  @Column()
+  referenceId: number;
+
   @Column({
     enum: NotificationType,
   })

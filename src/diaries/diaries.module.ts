@@ -4,9 +4,11 @@ import { DiariesService } from './services/diaries.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DiaryEntity } from './entities/diary.entity';
 import { UsersModule } from '../users/users.module';
+import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
   imports: [
+    NotificationsModule,
     TypeOrmModule.forFeature([DiaryEntity]),
     forwardRef(() => UsersModule),
   ],

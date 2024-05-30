@@ -15,6 +15,7 @@ import { UserEntity } from './entities/user.entity';
 import { UsersService } from './services/users.service';
 import { SmsModule } from '../sms/sms.module';
 import { ReportEntity } from '../reports/entities/report.entity';
+import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { ReportEntity } from '../reports/entities/report.entity';
       ReportEntity,
     ]),
     SmsModule,
+    NotificationsModule,
   ],
   controllers: [UsersController],
   providers: [UsersService, JwtStrategy],

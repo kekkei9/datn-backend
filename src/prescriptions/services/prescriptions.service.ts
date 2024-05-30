@@ -9,6 +9,8 @@ import {
 } from '../dto/create-prescription.dto';
 import { UsersService } from '../../users/services/users.service';
 import { Role } from '../../auth/models/roles.model';
+import { NotificationType } from '../../notifications/entities/notification.entity';
+import { NotificationsService } from '../../notifications/services/notifications.service';
 
 @Injectable()
 export class PrescriptionsService {
@@ -17,6 +19,8 @@ export class PrescriptionsService {
     private prescriptionRepository: Repository<PrescriptionEntity>,
 
     private usersService: UsersService,
+
+    private notificationsService: NotificationsService,
   ) {}
 
   async create(prescription: CreatePrescriptionDto, user: PayloadToken) {
@@ -31,7 +35,7 @@ export class PrescriptionsService {
       );
     }
 
-    return this.prescriptionRepository.save({
+    const createdPrescription = await this.prescriptionRepository.save({
       data,
       createdBy: {
         id: user.id,
@@ -40,6 +44,20 @@ export class PrescriptionsService {
         id: belongTo,
       },
     });
+
+    this.notificationsService.create({
+      belongTo: {
+        id: belongTo,
+      },
+      createdBy: {
+        id: user.id,
+      },
+      message: 'Diary created',
+      referenceId: createdPrescription.id,
+      type: NotificationType.PRESCRIPTION,
+    });
+
+    return createdPrescription;
   }
 
   async patch(

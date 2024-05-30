@@ -27,6 +27,8 @@ import SmsService from '../../sms/services/sms.service';
 import { ResponseFriendRequestDto } from '../dto/friend-request.dto';
 import { isPhoneNumber } from 'class-validator';
 import { DeactivateUserDto } from '../dto/deactivate-user.dto';
+import { NotificationsService } from '../../notifications/services/notifications.service';
+import { NotificationType } from '../../notifications/entities/notification.entity';
 
 @Injectable()
 export class UsersService {
@@ -41,6 +43,8 @@ export class UsersService {
     private readonly doctorRequestRepository: Repository<DoctorRequestEntity>,
 
     private readonly smsService: SmsService,
+
+    private notificationsService: NotificationsService,
   ) {}
 
   //-------------------------------------COMMON----------------------------------------------
@@ -282,7 +286,17 @@ export class UsersService {
       saveRequest.pinId = result.pinId;
     }
 
-    return await this.friendRequestRepository.save(saveRequest);
+    const savedRequest = await this.friendRequestRepository.save(saveRequest);
+
+    this.notificationsService.create({
+      message: 'You have a new friend request!',
+      belongTo: { id: receiverId },
+      createdBy: { id: creatorId },
+      type: NotificationType.FRIEND,
+      referenceId: savedRequest.id,
+    });
+
+    return savedRequest;
   }
 
   async getFriendRequestStatus(

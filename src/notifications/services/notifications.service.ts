@@ -17,17 +17,20 @@ export class NotificationsService {
     belongTo,
     createdBy,
     type,
+    referenceId,
   }: {
     message: string;
-    belongTo: PayloadToken;
-    createdBy: PayloadToken;
+    belongTo: { id: number };
+    createdBy: { id: number };
     type: NotificationType;
+    referenceId: number;
   }) {
     return this.notificationRepository.save({
       message,
       belongTo,
       createdBy,
       type,
+      referenceId,
     });
   }
 

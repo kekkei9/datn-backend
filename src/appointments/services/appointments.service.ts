@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Role } from '../../auth/models/roles.model';
@@ -92,7 +97,7 @@ export class AppointmentsService {
       };
     }
 
-    const createAppointment = this.appointmentRepository.save({
+    const createdAppointment = await this.appointmentRepository.save({
       beginTimestamp: createAppointmentRequestDto.beginTimestamp,
       confirmUser: user,
       requestUser: currentUser,
@@ -100,13 +105,14 @@ export class AppointmentsService {
     });
 
     this.notificationsService.create({
-      message: `You have a new appointment request from {{createdBy.firstName}} {{createdBy.lastName}`,
+      message: `You have a new appointment request from ${currentUser.firstName} ${currentUser.lastName}`,
       belongTo: user,
       createdBy: currentUser,
       type: NotificationType.APPOINTMENT,
+      referenceId: createdAppointment.id,
     });
 
-    return createAppointment;
+    return createdAppointment;
   }
 
   getAppointmentsByUser({ id }: PayloadToken) {
@@ -141,7 +147,9 @@ export class AppointmentsService {
         user.id,
       )
     ) {
-      return { message: 'You cannot respond to this appointment request' };
+      throw new ForbiddenException(
+        'You cannot respond to this appointment request',
+      );
     }
 
     if (action === ResponseAppointmentAction.COMPLETE) {
@@ -151,10 +159,12 @@ export class AppointmentsService {
     }
 
     if (user.id !== appointment.confirmUser.id)
-      return { message: 'You cannot respond to this appointment request' };
+      throw new ForbiddenException(
+        'You cannot respond to this appointment request',
+      );
 
     if (appointment.status !== AppointmentStatus.PENDING)
-      return { message: 'Appointment request is not pending' };
+      throw new ForbiddenException('Appointment request is not pending');
 
     if (action === ResponseAppointmentAction.ACCEPT) {
       return this.update(appointmentId, { status: AppointmentStatus.ONGOING });
@@ -173,10 +183,10 @@ export class AppointmentsService {
 
     if (action === ResponseAppointmentAction.RESCHEDULE) {
       if (!beginTimestamp) {
-        return { message: 'Begin timestamp is required' };
+        throw new BadRequestException('Begin timestamp is required');
       }
       if (user.id !== appointment.confirmUser.id) {
-        return { message: 'You cannot reschedule this appointment' };
+        throw new ForbiddenException('You cannot reschedule this appointment');
       }
       return this.update(appointmentId, {
         beginTimestamp,

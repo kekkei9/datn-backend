@@ -6,6 +6,8 @@ import { PayloadToken } from '../../auth/models/token.model';
 import { CreateDiaryDto, PatchDiaryDto } from '../dto/create-diary.dto';
 import { UsersService } from '../../users/services/users.service';
 import { Role } from '../../auth/models/roles.model';
+import { NotificationsService } from '../../notifications/services/notifications.service';
+import { NotificationType } from '../../notifications/entities/notification.entity';
 
 @Injectable()
 export class DiariesService {
@@ -14,6 +16,8 @@ export class DiariesService {
     private diaryRepository: Repository<DiaryEntity>,
 
     private usersService: UsersService,
+
+    private notificationsService: NotificationsService,
   ) {}
 
   async create(diary: CreateDiaryDto, user: PayloadToken) {
@@ -28,7 +32,7 @@ export class DiariesService {
       );
     }
 
-    return this.diaryRepository.save({
+    const createdDiary = await this.diaryRepository.save({
       data,
       createdBy: {
         id: user.id,
@@ -37,6 +41,20 @@ export class DiariesService {
         id: belongTo,
       },
     });
+
+    this.notificationsService.create({
+      belongTo: {
+        id: belongTo,
+      },
+      createdBy: {
+        id: user.id,
+      },
+      message: 'Diary created',
+      referenceId: createdDiary.id,
+      type: NotificationType.DIARY,
+    });
+
+    return createdDiary;
   }
 
   async patch({ data }: PatchDiaryDto, diaryId: number, user: PayloadToken) {
