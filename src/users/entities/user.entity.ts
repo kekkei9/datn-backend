@@ -43,6 +43,11 @@ export class UserEntity extends DefaultEntity {
   refreshToken: string;
 
   @Column({
+    nullable: true,
+  })
+  avatar: string;
+
+  @Column({
     name: 'first_name',
   })
   firstName: string;

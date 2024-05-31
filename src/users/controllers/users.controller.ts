@@ -11,11 +11,15 @@ import {
   Put,
   Query,
   Request,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import {
   ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
   ApiOperation,
   ApiResponse,
   ApiTags,
@@ -39,6 +43,7 @@ import {
 import { SearchUserDto } from '../dto/search-user.dto';
 import { UsersService } from '../services/users.service';
 import { DeactivateUserDto } from '../dto/deactivate-user.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('users') // put the name of the controller in swagger
 @Controller('users')
@@ -241,6 +246,7 @@ export class UsersController {
     return this.usersService.checkPhoneAvailability(phoneNumber);
   }
 
+  @ApiTags('cms')
   @Post('deactivate/:userId')
   @ApiBearerAuth('access-token')
   @Roles(Role.ADMIN)
@@ -252,5 +258,24 @@ export class UsersController {
       parseInt(userStringId),
       deactivateUserDto,
     );
+  }
+
+  @Post('upload-avatar')
+  @ApiBearerAuth('access-token')
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @UseInterceptors(FileInterceptor('file'))
+  uploadAvatar(@Request() req, @UploadedFile() file: Express.Multer.File) {
+    return this.usersService.uploadAvatar(req.user, file);
   }
 }

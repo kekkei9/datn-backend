@@ -29,6 +29,7 @@ import { isPhoneNumber } from 'class-validator';
 import { DeactivateUserDto } from '../dto/deactivate-user.dto';
 import { NotificationsService } from '../../notifications/services/notifications.service';
 import { NotificationType } from '../../notifications/entities/notification.entity';
+import { ImageService } from '../../image/services/image.service';
 
 @Injectable()
 export class UsersService {
@@ -45,6 +46,8 @@ export class UsersService {
     private readonly smsService: SmsService,
 
     private notificationsService: NotificationsService,
+
+    private readonly imageService: ImageService,
   ) {}
 
   //-------------------------------------COMMON----------------------------------------------
@@ -409,5 +412,11 @@ export class UsersService {
     //set user role to doctor
     await this.userRepository.update(doctorRequest.id, { role: Role.DOCTOR });
     return this.doctorRequestRepository.remove(doctorRequest);
+  }
+
+  async uploadAvatar(user: PayloadToken, avatar: Express.Multer.File) {
+    const { imagePath } = await this.imageService.uploadImage(avatar);
+
+    return this.userRepository.update(user.id, { avatar: imagePath });
   }
 }

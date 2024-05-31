@@ -9,11 +9,12 @@ import config from './config';
 import { DiariesModule } from './diaries/diaries.module';
 import { DrugsModule } from './drugs/drugs.module';
 import { enviroments } from './environments';
+import { ImageModule } from './image/image.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { PrescriptionsModule } from './prescriptions/prescriptions.module';
+import { ReportsModule } from './reports/reports.module';
 import { SmsModule } from './sms/sms.module';
 import { UsersModule } from './users/users.module';
-import { ReportsModule } from './reports/reports.module';
 
 @Module({
   imports: [
@@ -61,6 +62,7 @@ import { ReportsModule } from './reports/reports.module';
     DiariesModule,
     NotificationsModule,
     ReportsModule,
+    ImageModule,
   ],
   controllers: [],
   providers: [],
