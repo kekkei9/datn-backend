@@ -7,16 +7,16 @@ import {
   Patch,
   Post,
   Request,
+  UploadedFiles,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { Role } from '../../auth/models/roles.model';
-import {
-  CreatePrescriptionDto,
-  PatchPrescriptionDto,
-} from '../dto/create-prescription.dto';
+import { PatchPrescriptionDto } from '../dto/create-prescription.dto';
 import { PrescriptionsService } from '../services/prescriptions.service';
 
 @ApiTags('prescriptions')
@@ -65,10 +65,37 @@ export class PrescriptionsController {
 
   @Post()
   @ApiBearerAuth('access-token')
+  @ApiConsumes('multipart/form-data')
   @UseGuards(JwtAuthGuard)
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        files: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'binary',
+          },
+        },
+        data: {
+          type: 'object',
+        },
+        belongTo: {
+          type: 'number',
+        },
+      },
+    },
+  })
   @Roles(Role.DOCTOR, Role.ADMIN)
-  createAPrescription(@Request() req, @Body() body: CreatePrescriptionDto) {
-    return this.prescriptionsService.create(body, req.user);
+  @UseInterceptors(FilesInterceptor('files'))
+  createAPrescription(
+    @Request() req,
+    @Body() body,
+    @UploadedFiles()
+    files: Express.Multer.File[],
+  ) {
+    return this.prescriptionsService.create(body, files, req.user);
   }
 
   @Patch('/:prescriptionId')

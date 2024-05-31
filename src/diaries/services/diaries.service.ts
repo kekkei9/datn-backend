@@ -8,6 +8,7 @@ import { UsersService } from '../../users/services/users.service';
 import { Role } from '../../auth/models/roles.model';
 import { NotificationsService } from '../../notifications/services/notifications.service';
 import { NotificationType } from '../../notifications/entities/notification.entity';
+import { ImageService } from '../../image/services/image.service';
 
 @Injectable()
 export class DiariesService {
@@ -18,9 +19,15 @@ export class DiariesService {
     private usersService: UsersService,
 
     private notificationsService: NotificationsService,
+
+    private imageService: ImageService,
   ) {}
 
-  async create(diary: CreateDiaryDto, user: PayloadToken) {
+  async create(
+    diary: CreateDiaryDto,
+    files: Express.Multer.File[],
+    user: PayloadToken,
+  ) {
     const { data, belongTo } = diary;
 
     const belongToUser = await this.usersService.findUserById(belongTo);
@@ -32,6 +39,10 @@ export class DiariesService {
       );
     }
 
+    const images = await Promise.all(
+      files.map((file) => this.imageService.uploadImage(file)),
+    );
+
     const createdDiary = await this.diaryRepository.save({
       data,
       createdBy: {
@@ -40,6 +51,7 @@ export class DiariesService {
       belongTo: {
         id: belongTo,
       },
+      imagePaths: images.map((image) => image.imagePath),
     });
 
     this.notificationsService.create({

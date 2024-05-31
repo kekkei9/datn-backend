@@ -11,6 +11,7 @@ import { UsersService } from '../../users/services/users.service';
 import { Role } from '../../auth/models/roles.model';
 import { NotificationType } from '../../notifications/entities/notification.entity';
 import { NotificationsService } from '../../notifications/services/notifications.service';
+import { ImageService } from '../../image/services/image.service';
 
 @Injectable()
 export class PrescriptionsService {
@@ -21,9 +22,15 @@ export class PrescriptionsService {
     private usersService: UsersService,
 
     private notificationsService: NotificationsService,
+
+    private imageService: ImageService,
   ) {}
 
-  async create(prescription: CreatePrescriptionDto, user: PayloadToken) {
+  async create(
+    prescription: CreatePrescriptionDto,
+    files: Express.Multer.File[],
+    user: PayloadToken,
+  ) {
     const { data, belongTo } = prescription;
 
     const belongToUser = await this.usersService.findUserById(belongTo);
@@ -35,6 +42,10 @@ export class PrescriptionsService {
       );
     }
 
+    const images = await Promise.all(
+      files.map((file) => this.imageService.uploadImage(file)),
+    );
+
     const createdPrescription = await this.prescriptionRepository.save({
       data,
       createdBy: {
@@ -43,6 +54,7 @@ export class PrescriptionsService {
       belongTo: {
         id: belongTo,
       },
+      imagePaths: images.map((image) => image.imagePath),
     });
 
     this.notificationsService.create({

@@ -16,6 +16,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -35,6 +36,7 @@ import {
   DefaultColumnsResponse,
   UpdateUserDto,
 } from '../dto/create-user.dto';
+import { DeactivateUserDto } from '../dto/deactivate-user.dto';
 import { RegisterDoctorRequestDto } from '../dto/doctor-request.dto';
 import {
   ResponseFriendRequestDto,
@@ -42,8 +44,6 @@ import {
 } from '../dto/friend-request.dto';
 import { SearchUserDto } from '../dto/search-user.dto';
 import { UsersService } from '../services/users.service';
-import { DeactivateUserDto } from '../dto/deactivate-user.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('users') // put the name of the controller in swagger
 @Controller('users')
@@ -275,7 +275,11 @@ export class UsersController {
     },
   })
   @UseInterceptors(FileInterceptor('file'))
-  uploadAvatar(@Request() req, @UploadedFile() file: Express.Multer.File) {
+  uploadAvatar(
+    @Request() req,
+    @UploadedFile()
+    file: Express.Multer.File,
+  ) {
     return this.usersService.uploadAvatar(req.user, file);
   }
 }

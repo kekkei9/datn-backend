@@ -7,13 +7,16 @@ import {
   Patch,
   Post,
   Request,
+  UploadedFiles,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { Role } from '../../auth/models/roles.model';
-import { CreateDiaryDto, PatchDiaryDto } from '../dto/create-diary.dto';
+import { PatchDiaryDto } from '../dto/create-diary.dto';
 import { DiariesService } from '../services/diaries.service';
 
 @ApiTags('diaries')
@@ -57,9 +60,36 @@ export class DiariesController {
   @Post()
   @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        files: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'binary',
+          },
+        },
+        data: {
+          type: 'object',
+        },
+        belongTo: {
+          type: 'number',
+        },
+      },
+    },
+  })
   @Roles(Role.DOCTOR, Role.ADMIN)
-  createADiary(@Request() req, @Body() body: CreateDiaryDto) {
-    return this.diariesService.create(body, req.user);
+  @UseInterceptors(FilesInterceptor('files'))
+  createADiary(
+    @Request() req,
+    @Body() body,
+    @UploadedFiles()
+    files: Express.Multer.File[],
+  ) {
+    return this.diariesService.create(body, files, req.user);
   }
 
   @Patch('/:diaryId')

@@ -15,4 +15,10 @@ export class PrescriptionEntity extends DefaultEntity {
 
   @ManyToOne(() => UserEntity, (userEntity) => userEntity.prescriptions)
   belongTo: UserEntity;
+
+  @Column('text', {
+    default: {},
+    array: true,
+  })
+  imagePaths: string[];
 }

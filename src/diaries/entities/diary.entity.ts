@@ -15,4 +15,10 @@ export class DiaryEntity extends DefaultEntity {
 
   @ManyToOne(() => UserEntity, (userEntity) => userEntity.diaries)
   belongTo: UserEntity;
+
+  @Column('text', {
+    default: {},
+    array: true,
+  })
+  imagePaths: string[];
 }
