@@ -22,6 +22,12 @@ import { DiaryEntity } from '../../diaries/entities/diary.entity';
 import { NotificationEntity } from '../../notifications/entities/notification.entity';
 import { ReportEntity } from '../../reports/entities/report.entity';
 
+export enum Gender {
+  MALE = 'male',
+  FEMALE = 'female',
+  OTHER = 'other',
+}
+
 @Entity('users')
 export class UserEntity extends DefaultEntity {
   @PrimaryGeneratedColumn()
@@ -46,6 +52,12 @@ export class UserEntity extends DefaultEntity {
     nullable: true,
   })
   avatar: string;
+
+  @Column({
+    nullable: true,
+    enum: Gender,
+  })
+  gender: Gender;
 
   @Column({
     name: 'first_name',

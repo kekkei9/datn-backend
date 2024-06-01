@@ -9,6 +9,7 @@ import { MessageEntity } from './chat/models/message.entity';
 import { PrescriptionEntity } from './prescriptions/entities/prescription.entity';
 import { DiaryEntity } from './diaries/entities/diary.entity';
 import { NotificationEntity } from './notifications/entities/notification.entity';
+import { ReportEntity } from './reports/entities/report.entity';
 
 const options: DataSourceOptions & SeederOptions = {
   type: 'postgres',
@@ -27,6 +28,7 @@ const options: DataSourceOptions & SeederOptions = {
     PrescriptionEntity,
     DiaryEntity,
     NotificationEntity,
+    ReportEntity,
   ],
   seeds: ['src/database/seeds/**/*{.ts,.js}'],
   seedTracking: true,
