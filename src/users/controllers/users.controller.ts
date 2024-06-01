@@ -141,12 +141,10 @@ export class UsersController {
     return this.usersService.findOne(+id);
   }
 
-  @ApiTags('cms')
+  @Patch('')
   @ApiBearerAuth('access-token')
-  @Roles(Role.ADMIN)
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  update(@Request() req, @Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.update(req.user.id, updateUserDto);
   }
 
   @ApiTags('cms')

@@ -60,6 +60,26 @@ export class UserEntity extends DefaultEntity {
   gender: Gender;
 
   @Column({
+    nullable: true,
+  })
+  birthdate: Date;
+
+  @Column({
+    nullable: true,
+  })
+  address: string;
+
+  @Column({
+    nullable: true,
+  })
+  height: number;
+
+  @Column({
+    nullable: true,
+  })
+  weight: number;
+
+  @Column({
     name: 'first_name',
   })
   firstName: string;
