@@ -88,10 +88,12 @@ export class UsersService {
     });
 
     if (user) {
-      throw new BadRequestException();
+      throw new BadRequestException(
+        'User with this phone number already exists',
+      );
     }
 
-    const createdUser = await this.userRepository.create(createUserDto);
+    const createdUser = this.userRepository.create(createUserDto);
     const saveUser = await this.userRepository.save(createdUser);
     delete saveUser.password;
     delete saveUser.refreshToken;
@@ -138,14 +140,18 @@ export class UsersService {
   }
 
   resetPassword(phoneNumber: string, newPassword: string) {
-    return this.userRepository.update(
+    const newUser = { password: newPassword };
+    const userDto = this.userRepository.create(newUser);
+    const userAccount = this.userRepository.update(
       {
         phoneNumber,
       },
-      {
-        password: newPassword,
-      },
+      userDto,
     );
+
+    return {
+      isSuccess: !!userAccount,
+    };
   }
 
   async findUserByPhoneNumber(text: string) {
