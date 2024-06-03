@@ -36,7 +36,7 @@ export class UserEntity extends DefaultEntity {
   @Column({ nullable: true })
   email: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, name: 'phone_number' })
   public phoneNumber: string;
 
   @Column({ select: false })

@@ -1,4 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { UserEntity } from '../../users/entities/user.entity';
 
 export enum AppointmentStatus {
@@ -13,10 +19,20 @@ export class AppointmentEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => UserEntity, (userEntity) => userEntity.sentAppointments)
+  @ManyToOne(() => UserEntity, (userEntity) => userEntity.sentAppointments, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'request_user_id' })
   requestUser: UserEntity;
 
-  @ManyToOne(() => UserEntity, (userEntity) => userEntity.confirmedAppointments)
+  @ManyToOne(
+    () => UserEntity,
+    (userEntity) => userEntity.confirmedAppointments,
+    {
+      onDelete: 'CASCADE',
+    },
+  )
+  @JoinColumn({ name: 'confirm_user_id' })
   confirmUser: UserEntity;
 
   @Column({
@@ -24,6 +40,8 @@ export class AppointmentEntity {
   })
   status: AppointmentStatus;
 
-  @Column()
+  @Column({
+    name: 'begin_timestamp',
+  })
   beginTimestamp: number;
 }

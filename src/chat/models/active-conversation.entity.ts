@@ -5,12 +5,18 @@ export class ActiveConversationEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({
+    name: 'socket_id',
+  })
   socketId: string;
 
-  @Column()
+  @Column({
+    name: 'user_id',
+  })
   userId: number;
 
-  @Column()
+  @Column({
+    name: 'conversation_id',
+  })
   conversationId: number;
 }

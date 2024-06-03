@@ -1,4 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { UserEntity } from '../../users/entities/user.entity';
 import { DefaultEntity } from '../../utils/entities/default.entity';
 
@@ -10,9 +16,15 @@ export class ReportEntity extends DefaultEntity {
   @Column()
   reason: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.createdReports)
+  @ManyToOne(() => UserEntity, (user) => user.createdReports, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'created_by_id' })
   createdBy: UserEntity;
 
-  @ManyToOne(() => UserEntity, (user) => user.reports)
+  @ManyToOne(() => UserEntity, (user) => user.reports, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'belong_to_id' })
   belongTo: UserEntity;
 }

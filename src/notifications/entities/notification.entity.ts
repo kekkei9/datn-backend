@@ -1,4 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { DefaultEntity } from '../../utils/entities/default.entity';
 import { UserEntity } from '../../users/entities/user.entity';
 import { IsEnum } from 'class-validator';
@@ -24,7 +30,9 @@ export class NotificationEntity extends DefaultEntity {
   message: string;
 
   //represents reference id number ie: appointmentId, diaryId, prescriptionId, ...
-  @Column()
+  @Column({
+    name: 'reference_id',
+  })
   referenceId: number;
 
   @Column({
@@ -33,9 +41,15 @@ export class NotificationEntity extends DefaultEntity {
   @IsEnum(NotificationType)
   type: NotificationType;
 
-  @ManyToOne(() => UserEntity, (user) => user.createdNotifications)
+  @ManyToOne(() => UserEntity, (user) => user.createdNotifications, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'created_by_id' })
   createdBy: UserEntity;
 
-  @ManyToOne(() => UserEntity, (user) => user.notifications)
+  @ManyToOne(() => UserEntity, (user) => user.notifications, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'belong_to_id' })
   belongTo: UserEntity;
 }

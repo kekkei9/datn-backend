@@ -14,13 +14,19 @@ export class ConversationEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToMany(() => UserEntity)
-  @JoinTable()
+  @ManyToMany(() => UserEntity, {
+    onDelete: 'CASCADE',
+  })
+  @JoinTable({
+    name: 'users_id',
+  })
   users: UserEntity[];
 
   @OneToMany(() => MessageEntity, (messageEntity) => messageEntity.conversation)
   messages: MessageEntity[];
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({
+    name: 'last_updated',
+  })
   lastUpdated: Date;
 }
