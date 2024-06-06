@@ -3,7 +3,6 @@ import { ConfigType } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtStrategy } from '../auth/strategies/jwt.strategy';
-import { ConversationEntity } from '../chat/models/conversation.entity';
 import config from '../config';
 import { DiaryEntity } from '../diaries/entities/diary.entity';
 import { NotificationEntity } from '../notifications/entities/notification.entity';
@@ -35,7 +34,6 @@ import { ImageModule } from '../image/image.module';
       UserEntity,
       FriendRequestEntity,
       DoctorRequestEntity,
-      ConversationEntity,
       PrescriptionEntity,
       NotificationEntity,
       DiaryEntity,

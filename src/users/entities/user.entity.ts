@@ -4,23 +4,20 @@ import {
   BeforeUpdate,
   Column,
   Entity,
-  ManyToMany,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   VirtualColumn,
 } from 'typeorm';
-import { Role } from '../../auth/models/roles.model';
-import { DefaultEntity } from '../../utils/entities/default.entity';
-import { FriendRequestEntity } from './friend-request.entity';
-import { DoctorRequestEntity } from './doctor-request.entity';
 import { AppointmentEntity } from '../../appointments/entities/appointment.entity';
-import { MessageEntity } from '../../chat/models/message.entity';
-import { ConversationEntity } from '../../chat/models/conversation.entity';
-import { PrescriptionEntity } from '../../prescriptions/entities/prescription.entity';
+import { Role } from '../../auth/models/roles.model';
 import { DiaryEntity } from '../../diaries/entities/diary.entity';
 import { NotificationEntity } from '../../notifications/entities/notification.entity';
+import { PrescriptionEntity } from '../../prescriptions/entities/prescription.entity';
 import { ReportEntity } from '../../reports/entities/report.entity';
+import { DefaultEntity } from '../../utils/entities/default.entity';
+import { DoctorRequestEntity } from './doctor-request.entity';
+import { FriendRequestEntity } from './friend-request.entity';
 
 export enum Gender {
   MALE = 'male',
@@ -131,15 +128,6 @@ export class UserEntity extends DefaultEntity {
     (appointmentEntity) => appointmentEntity.confirmUser,
   )
   confirmedAppointments: AppointmentEntity[];
-
-  @OneToMany(() => MessageEntity, (messageEntity) => messageEntity.user)
-  messages: MessageEntity[];
-
-  @ManyToMany(
-    () => ConversationEntity,
-    (conversationEntity) => conversationEntity.users,
-  )
-  conversations: ConversationEntity[];
 
   @OneToMany(
     () => PrescriptionEntity,

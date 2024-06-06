@@ -4,7 +4,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import * as Joi from 'joi';
 import { AppointmentsModule } from './appointments/appointments.module';
 import { AuthModule } from './auth/auth.module';
-import { ChatModule } from './chat/chat.module';
 import config from './config';
 import { DiariesModule } from './diaries/diaries.module';
 import { DrugsModule } from './drugs/drugs.module';
@@ -55,7 +54,6 @@ import { UsersModule } from './users/users.module';
     UsersModule,
     AuthModule,
     AppointmentsModule,
-    ChatModule,
     SmsModule,
     DrugsModule,
     PrescriptionsModule,
