@@ -1,4 +1,4 @@
-import { Seeder } from 'typeorm-extension';
+import { Seeder, SeederFactoryManager } from 'typeorm-extension';
 import { DataSource } from 'typeorm';
 import { UserEntity } from '../../users/entities/user.entity';
 import { Role } from '../../auth/models/roles.model';
@@ -14,7 +14,7 @@ export default class UserSeeder implements Seeder {
 
   public async run(
     dataSource: DataSource,
-    // factoryManager: SeederFactoryManager,
+    factoryManager: SeederFactoryManager,
   ): Promise<any> {
     const repository = dataSource.getRepository(UserEntity);
     await repository.insert([
@@ -27,8 +27,8 @@ export default class UserSeeder implements Seeder {
         phoneNumber: 'patient',
       },
       {
-        firstName: 'Caleb',
-        lastName: 'Barrows',
+        firstName: 'admin',
+        lastName: 'admin',
         email: 'admin@gmail.com',
         password: await bcrypt.hash('admin', 10),
         role: Role.ADMIN,
@@ -46,11 +46,11 @@ export default class UserSeeder implements Seeder {
 
     // ---------------------------------------------------
 
-    // const userFactory = await factoryManager.get(UserEntity);
-    // // save 1 factory generated entity, to the database
-    // await userFactory.save();
+    const userFactory = await factoryManager.get(UserEntity);
+    // save 1 factory generated entity, to the database
+    await userFactory.save();
 
-    // // save 5 factory generated entities, to the database
-    // await userFactory.saveMany(5);
+    // save 5 factory generated entities, to the database
+    await userFactory.saveMany(50);
   }
 }

@@ -44,6 +44,7 @@ import {
 } from '../dto/friend-request.dto';
 import { SearchUserDto } from '../dto/search-user.dto';
 import { UsersService } from '../services/users.service';
+import { FriendRequestStatus } from '../entities/friend-request.interface';
 
 @ApiTags('users') // put the name of the controller in swagger
 @Controller('users')
@@ -76,7 +77,7 @@ export class UsersController {
     if (refererToken) {
       const refererId = this.jwtService.decode(refererToken)['id'];
       return this.usersService.createFriendRequest({
-        status: 'accepted',
+        status: FriendRequestStatus.ACCEPTED,
         creator: {
           id: refererId,
         },

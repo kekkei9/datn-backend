@@ -20,7 +20,7 @@ import { DoctorRequestEntity } from '../entities/doctor-request.entity';
 import { FriendRequestEntity } from '../entities/friend-request.entity';
 import {
   FriendRequest,
-  FriendRequest_Status,
+  FriendRequestStatus,
 } from '../entities/friend-request.interface';
 import { UserEntity } from '../entities/user.entity';
 import SmsService from '../../sms/services/sms.service';
@@ -282,7 +282,7 @@ export class UsersService {
       receiver: {
         id: receiverId,
       },
-      status: 'pending',
+      status: FriendRequestStatus.PENDING,
     };
 
     if (method === 'OTP') {
@@ -324,7 +324,7 @@ export class UsersService {
 
     if (friendRequest?.receiver.id === currentUser.id) {
       return {
-        status: 'waiting-for-current-user-response' as FriendRequest_Status,
+        status: 'waiting-for-current-user-response' as FriendRequestStatus,
       };
     }
     return { status: friendRequest?.status || 'not-sent' };
@@ -369,7 +369,7 @@ export class UsersService {
         receiver: {
           id: currentUserId,
         },
-        status: Not('accepted'),
+        status: Not(FriendRequestStatus.ACCEPTED),
       },
       relations: ['receiver', 'creator'],
       select: ['id', 'status', 'creator'],
@@ -379,8 +379,14 @@ export class UsersService {
   async getFriends({ id: currentUserId }: PayloadToken) {
     const friends = await this.friendRequestRepository.find({
       where: [
-        { creator: { id: currentUserId }, status: 'accepted' },
-        { receiver: { id: currentUserId }, status: 'accepted' },
+        {
+          creator: { id: currentUserId },
+          status: FriendRequestStatus.ACCEPTED,
+        },
+        {
+          receiver: { id: currentUserId },
+          status: FriendRequestStatus.ACCEPTED,
+        },
       ],
       relations: ['creator', 'receiver'],
     });
