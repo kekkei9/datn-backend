@@ -11,7 +11,7 @@ export default class FriendRequestSeeder implements Seeder {
    *
    * Default: false
    */
-  track = false;
+  track = true;
 
   public async run(
     dataSource: DataSource,
@@ -33,29 +33,24 @@ export default class FriendRequestSeeder implements Seeder {
       },
     });
 
-    doctorAccounts.forEach(async (doctor) => {
-      patientAccounts.forEach(async (patient) => {
-        await friendRequestrepository.insert([
-          {
-            creator: {
-              id: doctor.id,
-            },
-            receiver: {
-              id: patient.id,
-            },
-            status: FriendRequestStatus.ACCEPTED,
-          },
-          {
-            creator: {
-              id: patient.id,
-            },
-            receiver: {
-              id: doctor.id,
-            },
-            status: FriendRequestStatus.ACCEPTED,
-          },
-        ]);
-      });
-    });
+    await Promise.all(
+      doctorAccounts.map((doctor) =>
+        Promise.all(
+          patientAccounts.map((patient) =>
+            friendRequestrepository.insert([
+              {
+                creator: {
+                  id: doctor.id,
+                },
+                receiver: {
+                  id: patient.id,
+                },
+                status: FriendRequestStatus.ACCEPTED,
+              },
+            ]),
+          ),
+        ),
+      ),
+    );
   }
 }

@@ -10,6 +10,7 @@ import { PrescriptionEntity } from './prescriptions/entities/prescription.entity
 import { DiaryEntity } from './diaries/entities/diary.entity';
 import { NotificationEntity } from './notifications/entities/notification.entity';
 import { ReportEntity } from './reports/entities/report.entity';
+import { MainSeeder } from './database/seeds/main.seeder';
 
 const options: DataSourceOptions & SeederOptions = {
   type: 'postgres',
@@ -30,9 +31,9 @@ const options: DataSourceOptions & SeederOptions = {
     NotificationEntity,
     ReportEntity,
   ],
-  seeds: ['src/database/seeds/**/*{.ts,.js}'],
   seedTracking: true,
   factories: ['src/database/factories/**/*{.ts,.js}'],
+  seeds: [MainSeeder],
 };
 
 export default new DataSource(options);

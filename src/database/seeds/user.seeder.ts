@@ -10,7 +10,7 @@ export default class UserSeeder implements Seeder {
    *
    * Default: false
    */
-  track = false;
+  track = true;
 
   public async run(
     dataSource: DataSource,
@@ -46,11 +46,7 @@ export default class UserSeeder implements Seeder {
 
     // ---------------------------------------------------
 
-    const userFactory = await factoryManager.get(UserEntity);
-    // save 1 factory generated entity, to the database
-    await userFactory.save();
-
-    // save 5 factory generated entities, to the database
-    await userFactory.saveMany(50);
+    const userFactory = factoryManager.get(UserEntity);
+    await userFactory.saveMany(20);
   }
 }
