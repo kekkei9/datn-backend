@@ -35,4 +35,10 @@ export class ImageService {
       stream.end(file.buffer);
     });
   }
+
+  async uploadImages(
+    files: Express.Multer.File[],
+  ): Promise<{ imagePath: string; name: string }[]> {
+    return Promise.all(files.map((file) => this.uploadImage(file)));
+  }
 }

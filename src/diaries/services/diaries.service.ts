@@ -3,7 +3,7 @@ import { DiaryEntity } from '../entities/diary.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PayloadToken } from '../../auth/models/token.model';
-import { CreateDiaryDto, PatchDiaryDto } from '../dto/create-diary.dto';
+import { CreateDiaryDto } from '../dto/create-diary.dto';
 import { UsersService } from '../../users/services/users.service';
 import { Role } from '../../auth/models/roles.model';
 import { NotificationsService } from '../../notifications/services/notifications.service';
@@ -39,9 +39,7 @@ export class DiariesService {
       );
     }
 
-    const images = await Promise.all(
-      files.map((file) => this.imageService.uploadImage(file)),
-    );
+    const images = await this.imageService.uploadImages(files);
 
     const createdDiary = await this.diaryRepository.save({
       data,
@@ -69,7 +67,12 @@ export class DiariesService {
     return createdDiary;
   }
 
-  async patch({ data }: PatchDiaryDto, diaryId: number, user: PayloadToken) {
+  async patch(
+    { data }: { data: object },
+    files: Express.Multer.File[],
+    diaryId: number,
+    user: PayloadToken,
+  ) {
     const currentUser = await this.usersService.findUserById(user.id);
     const diary = await this.findById(diaryId);
 
@@ -84,8 +87,11 @@ export class DiariesService {
       throw new HttpException('Diary not found', HttpStatus.NOT_FOUND);
     }
 
+    const images = await this.imageService.uploadImages(files);
+
     return this.diaryRepository.update(diaryId, {
       data,
+      imagePaths: images.map((image) => image.imagePath),
     });
   }
 

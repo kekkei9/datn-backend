@@ -6,10 +6,11 @@ import { PrescriptionEntity } from './entities/prescription.entity';
 import { UsersModule } from '../users/users.module';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { ImageModule } from '../image/image.module';
+import { DiagnoseEntity } from './entities/diagnose.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([PrescriptionEntity]),
+    TypeOrmModule.forFeature([PrescriptionEntity, DiagnoseEntity]),
     UsersModule,
     NotificationsModule,
     ImageModule,

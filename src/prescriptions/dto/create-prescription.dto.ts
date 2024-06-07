@@ -9,8 +9,3 @@ export class CreatePrescriptionDto {
   @IsNumber()
   belongTo: number;
 }
-
-export class PatchPrescriptionDto {
-  @ApiProperty()
-  data: object;
-}

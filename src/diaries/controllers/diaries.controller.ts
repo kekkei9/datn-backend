@@ -16,7 +16,6 @@ import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { Role } from '../../auth/models/roles.model';
-import { PatchDiaryDto } from '../dto/create-diary.dto';
 import { DiariesService } from '../services/diaries.service';
 
 @ApiTags('diaries')
@@ -95,12 +94,37 @@ export class DiariesController {
   @Patch('/:diaryId')
   @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        files: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'binary',
+          },
+        },
+        data: {
+          type: 'object',
+        },
+      },
+    },
+  })
+  @UseInterceptors(FilesInterceptor('files'))
   @Roles(Role.DOCTOR, Role.ADMIN)
   patchDiary(
     @Request() req,
-    @Body() body: PatchDiaryDto,
+    @Body() body,
     @Param('diaryId') diaryStringId: string,
+    @UploadedFiles()
+    files: Express.Multer.File[],
   ) {
-    return this.diariesService.patch(body, Number(diaryStringId), req.user);
+    return this.diariesService.patch(
+      body,
+      files,
+      Number(diaryStringId),
+      req.user,
+    );
   }
 }

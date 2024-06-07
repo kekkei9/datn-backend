@@ -1,17 +1,14 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { PrescriptionEntity } from '../entities/prescription.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { PayloadToken } from '../../auth/models/token.model';
-import {
-  CreatePrescriptionDto,
-  PatchPrescriptionDto,
-} from '../dto/create-prescription.dto';
-import { UsersService } from '../../users/services/users.service';
 import { Role } from '../../auth/models/roles.model';
+import { PayloadToken } from '../../auth/models/token.model';
+import { ImageService } from '../../image/services/image.service';
 import { NotificationType } from '../../notifications/entities/notification.entity';
 import { NotificationsService } from '../../notifications/services/notifications.service';
-import { ImageService } from '../../image/services/image.service';
+import { UsersService } from '../../users/services/users.service';
+import { CreatePrescriptionDto } from '../dto/create-prescription.dto';
+import { PrescriptionEntity } from '../entities/prescription.entity';
 
 @Injectable()
 export class PrescriptionsService {
@@ -42,9 +39,7 @@ export class PrescriptionsService {
       );
     }
 
-    const images = await Promise.all(
-      files.map((file) => this.imageService.uploadImage(file)),
-    );
+    const images = await this.imageService.uploadImages(files);
 
     const createdPrescription = await this.prescriptionRepository.save({
       data,
@@ -73,7 +68,8 @@ export class PrescriptionsService {
   }
 
   async patch(
-    { data }: PatchPrescriptionDto,
+    { data }: { data: object },
+    files: Express.Multer.File[],
     prescriptionId: number,
     user: PayloadToken,
   ) {
@@ -93,9 +89,11 @@ export class PrescriptionsService {
     if (!prescription) {
       throw new HttpException('Prescription not found', HttpStatus.NOT_FOUND);
     }
+    const images = await this.imageService.uploadImages(files);
 
     return this.prescriptionRepository.update(prescriptionId, {
       data,
+      imagePaths: images.map((image) => image.imagePath),
     });
   }
 

@@ -16,7 +16,6 @@ import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { Role } from '../../auth/models/roles.model';
-import { PatchPrescriptionDto } from '../dto/create-prescription.dto';
 import { PrescriptionsService } from '../services/prescriptions.service';
 
 @ApiTags('prescriptions')
@@ -100,15 +99,36 @@ export class PrescriptionsController {
 
   @Patch('/:prescriptionId')
   @ApiBearerAuth('access-token')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        files: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'binary',
+          },
+        },
+        data: {
+          type: 'object',
+        },
+      },
+    },
+  })
   @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FilesInterceptor('files'))
   @Roles(Role.DOCTOR, Role.ADMIN)
   patchPrescription(
     @Request() req,
-    @Body() body: PatchPrescriptionDto,
+    @Body() body,
     @Param('prescriptionId') prescriptionStringId: string,
+    @UploadedFiles()
+    files: Express.Multer.File[],
   ) {
     return this.prescriptionsService.patch(
       body,
+      files,
       Number(prescriptionStringId),
       req.user,
     );

@@ -7,7 +7,6 @@ import {
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
-  VirtualColumn,
 } from 'typeorm';
 import { AppointmentEntity } from '../../appointments/entities/appointment.entity';
 import { Role } from '../../auth/models/roles.model';
@@ -176,13 +175,6 @@ export class UserEntity extends DefaultEntity {
     (notificationEntity) => notificationEntity.belongTo,
   )
   reports: ReportEntity[];
-
-  @VirtualColumn({
-    type: 'int',
-    query: (entity) =>
-      `SELECT SUM(balance) FROM account WHERE ownerId = ${entity}.id AND deleted_at IS NULL`,
-  })
-  reportsCount: number;
 
   @BeforeInsert()
   @BeforeUpdate()

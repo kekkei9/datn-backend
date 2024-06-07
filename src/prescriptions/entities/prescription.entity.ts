@@ -3,10 +3,12 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { DefaultEntity } from '../../utils/entities/default.entity';
 import { UserEntity } from '../../users/entities/user.entity';
+import { DiagnoseEntity } from './diagnose.entity';
 
 @Entity('prescription')
 export class PrescriptionEntity extends DefaultEntity {
@@ -31,6 +33,12 @@ export class PrescriptionEntity extends DefaultEntity {
   })
   @JoinColumn({ name: 'belong_to_id' })
   belongTo: UserEntity;
+
+  @OneToMany(
+    () => DiagnoseEntity,
+    (diagnoseEntity) => diagnoseEntity.prescription,
+  )
+  diagnoses: DiagnoseEntity[];
 
   @Column('text', {
     default: {},

@@ -9,8 +9,3 @@ export class CreateDiaryDto {
   @IsNumber()
   belongTo: number;
 }
-
-export class PatchDiaryDto {
-  @ApiProperty()
-  data: object;
-}
