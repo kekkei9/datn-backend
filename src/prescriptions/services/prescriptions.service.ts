@@ -9,12 +9,17 @@ import { NotificationsService } from '../../notifications/services/notifications
 import { UsersService } from '../../users/services/users.service';
 import { CreatePrescriptionDto } from '../dto/create-prescription.dto';
 import { PrescriptionEntity } from '../entities/prescription.entity';
+import { DiagnoseEntity } from '../entities/diagnose.entity';
+import { CreateDiagnoseDto } from '../dto/create-diagnose.dto';
 
 @Injectable()
 export class PrescriptionsService {
   constructor(
     @InjectRepository(PrescriptionEntity)
     private prescriptionRepository: Repository<PrescriptionEntity>,
+
+    @InjectRepository(DiagnoseEntity)
+    private diagnoseRepository: Repository<DiagnoseEntity>,
 
     private usersService: UsersService,
 
@@ -151,6 +156,72 @@ export class PrescriptionsService {
       order: {
         updatedAt: 'DESC',
       },
+    });
+  }
+
+  async addDiagnoseToPrescription(
+    createDiagnoseDto: CreateDiagnoseDto,
+    files: Express.Multer.File[],
+    prescriptionId: number,
+    user: PayloadToken,
+  ) {
+    const prescription = await this.findById(prescriptionId);
+
+    if (user.id !== prescription.createdBy.id && user.role !== Role.ADMIN) {
+      throw new HttpException(
+        'Cannot add diagnose to this prescription',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    const images = await this.imageService.uploadImages(files);
+
+    return this.diagnoseRepository.save({
+      ...createDiagnoseDto,
+      prescription: {
+        id: prescriptionId,
+      },
+      imagePaths: images.map((image) => image.imagePath),
+    });
+  }
+
+  async patchDiagnoseOfPrescription(
+    createDiagnoseDto: CreateDiagnoseDto,
+    files: Express.Multer.File[],
+    prescriptionId: number,
+    diagnoseId: number,
+    user: PayloadToken,
+  ) {
+    const currentUser = await this.usersService.findUserById(user.id);
+    const diagnose = await this.diagnoseRepository.findOne({
+      where: {
+        id: diagnoseId,
+        prescription: {
+          id: prescriptionId,
+        },
+      },
+      relations: ['prescription'],
+    });
+
+    if (
+      currentUser.id !== diagnose.prescription.createdBy.id &&
+      currentUser.role !== Role.ADMIN
+    ) {
+      throw new HttpException(
+        'Cannot update this diagnose',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    if (!diagnose) {
+      throw new HttpException('Diagnose not found', HttpStatus.NOT_FOUND);
+    }
+
+    const images = await this.imageService.uploadImages(files);
+
+    return this.diagnoseRepository.update(diagnoseId, {
+      ...createDiagnoseDto,
+      imagePaths: images.map((image) => image.imagePath),
     });
   }
 }

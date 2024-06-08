@@ -19,6 +19,7 @@ import { Role } from '../../auth/models/roles.model';
 import { PrescriptionsService } from '../services/prescriptions.service';
 
 @ApiTags('prescriptions')
+@UseGuards(JwtAuthGuard)
 @Controller('prescriptions')
 export class PrescriptionsController {
   constructor(private readonly prescriptionsService: PrescriptionsService) {}
@@ -26,7 +27,6 @@ export class PrescriptionsController {
   @Get()
   @ApiTags('cms')
   @ApiBearerAuth('access-token')
-  @UseGuards(JwtAuthGuard)
   @Roles(Role.ADMIN)
   getAll() {
     return this.prescriptionsService.findAll();
@@ -35,7 +35,6 @@ export class PrescriptionsController {
   @Delete('/:prescriptionId')
   @ApiTags('cms')
   @ApiBearerAuth('access-token')
-  @UseGuards(JwtAuthGuard)
   @Roles(Role.ADMIN)
   deleteAPrescription(@Param('prescriptionId') prescriptionStringId: string) {
     return this.prescriptionsService.delete(Number(prescriptionStringId));
@@ -43,14 +42,12 @@ export class PrescriptionsController {
 
   @Get('/my-prescriptions')
   @ApiBearerAuth('access-token')
-  @UseGuards(JwtAuthGuard)
   getMyPrescriptions(@Request() req) {
     return this.prescriptionsService.getMyPrescriptions(req.user);
   }
 
   @Get('/user-prescriptions/:userId')
   @ApiBearerAuth('access-token')
-  @UseGuards(JwtAuthGuard)
   @Roles(Role.DOCTOR, Role.ADMIN)
   getUserMyPrescriptions(
     @Request() req,
@@ -65,7 +62,6 @@ export class PrescriptionsController {
   @Post()
   @ApiBearerAuth('access-token')
   @ApiConsumes('multipart/form-data')
-  @UseGuards(JwtAuthGuard)
   @ApiBody({
     schema: {
       type: 'object',
@@ -99,6 +95,7 @@ export class PrescriptionsController {
 
   @Patch('/:prescriptionId')
   @ApiBearerAuth('access-token')
+  @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
       type: 'object',
@@ -116,7 +113,6 @@ export class PrescriptionsController {
       },
     },
   })
-  @UseGuards(JwtAuthGuard)
   @UseInterceptors(FilesInterceptor('files'))
   @Roles(Role.DOCTOR, Role.ADMIN)
   patchPrescription(
@@ -130,6 +126,82 @@ export class PrescriptionsController {
       body,
       files,
       Number(prescriptionStringId),
+      req.user,
+    );
+  }
+
+  @Post('/:prescriptionId/diagnoses')
+  @ApiBearerAuth('access-token')
+  @ApiConsumes('multipart/form-data')
+  @Roles(Role.DOCTOR, Role.ADMIN)
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        files: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'binary',
+          },
+        },
+        problem: {
+          type: 'string',
+        },
+      },
+    },
+  })
+  @UseInterceptors(FilesInterceptor('files'))
+  addDiagnoseToPrescription(
+    @Request() req,
+    @Body() body,
+    @Param('prescriptionId') prescriptionStringId: string,
+    @UploadedFiles()
+    files: Express.Multer.File[],
+  ) {
+    return this.prescriptionsService.addDiagnoseToPrescription(
+      body,
+      files,
+      Number(prescriptionStringId),
+      req.user,
+    );
+  }
+
+  @Post('/:prescriptionId/diagnoses/:diagnoseId')
+  @ApiBearerAuth('access-token')
+  @ApiConsumes('multipart/form-data')
+  @Roles(Role.DOCTOR, Role.ADMIN)
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        files: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'binary',
+          },
+        },
+        problem: {
+          type: 'string',
+        },
+      },
+    },
+  })
+  @UseInterceptors(FilesInterceptor('files'))
+  patchDiagnoseOfPrescription(
+    @Request() req,
+    @Body() body,
+    @Param('prescriptionId') prescriptionStringId: string,
+    @Param('diagnoseId') diagnoseStringId: string,
+    @UploadedFiles()
+    files: Express.Multer.File[],
+  ) {
+    return this.prescriptionsService.patchDiagnoseOfPrescription(
+      body,
+      files,
+      Number(prescriptionStringId),
+      Number(diagnoseStringId),
       req.user,
     );
   }

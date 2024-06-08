@@ -93,6 +93,7 @@ export class DiariesController {
 
   @Patch('/:diaryId')
   @ApiBearerAuth('access-token')
+  @ApiConsumes('multipart/form-data')
   @UseGuards(JwtAuthGuard)
   @ApiBody({
     schema: {
