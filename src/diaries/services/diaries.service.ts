@@ -9,6 +9,7 @@ import { Role } from '../../auth/models/roles.model';
 import { NotificationsService } from '../../notifications/services/notifications.service';
 import { NotificationType } from '../../notifications/entities/notification.entity';
 import { ImageService } from '../../image/services/image.service';
+import { GetAllDiariesDto } from '../dto/find-diaries.dto';
 
 @Injectable()
 export class DiariesService {
@@ -99,9 +100,33 @@ export class DiariesService {
     return this.diaryRepository.delete(diaryId);
   }
 
-  findAll() {
+  async findAll({
+    page,
+    pageSize,
+    userId: targetUserId,
+    currentUser,
+  }: GetAllDiariesDto & {
+    currentUser: PayloadToken;
+  }) {
+    const friends = await this.usersService.getFriends(currentUser);
+    if (
+      !friends.find((friend) => friend.id === targetUserId) &&
+      currentUser.role !== Role.ADMIN
+    ) {
+      throw new HttpException(
+        'Cannot view prescriptions of this user',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
     return this.diaryRepository.find({
       relations: ['createdBy', 'belongTo'],
+      order: {
+        updatedAt: 'DESC',
+      },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+      ...(targetUserId ? { where: { belongTo: { id: targetUserId } } } : {}),
     });
   }
 
@@ -110,44 +135,6 @@ export class DiariesService {
       relations: ['createdBy', 'belongTo'],
       where: {
         id: diaryId,
-      },
-    });
-  }
-
-  getMyDiaries(user: PayloadToken) {
-    return this.diaryRepository.find({
-      where: {
-        belongTo: {
-          id: user.id,
-        },
-      },
-      order: {
-        updatedAt: 'DESC',
-      },
-    });
-  }
-
-  async getUserDiaries(currentUser: PayloadToken, targetUserId: number) {
-    const friends = await this.usersService.getFriends(currentUser);
-
-    if (
-      !friends.find((friend) => friend.id === targetUserId) &&
-      currentUser.role !== Role.ADMIN
-    ) {
-      throw new HttpException(
-        'Cannot view diaries of this user',
-        HttpStatus.FORBIDDEN,
-      );
-    }
-
-    return this.diaryRepository.find({
-      where: {
-        belongTo: {
-          id: targetUserId,
-        },
-      },
-      order: {
-        updatedAt: 'DESC',
       },
     });
   }

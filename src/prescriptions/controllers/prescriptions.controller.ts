@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Request,
   UploadedFiles,
   UseGuards,
@@ -17,6 +18,8 @@ import { Roles } from '../../auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { Role } from '../../auth/models/roles.model';
 import { PrescriptionsService } from '../services/prescriptions.service';
+import { GetAllPrescriptionDto } from '../dto/get-prescription.dto';
+import { GetAllDiagnoses } from '../dto/get-diagnoses.dto';
 
 @ApiTags('prescriptions')
 @UseGuards(JwtAuthGuard)
@@ -25,11 +28,12 @@ export class PrescriptionsController {
   constructor(private readonly prescriptionsService: PrescriptionsService) {}
 
   @Get()
-  @ApiTags('cms')
   @ApiBearerAuth('access-token')
-  @Roles(Role.ADMIN)
-  getAll() {
-    return this.prescriptionsService.findAll();
+  getAll(@Query() query: GetAllPrescriptionDto, @Request() req) {
+    return this.prescriptionsService.findAll({
+      ...query,
+      currentUser: req.user,
+    });
   }
 
   @Delete('/:prescriptionId')
@@ -38,25 +42,6 @@ export class PrescriptionsController {
   @Roles(Role.ADMIN)
   deleteAPrescription(@Param('prescriptionId') prescriptionStringId: string) {
     return this.prescriptionsService.delete(Number(prescriptionStringId));
-  }
-
-  @Get('/my-prescriptions')
-  @ApiBearerAuth('access-token')
-  getMyPrescriptions(@Request() req) {
-    return this.prescriptionsService.getMyPrescriptions(req.user);
-  }
-
-  @Get('/user-prescriptions/:userId')
-  @ApiBearerAuth('access-token')
-  @Roles(Role.DOCTOR, Role.ADMIN)
-  getUserMyPrescriptions(
-    @Request() req,
-    @Param('userId') userStringId: string,
-  ) {
-    return this.prescriptionsService.getUserPrescriptions(
-      req.user,
-      Number(userStringId),
-    );
   }
 
   @Post()
@@ -130,6 +115,26 @@ export class PrescriptionsController {
     );
   }
 
+  @Get('/diagnoses')
+  @ApiBearerAuth('access-token')
+  findAllDiagnoses(@Query() query: GetAllDiagnoses, @Request() req) {
+    return this.prescriptionsService.findAllDiagnoses({
+      ...query,
+      currentUser: req.user,
+    });
+  }
+
+  @Get('/:prescriptionId/diagnoses')
+  @ApiBearerAuth('access-token')
+  @Roles(Role.DOCTOR, Role.PATIENT)
+  getDiagnosesOfPrescription(
+    @Param('prescriptionId') prescriptionStringId: string,
+  ) {
+    return this.prescriptionsService.getDiagnosesOfPrescription(
+      Number(prescriptionStringId),
+    );
+  }
+
   @Post('/:prescriptionId/diagnoses')
   @ApiBearerAuth('access-token')
   @ApiConsumes('multipart/form-data')
@@ -167,7 +172,7 @@ export class PrescriptionsController {
     );
   }
 
-  @Post('/:prescriptionId/diagnoses/:diagnoseId')
+  @Patch('/diagnoses/:diagnoseId')
   @ApiBearerAuth('access-token')
   @ApiConsumes('multipart/form-data')
   @Roles(Role.DOCTOR, Role.ADMIN)

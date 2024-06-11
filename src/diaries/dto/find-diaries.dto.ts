@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
 import { DefaultPaginationDto } from '../../utils/dto/default.dto';
+import { IsNumber } from 'class-validator';
 
-export class GetAllDrugsDto extends DefaultPaginationDto {
+export class GetAllDiariesDto extends DefaultPaginationDto {
   @ApiProperty({
     required: false,
   })
-  @IsString()
-  filterAll: string;
+  @IsNumber()
+  userId?: number;
 }

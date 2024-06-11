@@ -7,10 +7,12 @@ import { ImageService } from '../../image/services/image.service';
 import { NotificationType } from '../../notifications/entities/notification.entity';
 import { NotificationsService } from '../../notifications/services/notifications.service';
 import { UsersService } from '../../users/services/users.service';
-import { CreatePrescriptionDto } from '../dto/create-prescription.dto';
-import { PrescriptionEntity } from '../entities/prescription.entity';
-import { DiagnoseEntity } from '../entities/diagnose.entity';
 import { CreateDiagnoseDto } from '../dto/create-diagnose.dto';
+import { CreatePrescriptionDto } from '../dto/create-prescription.dto';
+import { GetAllDiagnoses } from '../dto/get-diagnoses.dto';
+import { GetAllPrescriptionDto } from '../dto/get-prescription.dto';
+import { DiagnoseEntity } from '../entities/diagnose.entity';
+import { PrescriptionEntity } from '../entities/prescription.entity';
 
 @Injectable()
 export class PrescriptionsService {
@@ -106,9 +108,33 @@ export class PrescriptionsService {
     return this.prescriptionRepository.delete(prescriptionId);
   }
 
-  findAll() {
+  async findAll({
+    page,
+    pageSize,
+    userId: targetUserId,
+    currentUser,
+  }: GetAllPrescriptionDto & {
+    currentUser: PayloadToken;
+  }) {
+    const friends = await this.usersService.getFriends(currentUser);
+    if (
+      !friends.find((friend) => friend.id === targetUserId) &&
+      currentUser.role !== Role.ADMIN
+    ) {
+      throw new HttpException(
+        'Cannot view prescriptions of this user',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
     return this.prescriptionRepository.find({
       relations: ['createdBy', 'belongTo'],
+      order: {
+        updatedAt: 'DESC',
+      },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+      ...(targetUserId ? { where: { belongTo: { id: targetUserId } } } : {}),
     });
   }
 
@@ -121,20 +147,14 @@ export class PrescriptionsService {
     });
   }
 
-  getMyPrescriptions(user: PayloadToken) {
-    return this.prescriptionRepository.find({
-      where: {
-        belongTo: {
-          id: user.id,
-        },
-      },
-      order: {
-        updatedAt: 'DESC',
-      },
-    });
-  }
-
-  async getUserPrescriptions(currentUser: PayloadToken, targetUserId: number) {
+  async findAllDiagnoses({
+    page,
+    pageSize,
+    userId: targetUserId,
+    currentUser,
+  }: GetAllDiagnoses & {
+    currentUser: PayloadToken;
+  }) {
     const friends = await this.usersService.getFriends(currentUser);
 
     if (
@@ -142,20 +162,28 @@ export class PrescriptionsService {
       currentUser.role !== Role.ADMIN
     ) {
       throw new HttpException(
-        'Cannot view prescriptions of this user',
+        'Cannot view diagnoses of this user',
         HttpStatus.FORBIDDEN,
       );
     }
 
-    return this.prescriptionRepository.find({
-      where: {
-        belongTo: {
-          id: targetUserId,
-        },
-      },
+    return this.diagnoseRepository.find({
+      ...(targetUserId
+        ? {
+            where: {
+              prescription: {
+                belongTo: {
+                  id: targetUserId,
+                },
+              },
+            },
+          }
+        : {}),
       order: {
         updatedAt: 'DESC',
       },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
     });
   }
 
@@ -222,6 +250,16 @@ export class PrescriptionsService {
     return this.diagnoseRepository.update(diagnoseId, {
       ...createDiagnoseDto,
       imagePaths: images.map((image) => image.imagePath),
+    });
+  }
+
+  async getDiagnosesOfPrescription(prescriptionId: number) {
+    return this.diagnoseRepository.find({
+      where: {
+        prescription: {
+          id: prescriptionId,
+        },
+      },
     });
   }
 }

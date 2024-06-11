@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Request,
   UploadedFiles,
   UseGuards,
@@ -16,49 +17,31 @@ import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { Role } from '../../auth/models/roles.model';
+import { GetAllDiariesDto } from '../dto/find-diaries.dto';
 import { DiariesService } from '../services/diaries.service';
 
 @ApiTags('diaries')
 @Controller('diaries')
+@UseGuards(JwtAuthGuard)
 export class DiariesController {
   constructor(private readonly diariesService: DiariesService) {}
 
   @Get()
-  @ApiTags('cms')
   @ApiBearerAuth('access-token')
-  @UseGuards(JwtAuthGuard)
-  @Roles(Role.ADMIN)
-  getAll() {
-    return this.diariesService.findAll();
+  findAll(@Query() query: GetAllDiariesDto, @Request() req) {
+    return this.diariesService.findAll({ ...query, currentUser: req.user });
   }
 
   @Delete('/:diaryId')
   @ApiTags('cms')
   @ApiBearerAuth('access-token')
-  @UseGuards(JwtAuthGuard)
   @Roles(Role.ADMIN)
   deleteADiary(@Param('diaryId') diaryStringId: string) {
     return this.diariesService.delete(Number(diaryStringId));
   }
 
-  @Get('/my-diaries')
-  @ApiBearerAuth('access-token')
-  @UseGuards(JwtAuthGuard)
-  getMyDiaries(@Request() req) {
-    return this.diariesService.getMyDiaries(req.user);
-  }
-
-  @Get('/user-diaries/:userId')
-  @ApiBearerAuth('access-token')
-  @UseGuards(JwtAuthGuard)
-  @Roles(Role.DOCTOR, Role.ADMIN)
-  getUserMyDiaries(@Request() req, @Param('userId') userStringId: string) {
-    return this.diariesService.getUserDiaries(req.user, Number(userStringId));
-  }
-
   @Post()
   @ApiBearerAuth('access-token')
-  @UseGuards(JwtAuthGuard)
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
@@ -94,7 +77,6 @@ export class DiariesController {
   @Patch('/:diaryId')
   @ApiBearerAuth('access-token')
   @ApiConsumes('multipart/form-data')
-  @UseGuards(JwtAuthGuard)
   @ApiBody({
     schema: {
       type: 'object',
