@@ -31,6 +31,7 @@ const options: DataSourceOptions & SeederOptions = {
   ],
   seedTracking: true,
   factories: ['src/database/factories/**/*{.ts,.js}'],
+  migrations: ['db/migrations/*{.ts,.js}'],
   seeds: [MainSeeder],
 };
 
