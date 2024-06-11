@@ -56,7 +56,7 @@ export class PrescriptionsService {
       belongTo: {
         id: belongTo,
       },
-      imagePaths: images.map((image) => image.imagePath),
+      images: images.map((image) => image.url),
     });
 
     this.notificationsService.create({
@@ -100,7 +100,7 @@ export class PrescriptionsService {
 
     return this.prescriptionRepository.update(prescriptionId, {
       data,
-      imagePaths: images.map((image) => image.imagePath),
+      images: images.map((image) => image.url),
     });
   }
 
@@ -209,7 +209,7 @@ export class PrescriptionsService {
       prescription: {
         id: prescriptionId,
       },
-      imagePaths: images.map((image) => image.imagePath),
+      images: images.map((image) => image.url),
     });
   }
 
@@ -249,7 +249,7 @@ export class PrescriptionsService {
 
     return this.diagnoseRepository.update(diagnoseId, {
       ...createDiagnoseDto,
-      imagePaths: images.map((image) => image.imagePath),
+      images: images.map((image) => image.url),
     });
   }
 

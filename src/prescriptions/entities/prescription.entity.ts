@@ -45,5 +45,5 @@ export class PrescriptionEntity extends DefaultEntity {
     array: true,
     name: 'image_paths',
   })
-  imagePaths: string[];
+  images: string[];
 }

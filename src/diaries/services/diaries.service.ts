@@ -50,7 +50,7 @@ export class DiariesService {
       belongTo: {
         id: belongTo,
       },
-      imagePaths: images.map((image) => image.imagePath),
+      images: images.map((image) => image.url),
     });
 
     this.notificationsService.create({
@@ -92,7 +92,7 @@ export class DiariesService {
 
     return this.diaryRepository.update(diaryId, {
       data,
-      imagePaths: images.map((image) => image.imagePath),
+      images: images.map((image) => image.url),
     });
   }
 

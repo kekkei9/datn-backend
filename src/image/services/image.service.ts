@@ -7,7 +7,7 @@ export class ImageService {
 
   async uploadImage(
     file: Express.Multer.File,
-  ): Promise<{ imagePath: string; name: string }> {
+  ): Promise<{ url: string; name: string }> {
     const storage = this.firebaseService.getStorageInstance();
     const bucket = storage.bucket();
 
@@ -18,6 +18,7 @@ export class ImageService {
       metadata: {
         contentType: file.mimetype,
       },
+      public: true,
     });
 
     return new Promise((resolve, reject) => {
@@ -27,7 +28,7 @@ export class ImageService {
 
       stream.on('finish', () => {
         resolve({
-          imagePath: fileUpload.name,
+          url: fileUpload.publicUrl(),
           name: fileName,
         });
       });
@@ -38,7 +39,7 @@ export class ImageService {
 
   async uploadImages(
     files: Express.Multer.File[],
-  ): Promise<{ imagePath: string; name: string }[]> {
+  ): Promise<{ url: string; name: string }[]> {
     return Promise.all(files.map((file) => this.uploadImage(file)));
   }
 }

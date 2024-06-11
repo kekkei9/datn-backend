@@ -427,8 +427,8 @@ export class UsersService {
   }
 
   async uploadAvatar(user: PayloadToken, avatar: Express.Multer.File) {
-    const { imagePath } = await this.imageService.uploadImage(avatar);
+    const { url } = await this.imageService.uploadImage(avatar);
 
-    return this.userRepository.update(user.id, { avatar: imagePath });
+    return this.userRepository.update(user.id, { avatar: url });
   }
 }
