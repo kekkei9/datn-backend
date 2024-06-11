@@ -10,6 +10,7 @@ import { NotificationsService } from '../../notifications/services/notifications
 import { NotificationType } from '../../notifications/entities/notification.entity';
 import { ImageService } from '../../image/services/image.service';
 import { GetAllDiariesDto } from '../dto/find-diaries.dto';
+import { diaryMapper } from '../mapper/diary.mapper';
 
 @Injectable()
 export class DiariesService {
@@ -69,7 +70,7 @@ export class DiariesService {
   }
 
   async patch(
-    { data }: { data: object },
+    { data }: { data: string },
     files: Express.Multer.File[],
     diaryId: number,
     user: PayloadToken,
@@ -119,23 +120,27 @@ export class DiariesService {
       );
     }
 
-    return this.diaryRepository.find({
-      relations: ['createdBy', 'belongTo'],
-      order: {
-        updatedAt: 'DESC',
-      },
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-      ...(targetUserId ? { where: { belongTo: { id: targetUserId } } } : {}),
-    });
+    return (
+      await this.diaryRepository.find({
+        relations: ['createdBy', 'belongTo'],
+        order: {
+          updatedAt: 'DESC',
+        },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        ...(targetUserId ? { where: { belongTo: { id: targetUserId } } } : {}),
+      })
+    ).map(diaryMapper);
   }
 
-  findById(diaryId: number) {
-    return this.diaryRepository.findOne({
-      relations: ['createdBy', 'belongTo'],
-      where: {
-        id: diaryId,
-      },
-    });
+  async findById(diaryId: number) {
+    return diaryMapper(
+      await this.diaryRepository.findOne({
+        relations: ['createdBy', 'belongTo'],
+        where: {
+          id: diaryId,
+        },
+      }),
+    );
   }
 }

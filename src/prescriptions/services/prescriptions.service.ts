@@ -13,6 +13,7 @@ import { GetAllDiagnoses } from '../dto/get-diagnoses.dto';
 import { GetAllPrescriptionDto } from '../dto/get-prescription.dto';
 import { DiagnoseEntity } from '../entities/diagnose.entity';
 import { PrescriptionEntity } from '../entities/prescription.entity';
+import { prescriptionMapper } from '../mappers/prescription.mapper';
 
 @Injectable()
 export class PrescriptionsService {
@@ -75,7 +76,7 @@ export class PrescriptionsService {
   }
 
   async patch(
-    { data }: { data: object },
+    { data }: { data: string },
     files: Express.Multer.File[],
     prescriptionId: number,
     user: PayloadToken,
@@ -127,24 +128,28 @@ export class PrescriptionsService {
       );
     }
 
-    return this.prescriptionRepository.find({
-      relations: ['createdBy', 'belongTo'],
-      order: {
-        updatedAt: 'DESC',
-      },
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-      ...(targetUserId ? { where: { belongTo: { id: targetUserId } } } : {}),
-    });
+    return (
+      await this.prescriptionRepository.find({
+        relations: ['createdBy', 'belongTo'],
+        order: {
+          updatedAt: 'DESC',
+        },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        ...(targetUserId ? { where: { belongTo: { id: targetUserId } } } : {}),
+      })
+    ).map(prescriptionMapper);
   }
 
-  findById(prescriptionId: number) {
-    return this.prescriptionRepository.findOne({
-      relations: ['createdBy', 'belongTo'],
-      where: {
-        id: prescriptionId,
-      },
-    });
+  async findById(prescriptionId: number) {
+    return prescriptionMapper(
+      await this.prescriptionRepository.findOne({
+        relations: ['createdBy', 'belongTo'],
+        where: {
+          id: prescriptionId,
+        },
+      }),
+    );
   }
 
   async findAllDiagnoses({

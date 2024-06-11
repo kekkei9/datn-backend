@@ -1,9 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber } from 'class-validator';
+import { IsJSON, IsNumber } from 'class-validator';
 
 export class CreatePrescriptionDto {
   @ApiProperty()
-  data: object;
+  @IsJSON()
+  data: string;
 
   @ApiProperty()
   @IsNumber()

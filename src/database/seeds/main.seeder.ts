@@ -10,6 +10,7 @@ export class MainSeeder implements Seeder {
   ): Promise<any> {
     const userSeeder = new UserSeeder();
     await userSeeder.run(dataSource, factoryManager);
+
     const friendRequestSeeder = new FriendRequestSeeder();
     await friendRequestSeeder.run(dataSource);
   }
