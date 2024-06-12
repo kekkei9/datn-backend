@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Role } from '../../auth/models/roles.model';
 import { PayloadToken } from '../../auth/models/token.model';
 import { UsersService } from '../../users/services/users.service';
 import {
@@ -23,6 +22,7 @@ import { NotificationsService } from '../../notifications/services/notifications
 import { NotificationType } from '../../notifications/entities/notification.entity';
 import dayjs from 'dayjs';
 import { ReportsService } from '../../reports/services/reports.service';
+import { Role } from '../../users/entities/user.entity';
 
 @Injectable()
 export class AppointmentsService {

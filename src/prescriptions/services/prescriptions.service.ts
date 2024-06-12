@@ -1,7 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Role } from '../../auth/models/roles.model';
 import { PayloadToken } from '../../auth/models/token.model';
 import { ImageService } from '../../image/services/image.service';
 import { NotificationType } from '../../notifications/entities/notification.entity';
@@ -14,6 +13,7 @@ import { GetAllPrescriptionDto } from '../dto/get-prescription.dto';
 import { DiagnoseEntity } from '../entities/diagnose.entity';
 import { PrescriptionEntity } from '../entities/prescription.entity';
 import { prescriptionMapper } from '../mappers/prescription.mapper';
+import { Role } from '../../users/entities/user.entity';
 
 @Injectable()
 export class PrescriptionsService {

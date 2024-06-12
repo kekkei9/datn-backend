@@ -5,12 +5,12 @@ import { Repository } from 'typeorm';
 import { PayloadToken } from '../../auth/models/token.model';
 import { CreateDiaryDto } from '../dto/create-diary.dto';
 import { UsersService } from '../../users/services/users.service';
-import { Role } from '../../auth/models/roles.model';
 import { NotificationsService } from '../../notifications/services/notifications.service';
 import { NotificationType } from '../../notifications/entities/notification.entity';
 import { ImageService } from '../../image/services/image.service';
 import { GetAllDiariesDto } from '../dto/find-diaries.dto';
 import { diaryMapper } from '../mapper/diary.mapper';
+import { Role } from '../../users/entities/user.entity';
 
 @Injectable()
 export class DiariesService {

@@ -29,7 +29,6 @@ import { Public } from '../../auth/decorators/public.decorator';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../auth/guards/roles.guard';
-import { Role } from '../../auth/models/roles.model';
 import {
   CreateAdminDto,
   CreateUserDto,
@@ -45,6 +44,7 @@ import {
 import { SearchUserDto } from '../dto/search-user.dto';
 import { UsersService } from '../services/users.service';
 import { FriendRequestStatus } from '../entities/friend-request.interface';
+import { Role } from '../entities/user.entity';
 
 @ApiTags('users') // put the name of the controller in swagger
 @Controller('users')

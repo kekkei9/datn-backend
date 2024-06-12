@@ -16,9 +16,9 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { Role } from '../../auth/models/roles.model';
 import { GetAllDiariesDto } from '../dto/find-diaries.dto';
 import { DiariesService } from '../services/diaries.service';
+import { Role } from '../../users/entities/user.entity';
 
 @ApiTags('diaries')
 @Controller('diaries')

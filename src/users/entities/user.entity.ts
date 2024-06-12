@@ -9,7 +9,6 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { AppointmentEntity } from '../../appointments/entities/appointment.entity';
-import { Role } from '../../auth/models/roles.model';
 import { DiaryEntity } from '../../diaries/entities/diary.entity';
 import { NotificationEntity } from '../../notifications/entities/notification.entity';
 import { PrescriptionEntity } from '../../prescriptions/entities/prescription.entity';
@@ -22,6 +21,12 @@ export enum Gender {
   MALE = 'male',
   FEMALE = 'female',
   OTHER = 'other',
+}
+
+export enum Role {
+  ADMIN = 'admin',
+  PATIENT = 'patient',
+  DOCTOR = 'doctor',
 }
 
 @Entity('users')

@@ -1,9 +1,8 @@
 import { DataSource } from 'typeorm';
 import { Seeder } from 'typeorm-extension';
-import { Role } from '../../auth/models/roles.model';
 import { FriendRequestEntity } from '../../users/entities/friend-request.entity';
 import { FriendRequestStatus } from '../../users/entities/friend-request.interface';
-import { UserEntity } from '../../users/entities/user.entity';
+import { Role, UserEntity } from '../../users/entities/user.entity';
 
 export default class FriendRequestSeeder implements Seeder {
   /**

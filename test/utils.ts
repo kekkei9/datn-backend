@@ -1,4 +1,4 @@
-import { Role } from '../src/auth/models/roles.model';
+import { Role } from '../src/auth/entities/user.entity';
 import { CreateAdminDto } from '../src/users/dto/create-user.dto';
 
 export const userAdmin: CreateAdminDto = {

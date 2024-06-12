@@ -1,6 +1,5 @@
 import { setSeederFactory } from 'typeorm-extension';
-import { UserEntity } from '../../users/entities/user.entity';
-import { Role } from '../../auth/models/roles.model';
+import { Role, UserEntity } from '../../users/entities/user.entity';
 
 export default setSeederFactory(UserEntity, async (faker) => {
   const user = new UserEntity();

@@ -7,8 +7,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { Role } from '../../auth/models/roles.model';
-import { Gender } from '../entities/user.entity';
+import { Gender, Role } from '../entities/user.entity';
 
 export class CreateUserDto {
   @ApiProperty()

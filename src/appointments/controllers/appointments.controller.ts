@@ -12,12 +12,12 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../auth/guards/roles.guard';
-import { Role } from '../../auth/models/roles.model';
 import {
   CreateAppointmentRequestDto,
   ResponseAppointmentRequestDto,
 } from '../dto/create-appointment.dto';
 import { AppointmentsService } from '../services/appointments.service';
+import { Role } from '../../users/entities/user.entity';
 
 @ApiTags('appointments') // put the name of the controller in swagger
 @Controller('appointments')

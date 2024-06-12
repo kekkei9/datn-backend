@@ -16,10 +16,10 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { Role } from '../../auth/models/roles.model';
 import { PrescriptionsService } from '../services/prescriptions.service';
 import { GetAllPrescriptionDto } from '../dto/get-prescription.dto';
 import { GetAllDiagnoses } from '../dto/get-diagnoses.dto';
+import { Role } from '../../users/entities/user.entity';
 
 @ApiTags('prescriptions')
 @UseGuards(JwtAuthGuard)

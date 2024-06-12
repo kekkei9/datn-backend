@@ -9,7 +9,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { createHash } from 'crypto';
 import { DeepPartial, In, Not, Repository } from 'typeorm';
-import { Role } from '../../auth/models/roles.model';
 import { PayloadToken } from '../../auth/models/token.model';
 import {
   CreateAdminDto,
@@ -22,7 +21,7 @@ import {
   FriendRequest,
   FriendRequestStatus,
 } from '../entities/friend-request.interface';
-import { UserEntity } from '../entities/user.entity';
+import { Role, UserEntity } from '../entities/user.entity';
 import SmsService from '../../sms/services/sms.service';
 import { ResponseFriendRequestDto } from '../dto/friend-request.dto';
 import { isPhoneNumber } from 'class-validator';

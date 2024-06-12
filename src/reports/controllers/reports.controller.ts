@@ -12,8 +12,8 @@ import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../auth/guards/roles.guard';
 import { ReportsService } from '../services/reports.service';
 import { Roles } from '../../auth/decorators/roles.decorator';
-import { Role } from '../../auth/models/roles.model';
 import { CreateReportDto } from '../dto/create-report.dto';
+import { Role } from '../../users/entities/user.entity';
 
 @ApiTags('reports') // put the name of the controller in swagger
 @Controller('reports')
