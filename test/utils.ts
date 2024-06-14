@@ -1,5 +1,5 @@
-import { Role } from '../src/auth/entities/user.entity';
 import { CreateAdminDto } from '../src/users/dto/create-user.dto';
+import { Role } from '../src/users/entities/user.entity';
 
 export const userAdmin: CreateAdminDto = {
   email: 'test@example.com',

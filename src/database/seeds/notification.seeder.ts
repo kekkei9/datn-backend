@@ -4,7 +4,6 @@ import {
   NotificationEntity,
   NotificationType,
 } from '../../notifications/entities/notification.entity';
-import { UserEntity } from '../../users/entities/user.entity';
 
 export default class NotificationSeeder implements Seeder {
   /**
@@ -20,60 +19,50 @@ export default class NotificationSeeder implements Seeder {
   ): Promise<any> {
     const notificationRepository = dataSource.getRepository(NotificationEntity);
 
-    const userRepository = dataSource.getRepository(UserEntity);
-
-    const patientUser = await userRepository.findOne({
-      where: {
-        phoneNumber: 'patient',
-      },
-    });
-
-    const doctorUser = await userRepository.findOne({
-      where: {
-        phoneNumber: 'doctor',
-      },
-    });
-
     await notificationRepository.save([
       {
         message: 'Test notification 1',
         belongTo: {
-          id: patientUser.id,
+          id: 3,
         },
         createdBy: {
-          id: doctorUser.id,
+          id: 2,
         },
         type: NotificationType.APPOINTMENT,
+        referenceId: 1,
       },
       {
         message: 'Test notification 1',
         belongTo: {
-          id: patientUser.id,
+          id: 3,
         },
         createdBy: {
-          id: doctorUser.id,
+          id: 2,
         },
         type: NotificationType.DIARY,
+        referenceId: 1,
       },
       {
         message: 'Test notification 1',
         belongTo: {
-          id: patientUser.id,
+          id: 3,
         },
         createdBy: {
-          id: doctorUser.id,
+          id: 2,
         },
         type: NotificationType.FRIEND,
+        referenceId: 1,
       },
       {
         message: 'Test notification 1',
         belongTo: {
-          id: patientUser.id,
+          id: 3,
         },
         createdBy: {
-          id: doctorUser.id,
+          id: 2,
         },
         type: NotificationType.PRESCRIPTION,
+        referenceId: 1,
       },
     ]);
   }

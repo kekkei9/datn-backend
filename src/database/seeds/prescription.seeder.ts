@@ -1,7 +1,6 @@
 import { DataSource } from 'typeorm';
 import { Seeder } from 'typeorm-extension';
 import { PrescriptionEntity } from '../../prescriptions/entities/prescription.entity';
-import { UserEntity } from '../../users/entities/user.entity';
 
 export default class PrescriptionSeeder implements Seeder {
   /**
@@ -17,27 +16,14 @@ export default class PrescriptionSeeder implements Seeder {
   ): Promise<any> {
     const prescriptionRepository = dataSource.getRepository(PrescriptionEntity);
 
-    const userRepository = dataSource.getRepository(UserEntity);
-
-    const patientUser = await userRepository.findOne({
-      where: {
-        phoneNumber: 'patient',
-      },
-    });
-
-    const doctorUser = await userRepository.findOne({
-      where: {
-        phoneNumber: 'doctor',
-      },
-    });
-
-    await prescriptionRepository.save([
+    await prescriptionRepository.upsert(
       {
+        id: 1,
         belongTo: {
-          id: patientUser.id,
+          id: 3,
         },
         createdBy: {
-          id: doctorUser.id,
+          id: 2,
         },
         data: JSON.stringify({
           medicines: [
@@ -55,6 +41,9 @@ export default class PrescriptionSeeder implements Seeder {
         }),
         images: [],
       },
-    ]);
+      {
+        conflictPaths: ['id'],
+      },
+    );
   }
 }

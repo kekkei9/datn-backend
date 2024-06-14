@@ -1,7 +1,6 @@
 import { DataSource } from 'typeorm';
 import { Seeder } from 'typeorm-extension';
 import { DiagnoseEntity } from '../../prescriptions/entities/diagnose.entity';
-import { PrescriptionEntity } from '../../prescriptions/entities/prescription.entity';
 
 export default class DiagnoseSeeder implements Seeder {
   /**
@@ -16,15 +15,27 @@ export default class DiagnoseSeeder implements Seeder {
     // factoryManager: SeederFactoryManager,
   ): Promise<any> {
     const diagnoseRepository = dataSource.getRepository(DiagnoseEntity);
-    const prescriptionRepository = dataSource.getRepository(PrescriptionEntity);
-    const firstPrescription = await prescriptionRepository.findOne({});
 
     diagnoseRepository.save([
       {
         images: [],
         problem: 'test diagnose',
         prescription: {
-          id: firstPrescription.id,
+          id: 1,
+        },
+      },
+      {
+        images: [],
+        problem: 'test diagnose 2',
+        prescription: {
+          id: 1,
+        },
+      },
+      {
+        images: [],
+        problem: 'test diagnose 3',
+        prescription: {
+          id: 1,
         },
       },
     ]);
