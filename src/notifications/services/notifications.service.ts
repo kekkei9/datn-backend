@@ -5,6 +5,7 @@ import {
   NotificationEntity,
   NotificationType,
 } from '../entities/notification.entity';
+import { GetNotificationsDto } from '../dto/get-notifications.dto';
 
 export class NotificationsService {
   constructor(
@@ -34,10 +35,22 @@ export class NotificationsService {
     });
   }
 
-  getUserNotifications(user: PayloadToken) {
+  getUserNotifications(
+    { page, pageSize, type }: GetNotificationsDto,
+    user: PayloadToken,
+  ) {
     return this.notificationRepository.find({
-      where: { belongTo: { id: user.id } },
+      where: {
+        belongTo: { id: user.id },
+        ...(type
+          ? {
+              type,
+            }
+          : {}),
+      },
       order: { createdAt: 'DESC' },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
     });
   }
 
