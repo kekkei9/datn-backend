@@ -1,16 +1,14 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { DiaryEntity } from '../entities/diary.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PayloadToken } from '../../auth/models/token.model';
-import { CreateDiaryDto } from '../dto/create-diary.dto';
-import { UsersService } from '../../users/services/users.service';
-import { NotificationsService } from '../../notifications/services/notifications.service';
-import { NotificationType } from '../../notifications/entities/notification.entity';
 import { ImageService } from '../../image/services/image.service';
-import { GetAllDiariesDto } from '../dto/find-diaries.dto';
-import { diaryMapper } from '../mapper/diary.mapper';
 import { Role } from '../../users/entities/user.entity';
+import { UsersService } from '../../users/services/users.service';
+import { CreateDiaryDto } from '../dto/create-diary.dto';
+import { GetAllDiariesDto } from '../dto/find-diaries.dto';
+import { DiaryEntity } from '../entities/diary.entity';
+import { diaryMapper } from '../mapper/diary.mapper';
 
 @Injectable()
 export class DiariesService {
@@ -20,23 +18,17 @@ export class DiariesService {
 
     private usersService: UsersService,
 
-    private notificationsService: NotificationsService,
-
     private imageService: ImageService,
   ) {}
 
   async create(
-    diary: CreateDiaryDto,
+    { data }: CreateDiaryDto,
     files: Express.Multer.File[],
     user: PayloadToken,
   ) {
-    const { data, belongTo } = diary;
-
-    const belongToUser = await this.usersService.findUserById(belongTo);
-
-    if (belongToUser.role !== Role.PATIENT) {
+    if (user.role !== Role.PATIENT) {
       throw new HttpException(
-        'Only patients can have diaries',
+        'Only patients can create diaries',
         HttpStatus.FORBIDDEN,
       );
     }
@@ -45,25 +37,10 @@ export class DiariesService {
 
     const createdDiary = await this.diaryRepository.save({
       data,
-      createdBy: {
+      user: {
         id: user.id,
-      },
-      belongTo: {
-        id: belongTo,
       },
       images: images.map((image) => image.url),
-    });
-
-    this.notificationsService.create({
-      belongTo: {
-        id: belongTo,
-      },
-      createdBy: {
-        id: user.id,
-      },
-      message: 'Diary created',
-      referenceId: createdDiary.id,
-      type: NotificationType.DIARY,
     });
 
     return createdDiary;
@@ -78,10 +55,7 @@ export class DiariesService {
     const currentUser = await this.usersService.findUserById(user.id);
     const diary = await this.findById(diaryId);
 
-    if (
-      currentUser.id !== diary.createdBy.id &&
-      currentUser.role !== Role.ADMIN
-    ) {
+    if (currentUser.id !== diary.user.id && currentUser.role !== Role.ADMIN) {
       throw new HttpException('Cannot update this diary', HttpStatus.FORBIDDEN);
     }
 
@@ -129,8 +103,8 @@ export class DiariesService {
         skip: (page - 1) * pageSize,
         take: pageSize,
         ...(targetUserId
-          ? { where: { belongTo: { id: targetUserId } } }
-          : { relations: ['createdBy', 'belongTo'] }),
+          ? { where: { user: { id: targetUserId } } }
+          : { relations: ['user'] }),
       })
     ).map(diaryMapper);
   }
@@ -138,7 +112,7 @@ export class DiariesService {
   async findById(diaryId: number) {
     return diaryMapper(
       await this.diaryRepository.findOne({
-        relations: ['createdBy', 'belongTo'],
+        relations: ['user'],
         where: {
           id: diaryId,
         },

@@ -43,7 +43,7 @@ export class PrescriptionEntity extends DefaultEntity {
   @Column('text', {
     default: {},
     array: true,
-    name: 'image_paths',
+    name: 'images',
   })
   images: string[];
 }

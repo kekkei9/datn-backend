@@ -145,16 +145,7 @@ export class UserEntity extends DefaultEntity {
   )
   prescriptions: PrescriptionEntity[];
 
-  @OneToMany(
-    () => DiaryEntity,
-    (prescriptionEntity) => prescriptionEntity.createdBy,
-  )
-  createdDiaries: DiaryEntity[];
-
-  @OneToMany(
-    () => DiaryEntity,
-    (prescriptionEntity) => prescriptionEntity.belongTo,
-  )
+  @OneToMany(() => DiaryEntity, (diaryEntity) => diaryEntity.user)
   diaries: DiaryEntity[];
 
   @OneToMany(

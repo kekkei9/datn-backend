@@ -16,22 +16,16 @@ export class DiaryEntity extends DefaultEntity {
   @Column('jsonb')
   data: string;
 
-  @ManyToOne(() => UserEntity, (userEntity) => userEntity.createdDiaries, {
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'created_by_id' })
-  createdBy: UserEntity;
-
   @ManyToOne(() => UserEntity, (userEntity) => userEntity.diaries, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'belong_to_id' })
-  belongTo: UserEntity;
+  user: UserEntity;
 
   @Column('text', {
     default: {},
     array: true,
-    name: 'image_paths',
+    name: 'images',
   })
   images: string[];
 }

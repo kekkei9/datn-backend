@@ -18,10 +18,7 @@ export default class DiarySeeder implements Seeder {
 
     await diaryRepository.save([
       {
-        createdBy: {
-          id: 2,
-        },
-        belongTo: {
+        user: {
           id: 3,
         },
         images: [],

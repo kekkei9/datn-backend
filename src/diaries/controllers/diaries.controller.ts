@@ -57,9 +57,6 @@ export class DiariesController {
         data: {
           type: 'object',
         },
-        belongTo: {
-          type: 'number',
-        },
       },
     },
   })
