@@ -120,7 +120,8 @@ export class PrescriptionsService {
     const friends = await this.usersService.getFriends(currentUser);
     if (
       !friends.find((friend) => friend.id === targetUserId) &&
-      currentUser.role !== Role.ADMIN
+      currentUser.role !== Role.ADMIN &&
+      currentUser.id !== targetUserId
     ) {
       throw new HttpException(
         'Cannot view prescriptions of this user',
@@ -130,13 +131,14 @@ export class PrescriptionsService {
 
     return (
       await this.prescriptionRepository.find({
-        relations: ['createdBy', 'belongTo'],
         order: {
           updatedAt: 'DESC',
         },
         skip: (page - 1) * pageSize,
         take: pageSize,
-        ...(targetUserId ? { where: { belongTo: { id: targetUserId } } } : {}),
+        ...(targetUserId
+          ? { where: { belongTo: { id: targetUserId } } }
+          : { relations: ['createdBy', 'belongTo'] }),
       })
     ).map(prescriptionMapper);
   }
@@ -164,7 +166,8 @@ export class PrescriptionsService {
 
     if (
       !friends.find((friend) => friend.id === targetUserId) &&
-      currentUser.role !== Role.ADMIN
+      currentUser.role !== Role.ADMIN &&
+      currentUser.id !== targetUserId
     ) {
       throw new HttpException(
         'Cannot view diagnoses of this user',
