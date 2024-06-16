@@ -45,6 +45,14 @@ export class AppointmentsController {
   }
 
   @ApiBearerAuth('access-token')
+  @Get('/history/:userId')
+  getUserAppointmentHistory(@Param('userId') userIdString: string) {
+    return this.appointmentsService.getAppointmentHistoryByUser(
+      parseInt(userIdString),
+    );
+  }
+
+  @ApiBearerAuth('access-token')
   @Post('/send/:userId')
   sendAppointmentRequest(
     @Request() req,

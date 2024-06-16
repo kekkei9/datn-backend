@@ -135,6 +135,26 @@ export class AppointmentsService {
     });
   }
 
+  getAppointmentHistoryByUser(userId: number) {
+    return this.appointmentRepository.find({
+      where: [
+        {
+          confirmUser: {
+            id: userId,
+          },
+          status: AppointmentStatus.COMPLETED,
+        },
+        {
+          requestUser: {
+            id: userId,
+          },
+          status: AppointmentStatus.COMPLETED,
+        },
+      ],
+      relations: ['requestUser'],
+    });
+  }
+
   async updateAppointmentRequestById(
     user: PayloadToken,
     appointmentId: number,
