@@ -1,4 +1,4 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsDate,
   IsEnum,
@@ -47,7 +47,17 @@ export class CreateAdminDto extends CreateUserDto {
   readonly phoneNumber: string;
 }
 
-export class UpdateUserDto extends PartialType(CreateUserDto) {
+export class UpdateUserDto {
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  readonly firstName: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  readonly lastName: string;
+
   @ApiProperty()
   @IsOptional()
   @IsDate()

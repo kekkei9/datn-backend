@@ -40,8 +40,8 @@ export class AppointmentsController {
 
   @ApiBearerAuth('access-token')
   @Get('/me')
-  getMyAppointments(@Request() req) {
-    return this.appointmentsService.getAppointmentsByUser(req.user);
+  getMyIncomingAppointments(@Request() req) {
+    return this.appointmentsService.getIncomingAppointmentsByUser(req.user);
   }
 
   @ApiBearerAuth('access-token')

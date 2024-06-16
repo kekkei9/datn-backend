@@ -115,7 +115,7 @@ export class AppointmentsService {
     return createdAppointment;
   }
 
-  getAppointmentsByUser({ id }: PayloadToken) {
+  getIncomingAppointmentsByUser({ id }: PayloadToken) {
     return this.appointmentRepository.find({
       where: [
         {
