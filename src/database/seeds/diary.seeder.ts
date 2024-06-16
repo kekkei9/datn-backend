@@ -19,7 +19,7 @@ export default class DiarySeeder implements Seeder {
     await diaryRepository.save([
       {
         user: {
-          id: 3,
+          id: 2,
         },
         images: [],
         data: JSON.stringify({
