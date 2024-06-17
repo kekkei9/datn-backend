@@ -6,6 +6,7 @@ import PrescriptionSeeder from './prescription.seeder';
 import DiagnoseSeeder from './diagnose.seeder';
 import NotificationSeeder from './notification.seeder';
 import DiarySeeder from './diary.seeder';
+import AppointmentSeeder from './appointment.seeder';
 
 export class MainSeeder implements Seeder {
   public async run(
@@ -29,5 +30,8 @@ export class MainSeeder implements Seeder {
 
     const diarySeeder = new DiarySeeder();
     await diarySeeder.run(dataSource);
+
+    const appointmentSeeder = new AppointmentSeeder();
+    await appointmentSeeder.run(dataSource);
   }
 }

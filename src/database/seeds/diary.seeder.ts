@@ -26,6 +26,33 @@ export default class DiarySeeder implements Seeder {
           mockKey: 'mockValue',
         }),
       },
+      {
+        user: {
+          id: 2,
+        },
+        images: [],
+        data: JSON.stringify({
+          mockKey: 'mockValue',
+        }),
+      },
+      {
+        user: {
+          id: 2,
+        },
+        images: [],
+        data: JSON.stringify({
+          mockKey: 'mockValue',
+        }),
+      },
+      {
+        user: {
+          id: 2,
+        },
+        images: [],
+        data: JSON.stringify({
+          mockKey: 'mockValue',
+        }),
+      },
     ]);
   }
 }

@@ -45,5 +45,34 @@ export default class PrescriptionSeeder implements Seeder {
         conflictPaths: ['id'],
       },
     );
+    await prescriptionRepository.upsert(
+      {
+        id: 2,
+        belongTo: {
+          id: 3,
+        },
+        createdBy: {
+          id: 2,
+        },
+        data: JSON.stringify({
+          medicines: [
+            {
+              name: 'Prospan',
+              dosage: 3,
+              schedule: { morning: 1, afternoon: 1, evening: 1, night: 0 },
+            },
+            {
+              name: 'Paracetamol',
+              dosage: 2,
+              schedule: { morning: 1, afternoon: 0, evening: 1, night: 0 },
+            },
+          ],
+        }),
+        images: [],
+      },
+      {
+        conflictPaths: ['id'],
+      },
+    );
   }
 }

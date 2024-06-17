@@ -38,6 +38,27 @@ export default class DiagnoseSeeder implements Seeder {
           id: 1,
         },
       },
+      {
+        images: [],
+        problem: 'test diagnose',
+        prescription: {
+          id: 2,
+        },
+      },
+      {
+        images: [],
+        problem: 'test diagnose 2',
+        prescription: {
+          id: 2,
+        },
+      },
+      {
+        images: [],
+        problem: 'test diagnose 3',
+        prescription: {
+          id: 2,
+        },
+      },
     ]);
   }
 }

@@ -48,7 +48,7 @@ export default class UserSeeder implements Seeder {
         },
       ].map((user) =>
         repository.upsert(user, {
-          conflictPaths: ['phoneNumber'],
+          conflictPaths: ['id'],
         }),
       ),
     );

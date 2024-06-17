@@ -19,51 +19,24 @@ export default class NotificationSeeder implements Seeder {
   ): Promise<any> {
     const notificationRepository = dataSource.getRepository(NotificationEntity);
 
-    await notificationRepository.save([
-      {
-        message: 'Test notification 1',
-        belongTo: {
-          id: 3,
-        },
-        createdBy: {
-          id: 2,
-        },
-        type: NotificationType.APPOINTMENT,
-        referenceId: 1,
-      },
-      {
-        message: 'Test notification 1',
-        belongTo: {
-          id: 3,
-        },
-        createdBy: {
-          id: 2,
-        },
-        type: NotificationType.DIARY,
-        referenceId: 1,
-      },
-      {
-        message: 'Test notification 1',
-        belongTo: {
-          id: 3,
-        },
-        createdBy: {
-          id: 2,
-        },
-        type: NotificationType.FRIEND,
-        referenceId: 1,
-      },
-      {
-        message: 'Test notification 1',
-        belongTo: {
-          id: 3,
-        },
-        createdBy: {
-          id: 2,
-        },
-        type: NotificationType.PRESCRIPTION,
-        referenceId: 1,
-      },
-    ]);
+    await notificationRepository.save(
+      Object.values(NotificationType).reduce(
+        (acc, curr) =>
+          acc.concat(
+            Array(5).fill({
+              message: `Test notification`,
+              belongTo: {
+                id: 3,
+              },
+              createdBy: {
+                id: 2,
+              },
+              type: curr,
+              referenceId: 1,
+            }),
+          ),
+        [],
+      ),
+    );
   }
 }
