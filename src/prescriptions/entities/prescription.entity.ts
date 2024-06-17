@@ -4,11 +4,13 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { DefaultEntity } from '../../utils/entities/default.entity';
 import { UserEntity } from '../../users/entities/user.entity';
 import { DiagnoseEntity } from './diagnose.entity';
+import { AppointmentEntity } from '../../appointments/entities/appointment.entity';
 
 @Entity('prescription')
 export class PrescriptionEntity extends DefaultEntity {
@@ -39,6 +41,13 @@ export class PrescriptionEntity extends DefaultEntity {
     (diagnoseEntity) => diagnoseEntity.prescription,
   )
   diagnoses: DiagnoseEntity[];
+
+  @OneToOne(
+    () => AppointmentEntity,
+    (appointmentEntity) => appointmentEntity.prescription,
+  )
+  @JoinColumn({ name: 'appointment_id' })
+  appointment: AppointmentEntity;
 
   @Column('text', {
     default: {},

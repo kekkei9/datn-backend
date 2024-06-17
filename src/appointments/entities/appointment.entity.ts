@@ -3,9 +3,11 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UserEntity } from '../../users/entities/user.entity';
+import { PrescriptionEntity } from '../../prescriptions/entities/prescription.entity';
 
 export enum AppointmentStatus {
   PENDING = 'pending',
@@ -44,4 +46,14 @@ export class AppointmentEntity {
     name: 'begin_timestamp',
   })
   beginTimestamp: number;
+
+  @OneToOne(
+    () => PrescriptionEntity,
+    (prescriptionEntity) => prescriptionEntity.appointment,
+    {
+      onDelete: 'CASCADE',
+    },
+  )
+  @JoinColumn({ name: 'prescription_id' })
+  prescription: PrescriptionEntity;
 }

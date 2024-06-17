@@ -30,6 +30,9 @@ export default class AppointmentSeeder implements Seeder {
           id: 3,
         },
         status: AppointmentStatus.COMPLETED,
+        prescription: {
+          id: 1,
+        },
       },
       {
         beginTimestamp: 0,
@@ -96,6 +99,9 @@ export default class AppointmentSeeder implements Seeder {
           id: 3,
         },
         status: AppointmentStatus.COMPLETED,
+        prescription: {
+          id: 2,
+        },
       },
       {
         beginTimestamp: 0,
