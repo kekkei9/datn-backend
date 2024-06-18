@@ -13,10 +13,14 @@ import { DiagnoseEntity } from './prescriptions/entities/diagnose.entity';
 
 const options: DataSourceOptions & SeederOptions = {
   type: 'postgres',
-  host: 'localhost',
-  username: 'postgres',
-  password: '12345679',
-  database: 'datn-backend',
+  // host: 'localhost',
+  // username: 'postgres',
+  // password: '12345679',
+  // database: 'datn-backend',
+  host: 'dpg-cpogs5uehbks73ej1plg-a',
+  username: 'datn_be_user',
+  password: 'sBmqW17UKMtkJFzgZ63cyWUzQpzSZK3T',
+  database: 'datn_be_kb2j',
   port: 5432,
   entities: [
     UserEntity,
