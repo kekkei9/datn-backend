@@ -8,7 +8,7 @@ import {
 import { DefaultEntity } from '../../utils/entities/default.entity';
 import { UserEntity } from '../../users/entities/user.entity';
 
-@Entity('diary')
+@Entity('diaries')
 export class DiaryEntity extends DefaultEntity {
   @PrimaryGeneratedColumn()
   id: number;

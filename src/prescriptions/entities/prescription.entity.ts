@@ -12,7 +12,7 @@ import { UserEntity } from '../../users/entities/user.entity';
 import { DiagnoseEntity } from './diagnose.entity';
 import { AppointmentEntity } from '../../appointments/entities/appointment.entity';
 
-@Entity('prescription')
+@Entity('prescriptions')
 export class PrescriptionEntity extends DefaultEntity {
   @PrimaryGeneratedColumn()
   id: number;

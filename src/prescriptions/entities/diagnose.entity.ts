@@ -8,7 +8,7 @@ import {
 import { DefaultEntity } from '../../utils/entities/default.entity';
 import { PrescriptionEntity } from './prescription.entity';
 
-@Entity('diagnose')
+@Entity('diagnoses')
 export class DiagnoseEntity extends DefaultEntity {
   @PrimaryGeneratedColumn()
   id: number;

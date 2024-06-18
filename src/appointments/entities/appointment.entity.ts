@@ -16,7 +16,7 @@ export enum AppointmentStatus {
   COMPLETED = 'completed',
 }
 
-@Entity('appointment')
+@Entity('appointments')
 export class AppointmentEntity {
   @PrimaryGeneratedColumn()
   id: number;

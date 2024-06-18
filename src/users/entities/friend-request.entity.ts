@@ -9,7 +9,7 @@ import { FriendRequestStatus } from './friend-request.interface';
 
 import { UserEntity as UserEntity } from './user.entity';
 
-@Entity('friend_request')
+@Entity('friend_requests')
 export class FriendRequestEntity {
   @PrimaryGeneratedColumn()
   id: number;

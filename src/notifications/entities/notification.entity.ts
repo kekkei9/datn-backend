@@ -16,7 +16,7 @@ export enum NotificationType {
   DIARY = 'diary',
 }
 
-@Entity('notification')
+@Entity('notifications')
 export class NotificationEntity extends DefaultEntity {
   @PrimaryGeneratedColumn()
   id: number;

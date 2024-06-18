@@ -34,7 +34,7 @@ const options: DataSourceOptions & SeederOptions = {
     ReportEntity,
     DiagnoseEntity,
   ],
-  ssl: true,
+  // ssl: true,
   // ssl: { rejectUnauthorized: false },
   // connectTimeoutMS: 0,
   seedTracking: true,
