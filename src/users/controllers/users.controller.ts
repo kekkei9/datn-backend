@@ -130,18 +130,6 @@ export class UsersController {
     return this.usersService.findUserById(userId);
   }
 
-  @ApiTags('cms')
-  @ApiBearerAuth('access-token')
-  @ApiResponse({
-    status: 200,
-    type: DefaultColumnsResponse,
-  })
-  @Roles(Role.ADMIN)
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
-  }
-
   @Patch('')
   @ApiBearerAuth('access-token')
   update(@Request() req, @Body() updateUserDto: UpdateUserDto) {
