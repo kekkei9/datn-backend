@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class RenameTables1718719775881 implements MigrationInterface {
-  name = 'RenameTables1718719775881';
+export class InitTable1718762128938 implements MigrationInterface {
+  name = 'InitTable1718762128938';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -27,6 +27,12 @@ export class RenameTables1718719775881 implements MigrationInterface {
     );
     await queryRunner.query(
       `CREATE TABLE "friend_requests" ("id" SERIAL NOT NULL, "status" character varying NOT NULL, "pin_id" character varying, "creator_id" integer, "receiver_id" integer, CONSTRAINT "PK_3827ba86ce64ecb4b90c92eeea6" PRIMARY KEY ("id"))`,
+    );
+    await queryRunner.query(
+      `CREATE TYPE "public"."users_role_enum" AS ENUM('admin', 'patient', 'doctor')`,
+    );
+    await queryRunner.query(
+      `CREATE TABLE "users" ("id" SERIAL NOT NULL, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "email" character varying, "phone_number" character varying NOT NULL, "password" character varying NOT NULL, "deactivated" boolean NOT NULL DEFAULT false, "refresh_token" character varying, "avatar" character varying, "gender" character varying, "birthdate" TIMESTAMP, "address" character varying, "height" integer, "weight" integer, "first_name" character varying NOT NULL, "last_name" character varying NOT NULL, "role" "public"."users_role_enum" NOT NULL DEFAULT 'patient', CONSTRAINT "UQ_17d1817f241f10a3dbafb169fd2" UNIQUE ("phone_number"), CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `ALTER TABLE "diagnoses" ADD CONSTRAINT "FK_fa77352d862d1d498424c939f10" FOREIGN KEY ("prescription_id") REFERENCES "prescriptions"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
@@ -127,6 +133,8 @@ export class RenameTables1718719775881 implements MigrationInterface {
     await queryRunner.query(
       `ALTER TABLE "diagnoses" DROP CONSTRAINT "FK_fa77352d862d1d498424c939f10"`,
     );
+    await queryRunner.query(`DROP TABLE "users"`);
+    await queryRunner.query(`DROP TYPE "public"."users_role_enum"`);
     await queryRunner.query(`DROP TABLE "friend_requests"`);
     await queryRunner.query(`DROP TABLE "doctor_requests"`);
     await queryRunner.query(`DROP TABLE "reports"`);
