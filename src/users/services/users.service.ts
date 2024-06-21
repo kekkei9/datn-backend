@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   HttpException,
   HttpStatus,
   Injectable,
@@ -263,16 +264,13 @@ export class UsersService {
     method?: 'OTP',
   ) {
     if (receiverId === creatorId)
-      return { error: 'It is not possible to add yourself!' };
+      throw new ForbiddenException('It is not possible to add yourself!');
 
     const hasRequestBeenSentOrReceived =
       await this.hasRequestBeenSentOrReceived(creatorId, receiverId);
 
     if (hasRequestBeenSentOrReceived)
-      return {
-        error:
-          'A friend request has already been sent of received to your account!',
-      };
+      throw new ForbiddenException('It is not possible to add yourself!');
 
     const saveRequest: DeepPartial<FriendRequestEntity> = {
       creator: {
@@ -355,6 +353,18 @@ export class UsersService {
         throw new HttpException('Code is incorrect', HttpStatus.BAD_REQUEST);
       }
     }
+
+    this.notificationsService.create({
+      message: `Your friend request has been ${
+        responseFriendRequestDto.status === FriendRequestStatus.ACCEPTED
+          ? 'accepted'
+          : 'declined'
+      }`,
+      belongTo: { id: friendRequest.creator.id },
+      createdBy: { id: friendRequest.receiver.id },
+      type: NotificationType.FRIEND,
+      referenceId: friendRequest.id,
+    });
 
     return await this.friendRequestRepository.save({
       ...friendRequest,

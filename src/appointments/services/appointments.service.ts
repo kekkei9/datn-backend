@@ -85,16 +85,15 @@ export class AppointmentsService {
     const currentUser = await this.userService.findUserById(currentUserId);
 
     if (user.role === currentUser.role) {
-      return {
-        message:
-          'You cannot send appointment request to user with the same role',
-      };
+      throw new ForbiddenException(
+        'You cannot send appointment request to user with the same role',
+      );
     }
 
     if ([user.role, currentUser.role].includes(Role.ADMIN)) {
-      return {
-        message: 'You cannot send appointment request to admin',
-      };
+      throw new ForbiddenException(
+        'You cannot send appointment request to admin',
+      );
     }
 
     const createdAppointment = await this.appointmentRepository.save({
@@ -223,16 +222,22 @@ export class AppointmentsService {
     const appointmentRequest = await this.findAppointmentById(appointmentId);
 
     if (user.id !== appointmentRequest.confirmUser.id)
-      return {
-        message: 'You cannot accept this appointment request',
-      };
+      throw new ForbiddenException(
+        'You cannot accept this appointment request',
+      );
 
     if (appointmentRequest.status !== 'pending')
-      return {
-        message: 'Appointment request is not pending',
-      };
+      throw new ForbiddenException('Appointment request is not pending');
 
     const { beginTimestamp, confirmUser, requestUser } = appointmentRequest;
+
+    this.notificationsService.create({
+      message: `Someone has accepted your appointment request`,
+      belongTo: appointmentRequest.confirmUser,
+      createdBy: user,
+      type: NotificationType.APPOINTMENT,
+      referenceId: appointmentId,
+    });
 
     return this.update(appointmentId, {
       beginTimestamp,

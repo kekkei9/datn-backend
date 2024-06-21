@@ -32,13 +32,13 @@ export class PrescriptionsService {
   ) {}
 
   async create(
-    prescription: CreatePrescriptionDto,
+    { data, belongTo }: CreatePrescriptionDto,
     files: Express.Multer.File[],
     user: PayloadToken,
   ) {
-    const { data, belongTo } = prescription;
+    const belongToId = Number(belongTo);
 
-    const belongToUser = await this.usersService.findUserById(belongTo);
+    const belongToUser = await this.usersService.findUserById(belongToId);
 
     if (belongToUser.role !== Role.PATIENT) {
       throw new HttpException(
@@ -55,19 +55,22 @@ export class PrescriptionsService {
         id: user.id,
       },
       belongTo: {
-        id: belongTo,
+        id: belongToId,
       },
       images: images.map((image) => image.url),
     });
 
     this.notificationsService.create({
       belongTo: {
-        id: belongTo,
+        id: belongToId,
       },
       createdBy: {
         id: user.id,
       },
-      message: 'Diary created',
+      message:
+        user.id === belongToId
+          ? 'You have created a prescription'
+          : 'A prescription has been created for you',
       referenceId: createdPrescription.id,
       type: NotificationType.PRESCRIPTION,
     });

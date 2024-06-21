@@ -13,7 +13,6 @@ export enum NotificationType {
   PRESCRIPTION = 'prescription',
   APPOINTMENT = 'appointment',
   FRIEND = 'add_friend',
-  DIARY = 'diary',
 }
 
 @Entity('notifications')
