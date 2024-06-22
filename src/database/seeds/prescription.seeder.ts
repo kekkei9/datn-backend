@@ -17,7 +17,7 @@ export default class PrescriptionSeeder implements Seeder {
   ): Promise<any> {
     const prescriptionRepository = dataSource.getRepository(PrescriptionEntity);
 
-    await prescriptionRepository.upsert(prescriptionData as any, {
+    await prescriptionRepository.upsert(prescriptionData, {
       conflictPaths: ['id'],
     });
   }

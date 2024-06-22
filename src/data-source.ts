@@ -10,6 +10,7 @@ import { NotificationEntity } from './notifications/entities/notification.entity
 import { ReportEntity } from './reports/entities/report.entity';
 import { MainSeeder } from './database/seeds/main.seeder';
 import { DiagnoseEntity } from './prescriptions/entities/diagnose.entity';
+import { DoctorSpecialtyEntity } from './doctorSpecialties/entities/doctor-specialty.entity';
 
 const options: DataSourceOptions & SeederOptions = {
   type: 'postgres',
@@ -33,6 +34,7 @@ const options: DataSourceOptions & SeederOptions = {
     NotificationEntity,
     ReportEntity,
     DiagnoseEntity,
+    DoctorSpecialtyEntity,
   ],
   // ssl: true,
   // ssl: { rejectUnauthorized: false },

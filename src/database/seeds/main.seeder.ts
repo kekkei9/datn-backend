@@ -9,6 +9,7 @@ import DiarySeeder from './diary.seeder';
 import AppointmentSeeder from './appointment.seeder';
 import DoctorRequestSeeder from './doctor_request.seeder';
 import ReportSeeder from './report.seeder';
+import DoctorSpecialtySeeder from './doctor_specialty.seeder';
 
 export class MainSeeder implements Seeder {
   public async run(
@@ -41,5 +42,8 @@ export class MainSeeder implements Seeder {
 
     const reportSeeder = new ReportSeeder();
     await reportSeeder.run(dataSource);
+
+    const doctorSpecialtySeeder = new DoctorSpecialtySeeder();
+    await doctorSpecialtySeeder.run(dataSource);
   }
 }

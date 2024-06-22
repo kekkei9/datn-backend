@@ -18,7 +18,7 @@ export default class DoctorRequestSeeder implements Seeder {
     const doctorRequestRepository =
       dataSource.getRepository(DoctorRequestEntity);
 
-    await doctorRequestRepository.upsert(doctorRequestData as any, {
+    await doctorRequestRepository.upsert(doctorRequestData, {
       conflictPaths: ['id'],
     });
   }

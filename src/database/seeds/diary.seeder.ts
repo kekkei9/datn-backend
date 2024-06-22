@@ -17,7 +17,7 @@ export default class DiarySeeder implements Seeder {
   ): Promise<any> {
     const diaryRepository = dataSource.getRepository(DiaryEntity);
 
-    await diaryRepository.upsert(diaryData as any, {
+    await diaryRepository.upsert(diaryData, {
       conflictPaths: ['id'],
     });
   }

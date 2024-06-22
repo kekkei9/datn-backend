@@ -1,0 +1,20 @@
+[
+  { "id": 1, "label": "Khám chức năng hô hấp" },
+  { "id": 2, "label": "Khám da liễu" },
+  { "id": 3, "label": "Khám điều trị vết thương" },
+  { "id": 4, "label": "Khám hậu môn-trực tràng" },
+  { "id": 5, "label": "Khám mắt" },
+  { "id": 6, "label": "Khám tai mũi họng" },
+  { "id": 7, "label": "Khám nội tiết" },
+  { "id": 8, "label": "Khám phụ khoa" },
+  { "id": 9, "label": "Khám thai" },
+  { "id": 10, "label": "Khám thần kinh" },
+  { "id": 11, "label": "Khám tiết niệu" },
+  { "id": 12, "label": "Khám tiêu hoá-gan mật" },
+  { "id": 13, "label": "Khám tim mạch" },
+  { "id": 14, "label": "Khám tổng quát" },
+  { "id": 15, "label": "Khám viêm gan" },
+  { "id": 16, "label": "Khám xương khớp" },
+  { "id": 17, "label": "Lồng ngực - Mạch máu - Bướu cổ" },
+  { "id": 18, "label": "Thẩm mỹ - chăm sóc da" }
+]

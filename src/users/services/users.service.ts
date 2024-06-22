@@ -8,14 +8,21 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
+import { isPhoneNumber } from 'class-validator';
 import { createHash } from 'crypto';
 import { DeepPartial, In, Not, Repository } from 'typeorm';
 import { PayloadToken } from '../../auth/models/token.model';
+import { ImageService } from '../../image/services/image.service';
+import { NotificationType } from '../../notifications/entities/notification.entity';
+import { NotificationsService } from '../../notifications/services/notifications.service';
+import SmsService from '../../sms/services/sms.service';
 import {
   CreateAdminDto,
   CreateUserDto,
   UpdateUserDto,
 } from '../dto/create-user.dto';
+import { DeactivateUserDto } from '../dto/deactivate-user.dto';
+import { ResponseFriendRequestDto } from '../dto/friend-request.dto';
 import { DoctorRequestEntity } from '../entities/doctor-request.entity';
 import { FriendRequestEntity } from '../entities/friend-request.entity';
 import {
@@ -23,13 +30,6 @@ import {
   FriendRequestStatus,
 } from '../entities/friend-request.interface';
 import { Role, UserEntity } from '../entities/user.entity';
-import SmsService from '../../sms/services/sms.service';
-import { ResponseFriendRequestDto } from '../dto/friend-request.dto';
-import { isPhoneNumber } from 'class-validator';
-import { DeactivateUserDto } from '../dto/deactivate-user.dto';
-import { NotificationsService } from '../../notifications/services/notifications.service';
-import { NotificationType } from '../../notifications/entities/notification.entity';
-import { ImageService } from '../../image/services/image.service';
 
 @Injectable()
 export class UsersService {

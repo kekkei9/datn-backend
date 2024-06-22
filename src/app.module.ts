@@ -14,6 +14,7 @@ import { PrescriptionsModule } from './prescriptions/prescriptions.module';
 import { ReportsModule } from './reports/reports.module';
 import { SmsModule } from './sms/sms.module';
 import { UsersModule } from './users/users.module';
+import { DoctorSpecialtiesModule } from './doctorSpecialties/doctorSpecialties.module';
 
 @Module({
   imports: [
@@ -61,6 +62,7 @@ import { UsersModule } from './users/users.module';
     NotificationsModule,
     ReportsModule,
     ImageModule,
+    DoctorSpecialtiesModule,
   ],
   controllers: [],
   providers: [],
