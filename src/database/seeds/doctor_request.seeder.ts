@@ -1,6 +1,7 @@
 import { DataSource } from 'typeorm';
 import { Seeder } from 'typeorm-extension';
 import { DoctorRequestEntity } from '../../users/entities/doctor-request.entity';
+import * as doctorRequestData from './data/doctor_request.data.json';
 
 export default class DoctorRequestSeeder implements Seeder {
   /**
@@ -17,16 +18,8 @@ export default class DoctorRequestSeeder implements Seeder {
     const doctorRequestRepository =
       dataSource.getRepository(DoctorRequestEntity);
 
-    await doctorRequestRepository.save([
-      {
-        confirmUser: {
-          id: 1,
-        },
-        requestUser: {
-          id: 2,
-        },
-        metadata: {},
-      },
-    ]);
+    await doctorRequestRepository.upsert(doctorRequestData as any, {
+      conflictPaths: ['id'],
+    });
   }
 }

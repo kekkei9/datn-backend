@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "confirmUser": {
+      "id": 1
+    },
+    "requestUser": {
+      "id": 2
+    },
+    "metadata": {}
+  }
+]

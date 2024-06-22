@@ -418,10 +418,13 @@ export class UsersService {
     { id: userId }: PayloadToken,
     metadata: Record<string, any>,
   ) {
-    return this.doctorRequestRepository.save({ id: userId, metadata });
+    return this.doctorRequestRepository.save({
+      id: userId,
+      metadata,
+    });
   }
 
-  async getDoctorRequests() {
+  getDoctorRequests() {
     return this.doctorRequestRepository.find();
   }
 

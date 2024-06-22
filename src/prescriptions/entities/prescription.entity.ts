@@ -18,7 +18,7 @@ export class PrescriptionEntity extends DefaultEntity {
   id: number;
 
   @Column('jsonb')
-  data: string;
+  data: object;
 
   @ManyToOne(
     () => UserEntity,

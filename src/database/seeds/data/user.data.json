@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "firstName": "admin",
+    "lastName": "admin",
+    "email": "admin@gmail.com",
+    "password": "admin",
+    "role": "admin",
+    "phoneNumber": "admin"
+  },
+  {
+    "id": 2,
+    "firstName": "Leanne",
+    "lastName": "Graham",
+    "email": "doctor@gmail.com",
+    "password": "doctor",
+    "role": "doctor",
+    "phoneNumber": "doctor"
+  },
+  {
+    "id": 3,
+    "firstName": "Caleb",
+    "lastName": "Barrows",
+    "email": "patient@gmail.com",
+    "password": "patient",
+    "role": "patient",
+    "phoneNumber": "patient"
+  }
+]

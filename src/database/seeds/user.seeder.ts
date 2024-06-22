@@ -2,6 +2,7 @@ import { Seeder, SeederFactoryManager } from 'typeorm-extension';
 import { DataSource } from 'typeorm';
 import { Role, UserEntity } from '../../users/entities/user.entity';
 import * as bcrypt from 'bcrypt';
+import * as userData from './data/user.data.json';
 
 export default class UserSeeder implements Seeder {
   /**
@@ -17,40 +18,17 @@ export default class UserSeeder implements Seeder {
   ): Promise<any> {
     const repository = dataSource.getRepository(UserEntity);
 
-    await Promise.all(
-      [
-        {
-          id: 1,
-          firstName: 'admin',
-          lastName: 'admin',
-          email: 'admin@gmail.com',
-          password: await bcrypt.hash('admin', 10),
-          role: Role.ADMIN,
-          phoneNumber: 'admin',
-        },
-        {
-          id: 2,
-          firstName: 'Leanne',
-          lastName: 'Graham',
-          email: 'doctor@gmail.com',
-          password: await bcrypt.hash('doctor', 10),
-          role: Role.DOCTOR,
-          phoneNumber: 'doctor',
-        },
-        {
-          id: 3,
-          firstName: 'Caleb',
-          lastName: 'Barrows',
-          email: 'patient@gmail.com',
-          password: await bcrypt.hash('patient', 10),
-          role: Role.PATIENT,
-          phoneNumber: 'patient',
-        },
-      ].map((user) =>
-        repository.upsert(user, {
-          conflictPaths: ['id'],
-        }),
+    await repository.upsert(
+      await Promise.all(
+        userData.map(async (user) => ({
+          ...user,
+          password: await bcrypt.hashSync(user.password, 10),
+          role: user.role as Role,
+        })),
       ),
+      {
+        conflictPaths: ['id'],
+      },
     );
 
     // ---------------------------------------------------

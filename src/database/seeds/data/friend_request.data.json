@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "creator": {
+      "id": 2
+    },
+    "receiver": {
+      "id": 3
+    },
+    "status": "accepted"
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "user": {
+      "id": 2
+    },
+    "images": [],
+    "data": {
+      "mockKey": "mockValue"
+    }
+  },
+  {
+    "id": 2,
+    "user": {
+      "id": 2
+    },
+    "images": [],
+    "data": {
+      "mockKey": "mockValue"
+    }
+  },
+  {
+    "id": 3,
+    "user": {
+      "id": 2
+    },
+    "images": [],
+    "data": {
+      "mockKey": "mockValue"
+    }
+  },
+  {
+    "id": 4,
+    "user": {
+      "id": 2
+    },
+    "images": [],
+    "data": {
+      "mockKey": "mockValue"
+    }
+  }
+]

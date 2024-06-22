@@ -14,7 +14,7 @@ export class DiaryEntity extends DefaultEntity {
   id: number;
 
   @Column('jsonb')
-  data: string;
+  data: object;
 
   @ManyToOne(() => UserEntity, (userEntity) => userEntity.diaries, {
     onDelete: 'CASCADE',

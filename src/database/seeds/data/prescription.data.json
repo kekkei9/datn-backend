@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "belongTo": {
+      "id": 3
+    },
+    "createdBy": {
+      "id": 2
+    },
+    "data": {
+      "medicines": [
+        {
+          "name": "Paracetamol",
+          "dosage": 2,
+          "schedule": { "morning": 1, "afternoon": 0, "evening": 1, "night": 0 }
+        },
+        {
+          "name": "Prospan",
+          "dosage": 3,
+          "schedule": { "morning": 1, "afternoon": 1, "evening": 1, "night": 0 }
+        }
+      ]
+    },
+    "images": []
+  },
+  {
+    "id": 2,
+    "belongTo": {
+      "id": 3
+    },
+    "createdBy": {
+      "id": 2
+    },
+    "data": {
+      "medicines": [
+        {
+          "name": "Prospan",
+          "dosage": 3,
+          "schedule": { "morning": 1, "afternoon": 1, "evening": 1, "night": 0 }
+        },
+        {
+          "name": "Paracetamol",
+          "dosage": 2,
+          "schedule": { "morning": 1, "afternoon": 0, "evening": 1, "night": 0 }
+        }
+      ]
+    },
+    "images": []
+  }
+]

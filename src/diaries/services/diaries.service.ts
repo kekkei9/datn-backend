@@ -8,7 +8,6 @@ import { UsersService } from '../../users/services/users.service';
 import { CreateDiaryDto } from '../dto/create-diary.dto';
 import { GetAllDiariesDto } from '../dto/find-diaries.dto';
 import { DiaryEntity } from '../entities/diary.entity';
-import { diaryMapper } from '../mapper/diary.mapper';
 
 @Injectable()
 export class DiariesService {
@@ -36,7 +35,7 @@ export class DiariesService {
     const images = await this.imageService.uploadImages(files);
 
     const createdDiary = await this.diaryRepository.save({
-      data,
+      data: JSON.parse(data),
       user: {
         id: user.id,
       },
@@ -66,7 +65,7 @@ export class DiariesService {
     const images = await this.imageService.uploadImages(files);
 
     return this.diaryRepository.update(diaryId, {
-      data,
+      data: JSON.parse(data),
       images: images.map((image) => image.url),
     });
   }
@@ -95,28 +94,24 @@ export class DiariesService {
       );
     }
 
-    return (
-      await this.diaryRepository.find({
-        order: {
-          updatedAt: 'DESC',
-        },
-        skip: (page - 1) * pageSize,
-        take: pageSize,
-        ...(targetUserId
-          ? { where: { user: { id: targetUserId } } }
-          : { relations: ['user'] }),
-      })
-    ).map(diaryMapper);
+    return await this.diaryRepository.find({
+      order: {
+        updatedAt: 'DESC',
+      },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+      ...(targetUserId
+        ? { where: { user: { id: targetUserId } } }
+        : { relations: ['user'] }),
+    });
   }
 
-  async findById(diaryId: number) {
-    return diaryMapper(
-      await this.diaryRepository.findOne({
-        relations: ['user'],
-        where: {
-          id: diaryId,
-        },
-      }),
-    );
+  findById(diaryId: number) {
+    return this.diaryRepository.findOne({
+      relations: ['user'],
+      where: {
+        id: diaryId,
+      },
+    });
   }
 }

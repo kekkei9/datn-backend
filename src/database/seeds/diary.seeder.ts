@@ -1,6 +1,7 @@
 import { DataSource } from 'typeorm';
 import { Seeder } from 'typeorm-extension';
 import { DiaryEntity } from '../../diaries/entities/diary.entity';
+import * as diaryData from './data/diary.data.json';
 
 export default class DiarySeeder implements Seeder {
   /**
@@ -16,43 +17,8 @@ export default class DiarySeeder implements Seeder {
   ): Promise<any> {
     const diaryRepository = dataSource.getRepository(DiaryEntity);
 
-    await diaryRepository.save([
-      {
-        user: {
-          id: 2,
-        },
-        images: [],
-        data: JSON.stringify({
-          mockKey: 'mockValue',
-        }),
-      },
-      {
-        user: {
-          id: 2,
-        },
-        images: [],
-        data: JSON.stringify({
-          mockKey: 'mockValue',
-        }),
-      },
-      {
-        user: {
-          id: 2,
-        },
-        images: [],
-        data: JSON.stringify({
-          mockKey: 'mockValue',
-        }),
-      },
-      {
-        user: {
-          id: 2,
-        },
-        images: [],
-        data: JSON.stringify({
-          mockKey: 'mockValue',
-        }),
-      },
-    ]);
+    await diaryRepository.upsert(diaryData as any, {
+      conflictPaths: ['id'],
+    });
   }
 }

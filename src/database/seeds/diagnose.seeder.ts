@@ -1,6 +1,7 @@
 import { DataSource } from 'typeorm';
 import { Seeder } from 'typeorm-extension';
 import { DiagnoseEntity } from '../../prescriptions/entities/diagnose.entity';
+import * as diagnoseData from './data/diagnose.data.json';
 
 export default class DiagnoseSeeder implements Seeder {
   /**
@@ -16,49 +17,8 @@ export default class DiagnoseSeeder implements Seeder {
   ): Promise<any> {
     const diagnoseRepository = dataSource.getRepository(DiagnoseEntity);
 
-    diagnoseRepository.save([
-      {
-        images: [],
-        problem: 'test diagnose',
-        prescription: {
-          id: 1,
-        },
-      },
-      {
-        images: [],
-        problem: 'test diagnose 2',
-        prescription: {
-          id: 1,
-        },
-      },
-      {
-        images: [],
-        problem: 'test diagnose 3',
-        prescription: {
-          id: 1,
-        },
-      },
-      {
-        images: [],
-        problem: 'test diagnose',
-        prescription: {
-          id: 2,
-        },
-      },
-      {
-        images: [],
-        problem: 'test diagnose 2',
-        prescription: {
-          id: 2,
-        },
-      },
-      {
-        images: [],
-        problem: 'test diagnose 3',
-        prescription: {
-          id: 2,
-        },
-      },
-    ]);
+    diagnoseRepository.upsert(diagnoseData, {
+      conflictPaths: ['id'],
+    });
   }
 }

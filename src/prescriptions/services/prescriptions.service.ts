@@ -5,6 +5,7 @@ import { PayloadToken } from '../../auth/models/token.model';
 import { ImageService } from '../../image/services/image.service';
 import { NotificationType } from '../../notifications/entities/notification.entity';
 import { NotificationsService } from '../../notifications/services/notifications.service';
+import { Role } from '../../users/entities/user.entity';
 import { UsersService } from '../../users/services/users.service';
 import { CreateDiagnoseDto } from '../dto/create-diagnose.dto';
 import { CreatePrescriptionDto } from '../dto/create-prescription.dto';
@@ -12,8 +13,6 @@ import { GetAllDiagnoses } from '../dto/get-diagnoses.dto';
 import { GetAllPrescriptionDto } from '../dto/get-prescription.dto';
 import { DiagnoseEntity } from '../entities/diagnose.entity';
 import { PrescriptionEntity } from '../entities/prescription.entity';
-import { prescriptionMapper } from '../mappers/prescription.mapper';
-import { Role } from '../../users/entities/user.entity';
 
 @Injectable()
 export class PrescriptionsService {
@@ -50,7 +49,7 @@ export class PrescriptionsService {
     const images = await this.imageService.uploadImages(files);
 
     const createdPrescription = await this.prescriptionRepository.save({
-      data,
+      data: JSON.parse(data),
       createdBy: {
         id: user.id,
       },
@@ -103,7 +102,7 @@ export class PrescriptionsService {
     const images = await this.imageService.uploadImages(files);
 
     return this.prescriptionRepository.update(prescriptionId, {
-      data,
+      data: JSON.parse(data),
       images: images.map((image) => image.url),
     });
   }
@@ -132,29 +131,25 @@ export class PrescriptionsService {
       );
     }
 
-    return (
-      await this.prescriptionRepository.find({
-        order: {
-          updatedAt: 'DESC',
-        },
-        skip: (page - 1) * pageSize,
-        take: pageSize,
-        ...(targetUserId
-          ? { where: { belongTo: { id: targetUserId } } }
-          : { relations: ['createdBy', 'belongTo'] }),
-      })
-    ).map(prescriptionMapper);
+    return await this.prescriptionRepository.find({
+      order: {
+        updatedAt: 'DESC',
+      },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+      ...(targetUserId
+        ? { where: { belongTo: { id: targetUserId } } }
+        : { relations: ['createdBy', 'belongTo'] }),
+    });
   }
 
-  async findById(prescriptionId: number) {
-    return prescriptionMapper(
-      await this.prescriptionRepository.findOne({
-        relations: ['createdBy', 'belongTo'],
-        where: {
-          id: prescriptionId,
-        },
-      }),
-    );
+  findById(prescriptionId: number) {
+    return this.prescriptionRepository.findOne({
+      relations: ['createdBy', 'belongTo'],
+      where: {
+        id: prescriptionId,
+      },
+    });
   }
 
   async findAllDiagnoses({

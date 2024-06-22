@@ -1,6 +1,7 @@
 import { DataSource } from 'typeorm';
 import { Seeder } from 'typeorm-extension';
 import { PrescriptionEntity } from '../../prescriptions/entities/prescription.entity';
+import * as prescriptionData from './data/prescription.data.json';
 
 export default class PrescriptionSeeder implements Seeder {
   /**
@@ -16,63 +17,8 @@ export default class PrescriptionSeeder implements Seeder {
   ): Promise<any> {
     const prescriptionRepository = dataSource.getRepository(PrescriptionEntity);
 
-    await prescriptionRepository.upsert(
-      {
-        id: 1,
-        belongTo: {
-          id: 3,
-        },
-        createdBy: {
-          id: 2,
-        },
-        data: JSON.stringify({
-          medicines: [
-            {
-              name: 'Paracetamol',
-              dosage: 2,
-              schedule: { morning: 1, afternoon: 0, evening: 1, night: 0 },
-            },
-            {
-              name: 'Prospan',
-              dosage: 3,
-              schedule: { morning: 1, afternoon: 1, evening: 1, night: 0 },
-            },
-          ],
-        }),
-        images: [],
-      },
-      {
-        conflictPaths: ['id'],
-      },
-    );
-    await prescriptionRepository.upsert(
-      {
-        id: 2,
-        belongTo: {
-          id: 3,
-        },
-        createdBy: {
-          id: 2,
-        },
-        data: JSON.stringify({
-          medicines: [
-            {
-              name: 'Prospan',
-              dosage: 3,
-              schedule: { morning: 1, afternoon: 1, evening: 1, night: 0 },
-            },
-            {
-              name: 'Paracetamol',
-              dosage: 2,
-              schedule: { morning: 1, afternoon: 0, evening: 1, night: 0 },
-            },
-          ],
-        }),
-        images: [],
-      },
-      {
-        conflictPaths: ['id'],
-      },
-    );
+    await prescriptionRepository.upsert(prescriptionData as any, {
+      conflictPaths: ['id'],
+    });
   }
 }
