@@ -4,6 +4,8 @@ import {
   BeforeUpdate,
   Column,
   Entity,
+  JoinTable,
+  ManyToMany,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -97,6 +99,12 @@ export class UserEntity extends DefaultEntity {
   })
   role: Role;
 
+  @Column('jsonb', {
+    select: false,
+    nullable: true,
+  })
+  metadata: object;
+
   @OneToMany(
     () => FriendRequestEntity,
     (friendRequestEntity) => friendRequestEntity.creator,
@@ -171,6 +179,10 @@ export class UserEntity extends DefaultEntity {
     (notificationEntity) => notificationEntity.belongTo,
   )
   reports: ReportEntity[];
+
+  @ManyToMany(() => DoctorRequestEntity)
+  @JoinTable()
+  specialties: DoctorRequestEntity[];
 
   @BeforeInsert()
   @BeforeUpdate()

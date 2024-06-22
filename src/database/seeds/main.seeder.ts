@@ -1,23 +1,23 @@
 import { DataSource } from 'typeorm';
-import { Seeder, SeederFactoryManager } from 'typeorm-extension';
-import FriendRequestSeeder from './friend_request.seeder';
-import UserSeeder from './user.seeder';
-import PrescriptionSeeder from './prescription.seeder';
-import DiagnoseSeeder from './diagnose.seeder';
-import NotificationSeeder from './notification.seeder';
-import DiarySeeder from './diary.seeder';
+import { Seeder } from 'typeorm-extension';
 import AppointmentSeeder from './appointment.seeder';
+import DiagnoseSeeder from './diagnose.seeder';
+import DiarySeeder from './diary.seeder';
 import DoctorRequestSeeder from './doctor_request.seeder';
-import ReportSeeder from './report.seeder';
 import DoctorSpecialtySeeder from './doctor_specialty.seeder';
+import FriendRequestSeeder from './friend_request.seeder';
+import NotificationSeeder from './notification.seeder';
+import PrescriptionSeeder from './prescription.seeder';
+import ReportSeeder from './report.seeder';
+import UserSeeder from './user.seeder';
 
 export class MainSeeder implements Seeder {
   public async run(
     dataSource: DataSource,
-    factoryManager: SeederFactoryManager,
+    // factoryManager: SeederFactoryManager,
   ): Promise<any> {
     const userSeeder = new UserSeeder();
-    await userSeeder.run(dataSource, factoryManager);
+    await userSeeder.run(dataSource);
 
     const friendRequestSeeder = new FriendRequestSeeder();
     await friendRequestSeeder.run(dataSource);

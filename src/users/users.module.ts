@@ -16,6 +16,7 @@ import { SmsModule } from '../sms/sms.module';
 import { ReportEntity } from '../reports/entities/report.entity';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { ImageModule } from '../image/image.module';
+import { DoctorSpecialtyEntity } from '../doctorSpecialties/entities/doctor-specialty.entity';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { ImageModule } from '../image/image.module';
       NotificationEntity,
       DiaryEntity,
       ReportEntity,
+      DoctorSpecialtyEntity,
     ]),
     SmsModule,
     NotificationsModule,

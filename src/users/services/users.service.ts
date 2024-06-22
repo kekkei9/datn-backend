@@ -10,7 +10,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { isPhoneNumber } from 'class-validator';
 import { createHash } from 'crypto';
-import { DeepPartial, In, Not, Repository } from 'typeorm';
+import {
+  DeepPartial,
+  FindOptionsRelations,
+  In,
+  Not,
+  Repository,
+} from 'typeorm';
 import { PayloadToken } from '../../auth/models/token.model';
 import { ImageService } from '../../image/services/image.service';
 import { NotificationType } from '../../notifications/entities/notification.entity';
@@ -22,6 +28,7 @@ import {
   UpdateUserDto,
 } from '../dto/create-user.dto';
 import { DeactivateUserDto } from '../dto/deactivate-user.dto';
+import { RegisterDoctorRequestDto } from '../dto/doctor-request.dto';
 import { ResponseFriendRequestDto } from '../dto/friend-request.dto';
 import { DoctorRequestEntity } from '../entities/doctor-request.entity';
 import { FriendRequestEntity } from '../entities/friend-request.entity';
@@ -121,8 +128,11 @@ export class UsersService {
     });
   }
 
-  findUserById(id: number) {
-    return this.userRepository.findOneOrFail({ where: { id } });
+  findUserById(id: number, relations?: FindOptionsRelations<UserEntity>) {
+    return this.userRepository.findOneOrFail({
+      where: { id },
+      relations,
+    });
   }
 
   async forgotPassword(phoneNumber: string) {
@@ -416,26 +426,63 @@ export class UsersService {
   //-------------------------------------DOCTOR REGISTER----------------------------------------------
   async registerToBeADoctor(
     { id: userId }: PayloadToken,
-    metadata: Record<string, any>,
+    registerDoctorRequestDto: RegisterDoctorRequestDto,
   ) {
+    const oldDoctorRequest = await this.doctorRequestRepository.findOne({
+      where: { requestUser: { id: userId }, isDone: false },
+    });
+
+    if (!!oldDoctorRequest) {
+      throw new ForbiddenException('Doctor request already exists');
+    }
+
     return this.doctorRequestRepository.save({
-      id: userId,
-      metadata,
+      requestUser: {
+        id: userId,
+      },
+      ...registerDoctorRequestDto,
     });
   }
 
   getDoctorRequests() {
-    return this.doctorRequestRepository.find();
+    return this.doctorRequestRepository.find({
+      relations: ['requestUser'],
+      where: { isDone: false },
+    });
   }
 
-  async acceptDoctorRegistration(doctorRequestId: number) {
+  async acceptDoctorRegistration(doctorRequestId: number, user: PayloadToken) {
     const doctorRequest = await this.doctorRequestRepository.findOne({
       where: { id: doctorRequestId },
+      relations: ['requestUser'],
     });
 
-    //set user role to doctor
-    await this.userRepository.update(doctorRequest.id, { role: Role.DOCTOR });
-    return this.doctorRequestRepository.remove(doctorRequest);
+    // const requestUser = await this.findUserById(doctorRequest.requestUser.id, {
+    //   sentDoctorRequest: true,
+    //   confirmedDoctorRequests: true,
+    // });
+
+    // await this.userRepository.save({
+    //   ...requestUser,
+    //   role: Role.DOCTOR,
+    //   metadata: doctorRequest.metadata,
+    //   //TODO: Check this
+    //   // specialties: doctorRequest.specialties.map((specialtyId) => ({
+    //   //   id: specialtyId,
+    //   // })),
+    // });
+
+    await this.userRepository.update(doctorRequest.requestUser.id, {
+      role: Role.DOCTOR,
+      metadata: doctorRequest.metadata,
+    });
+
+    return this.doctorRequestRepository.update(doctorRequestId, {
+      isDone: true,
+      confirmUser: {
+        id: user.id,
+      },
+    });
   }
 
   async uploadAvatar(user: PayloadToken, avatar: Express.Multer.File) {

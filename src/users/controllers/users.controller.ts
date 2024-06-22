@@ -221,9 +221,11 @@ export class UsersController {
   @Post('doctor-register/accept/:doctorRequestId')
   async acceptDoctorRegistration(
     @Param('doctorRequestId') doctorRequestStringId: string,
+    @Request() req,
   ) {
     return this.usersService.acceptDoctorRegistration(
       parseInt(doctorRequestStringId),
+      req.user,
     );
   }
 

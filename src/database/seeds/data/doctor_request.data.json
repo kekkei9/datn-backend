@@ -7,6 +7,7 @@
     "requestUser": {
       "id": 2
     },
-    "metadata": {}
+    "metadata": {},
+    "specialties": [1, 2, 3, 4]
   }
 ]

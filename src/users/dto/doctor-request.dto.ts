@@ -1,8 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsObject } from 'class-validator';
 
 export class RegisterDoctorRequestDto {
   @ApiProperty()
   @IsNotEmpty()
-  readonly status: object;
+  @IsObject()
+  readonly metadata: object;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber({}, { each: true })
+  readonly specialties: number[];
 }

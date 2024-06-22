@@ -1,7 +1,7 @@
-import { Seeder, SeederFactoryManager } from 'typeorm-extension';
-import { DataSource } from 'typeorm';
-import { Role, UserEntity } from '../../users/entities/user.entity';
 import * as bcrypt from 'bcrypt';
+import { DataSource } from 'typeorm';
+import { Seeder } from 'typeorm-extension';
+import { Role, UserEntity } from '../../users/entities/user.entity';
 import * as userData from './data/user.data.json';
 
 export default class UserSeeder implements Seeder {
@@ -14,7 +14,7 @@ export default class UserSeeder implements Seeder {
 
   public async run(
     dataSource: DataSource,
-    factoryManager: SeederFactoryManager,
+    // factoryManager: SeederFactoryManager,
   ): Promise<any> {
     const repository = dataSource.getRepository(UserEntity);
 
@@ -30,10 +30,5 @@ export default class UserSeeder implements Seeder {
         conflictPaths: ['id'],
       },
     );
-
-    // ---------------------------------------------------
-
-    const userFactory = factoryManager.get(UserEntity);
-    await userFactory.saveMany(20);
   }
 }

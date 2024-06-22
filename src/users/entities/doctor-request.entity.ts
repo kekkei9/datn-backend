@@ -31,4 +31,16 @@ export class DoctorRequestEntity {
 
   @Column('jsonb', { nullable: true })
   metadata: object;
+
+  @Column('int', {
+    default: {},
+    array: true,
+  })
+  specialties: number[];
+
+  @Column({
+    default: false,
+    select: false,
+  })
+  isDone: boolean;
 }
