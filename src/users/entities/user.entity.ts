@@ -180,7 +180,9 @@ export class UserEntity extends DefaultEntity {
   )
   reports: ReportEntity[];
 
-  @ManyToMany(() => DoctorRequestEntity)
+  @ManyToMany(() => DoctorRequestEntity, {
+    cascade: true,
+  })
   @JoinTable()
   specialties: DoctorRequestEntity[];
 

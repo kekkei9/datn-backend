@@ -457,24 +457,18 @@ export class UsersService {
       relations: ['requestUser'],
     });
 
-    // const requestUser = await this.findUserById(doctorRequest.requestUser.id, {
-    //   sentDoctorRequest: true,
-    //   confirmedDoctorRequests: true,
-    // });
+    const requestUser = await this.findUserById(doctorRequest.requestUser.id, {
+      sentDoctorRequest: true,
+      confirmedDoctorRequests: true,
+    });
 
-    // await this.userRepository.save({
-    //   ...requestUser,
-    //   role: Role.DOCTOR,
-    //   metadata: doctorRequest.metadata,
-    //   //TODO: Check this
-    //   // specialties: doctorRequest.specialties.map((specialtyId) => ({
-    //   //   id: specialtyId,
-    //   // })),
-    // });
-
-    await this.userRepository.update(doctorRequest.requestUser.id, {
+    await this.userRepository.save({
+      ...requestUser,
       role: Role.DOCTOR,
       metadata: doctorRequest.metadata,
+      specialties: doctorRequest.specialties.map((specialtyId) => ({
+        id: specialtyId,
+      })),
     });
 
     return this.doctorRequestRepository.update(doctorRequestId, {

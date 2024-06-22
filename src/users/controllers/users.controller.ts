@@ -203,6 +203,7 @@ export class UsersController {
   @ApiBearerAuth('access-token')
   @Roles(Role.PATIENT)
   @Post('doctor-register')
+  //TODO: File intercepter in here
   registerToBeADoctor(@Request() req, @Body() body: RegisterDoctorRequestDto) {
     return this.usersService.registerToBeADoctor(req.user, body);
   }
