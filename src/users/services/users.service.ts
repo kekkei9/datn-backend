@@ -280,7 +280,7 @@ export class UsersService {
       await this.hasRequestBeenSentOrReceived(creatorId, receiverId);
 
     if (hasRequestBeenSentOrReceived)
-      throw new ForbiddenException('It is not possible to add yourself!');
+      throw new ForbiddenException('Friend request already exists!');
 
     const saveRequest: DeepPartial<FriendRequestEntity> = {
       creator: {
@@ -340,6 +340,7 @@ export class UsersService {
   async getFriendRequestUserById(friendRequestId: number) {
     return await this.friendRequestRepository.findOne({
       where: [{ id: friendRequestId }],
+      relations: ['creator', 'receiver'],
     });
   }
 
