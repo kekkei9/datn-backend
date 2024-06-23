@@ -7,7 +7,6 @@ import {
   JoinTable,
   ManyToMany,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { AppointmentEntity } from '../../appointments/entities/appointment.entity';
@@ -117,7 +116,7 @@ export class UserEntity extends DefaultEntity {
   )
   receivedFriendRequests: FriendRequestEntity[];
 
-  @OneToOne(
+  @OneToMany(
     () => DoctorRequestEntity,
     (doctorRequestEntity) => doctorRequestEntity.requestUser,
   )

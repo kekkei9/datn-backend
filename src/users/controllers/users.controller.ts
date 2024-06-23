@@ -12,11 +12,15 @@ import {
   Query,
   Request,
   UploadedFile,
+  UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  FileFieldsInterceptor,
+  FileInterceptor,
+} from '@nestjs/platform-express';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -36,15 +40,15 @@ import {
   UpdateUserDto,
 } from '../dto/create-user.dto';
 import { DeactivateUserDto } from '../dto/deactivate-user.dto';
-import { RegisterDoctorRequestDto } from '../dto/doctor-request.dto';
+import { ResponseDoctorRequestDto } from '../dto/doctor-request.dto';
 import {
   ResponseFriendRequestDto,
   SendFriendRequestDto,
 } from '../dto/friend-request.dto';
 import { SearchUserDto } from '../dto/search-user.dto';
-import { UsersService } from '../services/users.service';
 import { FriendRequestStatus } from '../entities/friend-request.interface';
 import { Role } from '../entities/user.entity';
+import { UsersService } from '../services/users.service';
 
 @ApiTags('users') // put the name of the controller in swagger
 @Controller('users')
@@ -203,9 +207,65 @@ export class UsersController {
   @ApiBearerAuth('access-token')
   @Roles(Role.PATIENT)
   @Post('doctor-register')
-  //TODO: File intercepter in here
-  registerToBeADoctor(@Request() req, @Body() body: RegisterDoctorRequestDto) {
-    return this.usersService.registerToBeADoctor(req.user, body);
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        idCardFront: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'binary',
+          },
+        },
+        idCardBack: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'binary',
+          },
+        },
+        files: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'binary',
+          },
+        },
+        metadata: {
+          type: 'object',
+        },
+        specialties: {
+          type: 'array',
+          items: {
+            type: 'number',
+          },
+        },
+      },
+    },
+  })
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: 'idCardFront', maxCount: 1 },
+      { name: 'idCardBack', maxCount: 1 },
+      { name: 'files', maxCount: 10 },
+    ]),
+  )
+  registerToBeADoctor(
+    @Request() req,
+    @Body() body,
+    @UploadedFiles()
+    files,
+  ) {
+    return this.usersService.registerToBeADoctor(
+      req.user,
+      {
+        metadata: JSON.parse(body.metadata),
+        specialties: body.specialties.split(',').map((id) => parseInt(id)),
+      },
+      files,
+    );
   }
 
   @ApiTags('doctor-register', 'cms')
@@ -219,14 +279,16 @@ export class UsersController {
   @ApiTags('doctor-register', 'cms')
   @ApiBearerAuth('access-token')
   @Roles(Role.ADMIN)
-  @Post('doctor-register/accept/:doctorRequestId')
-  async acceptDoctorRegistration(
+  @Post('doctor-register/response/:doctorRequestId')
+  responseDoctorRegistration(
     @Param('doctorRequestId') doctorRequestStringId: string,
+    @Body() body: ResponseDoctorRequestDto,
     @Request() req,
   ) {
-    return this.usersService.acceptDoctorRegistration(
+    return this.usersService.responseDoctorRegistration(
       parseInt(doctorRequestStringId),
       req.user,
+      body,
     );
   }
 

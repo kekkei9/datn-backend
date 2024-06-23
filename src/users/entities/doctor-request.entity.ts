@@ -3,7 +3,6 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UserEntity } from './user.entity';
@@ -13,7 +12,7 @@ export class DoctorRequestEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => UserEntity, (userEntity) => userEntity.sentDoctorRequest, {
+  @ManyToOne(() => UserEntity, (userEntity) => userEntity.sentDoctorRequest, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'request_user_id' })
@@ -43,4 +42,20 @@ export class DoctorRequestEntity {
     select: false,
   })
   isDone: boolean;
+
+  @Column({
+    nullable: true,
+  })
+  idCardFront: string;
+
+  @Column({
+    nullable: true,
+  })
+  idCardBack: string;
+
+  @Column('text', {
+    default: {},
+    array: true,
+  })
+  images: string[];
 }

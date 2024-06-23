@@ -28,7 +28,10 @@ import {
   UpdateUserDto,
 } from '../dto/create-user.dto';
 import { DeactivateUserDto } from '../dto/deactivate-user.dto';
-import { RegisterDoctorRequestDto } from '../dto/doctor-request.dto';
+import {
+  RegisterDoctorRequestDto,
+  ResponseDoctorRequestDto,
+} from '../dto/doctor-request.dto';
 import { ResponseFriendRequestDto } from '../dto/friend-request.dto';
 import { DoctorRequestEntity } from '../entities/doctor-request.entity';
 import { FriendRequestEntity } from '../entities/friend-request.entity';
@@ -428,6 +431,15 @@ export class UsersService {
   async registerToBeADoctor(
     { id: userId }: PayloadToken,
     registerDoctorRequestDto: RegisterDoctorRequestDto,
+    {
+      idCardFront,
+      idCardBack,
+      files,
+    }: {
+      idCardFront?: Express.Multer.File[];
+      idCardBack?: Express.Multer.File[];
+      files?: Express.Multer.File[];
+    },
   ) {
     const oldDoctorRequest = await this.doctorRequestRepository.findOne({
       where: { requestUser: { id: userId }, isDone: false },
@@ -437,11 +449,22 @@ export class UsersService {
       throw new ForbiddenException('Doctor request already exists');
     }
 
+    //upload images
+
+    const [idCardFrontUrl, idCardBackUrl, filesUrl] = await Promise.all([
+      idCardFront && this.imageService.uploadImage(idCardFront[0]),
+      idCardBack && this.imageService.uploadImage(idCardBack[0]),
+      files && this.imageService.uploadImages(files),
+    ]);
+
     return this.doctorRequestRepository.save({
       requestUser: {
         id: userId,
       },
       ...registerDoctorRequestDto,
+      idCardFront: idCardFrontUrl?.url,
+      idCardBack: idCardBackUrl?.url,
+      images: filesUrl.map((file) => file.url),
     });
   }
 
@@ -452,7 +475,17 @@ export class UsersService {
     });
   }
 
-  async acceptDoctorRegistration(doctorRequestId: number, user: PayloadToken) {
+  async responseDoctorRegistration(
+    doctorRequestId: number,
+    user: PayloadToken,
+    { accept }: ResponseDoctorRequestDto,
+  ) {
+    if (!accept) {
+      return this.doctorRequestRepository.update(doctorRequestId, {
+        isDone: true,
+      });
+    }
+
     const doctorRequest = await this.doctorRequestRepository.findOne({
       where: { id: doctorRequestId },
       relations: ['requestUser'],
