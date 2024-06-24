@@ -499,7 +499,16 @@ export class UsersService {
     await this.userRepository.save({
       ...requestUser,
       role: Role.DOCTOR,
-      metadata: doctorRequest.metadata,
+      metadata: {
+        ...doctorRequest.metadata,
+        ...(doctorRequest.idCardFront
+          ? { idCardFront: doctorRequest.idCardFront }
+          : {}),
+        ...(doctorRequest.idCardBack
+          ? { idCardBack: doctorRequest.idCardBack }
+          : {}),
+        ...(doctorRequest.images ? { images: doctorRequest.images } : {}),
+      },
       specialties: doctorRequest.specialties.map((specialtyId) => ({
         id: specialtyId,
       })),
