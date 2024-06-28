@@ -17,6 +17,7 @@ import { ReportEntity } from '../../reports/entities/report.entity';
 import { DefaultEntity } from '../../utils/entities/default.entity';
 import { DoctorRequestEntity } from './doctor-request.entity';
 import { FriendRequestEntity } from './friend-request.entity';
+import { DoctorSpecialtyEntity } from '../../doctorSpecialties/entities/doctor-specialty.entity';
 
 export enum Gender {
   MALE = 'male',
@@ -179,11 +180,9 @@ export class UserEntity extends DefaultEntity {
   )
   reports: ReportEntity[];
 
-  @ManyToMany(() => DoctorRequestEntity, {
-    cascade: true,
-  })
+  @ManyToMany(() => DoctorSpecialtyEntity)
   @JoinTable()
-  specialties: DoctorRequestEntity[];
+  specialties: DoctorSpecialtyEntity[];
 
   @BeforeInsert()
   @BeforeUpdate()

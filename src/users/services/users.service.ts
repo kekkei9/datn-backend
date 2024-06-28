@@ -18,10 +18,12 @@ import {
   Repository,
 } from 'typeorm';
 import { PayloadToken } from '../../auth/models/token.model';
+import { DoctorSpecialtyEntity } from '../../doctorSpecialties/entities/doctor-specialty.entity';
 import { ImageService } from '../../image/services/image.service';
 import { NotificationType } from '../../notifications/entities/notification.entity';
 import { NotificationsService } from '../../notifications/services/notifications.service';
 import SmsService from '../../sms/services/sms.service';
+import { DefaultPaginationDto } from '../../utils/dto/default.dto';
 import {
   CreateAdminDto,
   CreateUserDto,
@@ -40,7 +42,6 @@ import {
   FriendRequestStatus,
 } from '../entities/friend-request.interface';
 import { Role, UserEntity } from '../entities/user.entity';
-import { DefaultPaginationDto } from '../../utils/dto/default.dto';
 
 @Injectable()
 export class UsersService {
@@ -53,6 +54,9 @@ export class UsersService {
 
     @InjectRepository(DoctorRequestEntity)
     private readonly doctorRequestRepository: Repository<DoctorRequestEntity>,
+
+    @InjectRepository(DoctorSpecialtyEntity)
+    private readonly doctorSpecialtyRepository: Repository<DoctorSpecialtyEntity>,
 
     private readonly smsService: SmsService,
 
@@ -470,7 +474,7 @@ export class UsersService {
       ...registerDoctorRequestDto,
       idCardFront: idCardFrontUrl?.url,
       idCardBack: idCardBackUrl?.url,
-      images: filesUrl.map((file) => file.url),
+      images: filesUrl?.map((file) => file.url),
     });
   }
 
@@ -497,6 +501,14 @@ export class UsersService {
       relations: ['requestUser'],
     });
 
+    if (!doctorRequest) {
+      throw new NotFoundException('Doctor request not found');
+    }
+
+    if (doctorRequest.isDone) {
+      throw new ForbiddenException('Doctor request already processed');
+    }
+
     const requestUser = await this.findUserById(doctorRequest.requestUser.id, {
       sentDoctorRequest: true,
       confirmedDoctorRequests: true,
@@ -515,9 +527,13 @@ export class UsersService {
           : {}),
         ...(doctorRequest.images ? { images: doctorRequest.images } : {}),
       },
-      specialties: doctorRequest.specialties.map((specialtyId) => ({
-        id: specialtyId,
-      })),
+      specialties: await Promise.all(
+        doctorRequest.specialties.map((specialtyId) =>
+          this.doctorSpecialtyRepository.findOne({
+            where: { id: specialtyId },
+          }),
+        ),
+      ),
     });
 
     return this.doctorRequestRepository.update(doctorRequestId, {

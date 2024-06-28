@@ -71,7 +71,9 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('me')
   getMyAccountInformation(@Request() req: { user: PayloadToken }) {
-    return this.usersService.findUserById(req.user.id);
+    return this.usersService.findUserById(req.user.id, {
+      specialties: true,
+    });
   }
 
   @Post('forgot-password')

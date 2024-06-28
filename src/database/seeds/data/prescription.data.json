@@ -10,18 +10,28 @@
     "data": {
       "medicines": [
         {
-          "name": "Paracetamol",
-          "dosage": 2,
-          "schedule": { "morning": 1, "afternoon": 0, "evening": 1, "night": 0 }
+          "name": "Candesartan + hydrochlorothiazid 16mg + 12.5mg (CKDCandemore Plus tab. 16/12.5mg)",
+          "dosage": 28,
+          "schedule": { "morning": 1, "afternoon": 0, "evening": 0, "night": 0 }
         },
         {
-          "name": "Prospan",
-          "dosage": 3,
-          "schedule": { "morning": 1, "afternoon": 1, "evening": 1, "night": 0 }
+          "name": "Cetirizin 10mg (Taparen)",
+          "dosage": 10,
+          "schedule": { "morning": 0, "afternoon": 1, "evening": 0, "night": 0 }
+        },
+        {
+          "name": "Rotundin 60mg (Rotundin 60)",
+          "dosage": 28,
+          "schedule": { "morning": 0, "afternoon": 0, "evening": 0, "night": 1 }
+        },
+        {
+          "name": "Paracetamol (acetaminophen) 500mg (Panactol)",
+          "dosage": 10,
+          "schedule": { "morning": 0, "afternoon": 1, "evening": 0, "night": 0 }
         }
       ]
     },
-    "images": []
+    "images": ["http://cainuochospital.com/upload/2824/fck/image(79).png"]
   },
   {
     "id": 2,
@@ -34,14 +44,29 @@
     "data": {
       "medicines": [
         {
-          "name": "Prospan",
-          "dosage": 3,
-          "schedule": { "morning": 1, "afternoon": 1, "evening": 1, "night": 0 }
+          "name": "Ciprofloxacin 500 mg",
+          "dosage": 14,
+          "schedule": { "morning": 1, "afternoon": 1, "evening": 0, "night": 0 }
         },
         {
-          "name": "Paracetamol",
-          "dosage": 2,
-          "schedule": { "morning": 1, "afternoon": 0, "evening": 1, "night": 0 }
+          "name": "Mictasol blue",
+          "dosage": 28,
+          "schedule": { "morning": 2, "afternoon": 2, "evening": 0, "night": 0 }
+        },
+        {
+          "name": "Prednisolon 5 mg",
+          "dosage": 14,
+          "schedule": { "morning": 2, "afternoon": 0, "evening": 0, "night": 0 }
+        },
+        {
+          "name": "Paracetamol (acetaminophen) 500 mg (Panadol)",
+          "dosage": 14,
+          "schedule": { "morning": 0, "afternoon": 1, "evening": 0, "night": 0 }
+        },
+        {
+          "name": "Vitamine C 500 mg",
+          "dosage": 14,
+          "schedule": { "morning": 1, "afternoon": 1, "evening": 0, "night": 0 }
         }
       ]
     },

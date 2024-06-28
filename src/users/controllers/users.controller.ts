@@ -132,7 +132,9 @@ export class UsersController {
   findUserById(@Param('userId') userStringId: string) {
     const userId = parseInt(userStringId);
     //filter unessary data
-    return this.usersService.findUserById(userId);
+    return this.usersService.findUserById(userId, {
+      specialties: true,
+    });
   }
 
   @Patch('')

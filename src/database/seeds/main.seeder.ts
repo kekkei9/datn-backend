@@ -16,6 +16,9 @@ export class MainSeeder implements Seeder {
     dataSource: DataSource,
     // factoryManager: SeederFactoryManager,
   ): Promise<any> {
+    const doctorSpecialtySeeder = new DoctorSpecialtySeeder();
+    await doctorSpecialtySeeder.run(dataSource);
+
     const userSeeder = new UserSeeder();
     await userSeeder.run(dataSource);
 
@@ -42,8 +45,5 @@ export class MainSeeder implements Seeder {
 
     const reportSeeder = new ReportSeeder();
     await reportSeeder.run(dataSource);
-
-    const doctorSpecialtySeeder = new DoctorSpecialtySeeder();
-    await doctorSpecialtySeeder.run(dataSource);
   }
 }

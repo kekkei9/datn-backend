@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class InitTable1718762128938 implements MigrationInterface {
-  name = 'InitTable1718762128938';
+export class InitTable1719583406510 implements MigrationInterface {
+  name = 'InitTable1719583406510';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -23,16 +23,28 @@ export class InitTable1718762128938 implements MigrationInterface {
       `CREATE TABLE "reports" ("id" SERIAL NOT NULL, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "reason" character varying NOT NULL, "created_by_id" integer, "belong_to_id" integer, CONSTRAINT "PK_d9013193989303580053c0b5ef6" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
-      `CREATE TABLE "doctor_requests" ("id" SERIAL NOT NULL, "metadata" jsonb, "request_user_id" integer, "confirm_user_id" integer, CONSTRAINT "REL_a5385e1e0618e577a5672e2892" UNIQUE ("request_user_id"), CONSTRAINT "PK_74fc746edd7142e7de0154e7f42" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "doctor_requests" ("id" SERIAL NOT NULL, "metadata" jsonb, "specialties" integer array NOT NULL DEFAULT '{}', "isDone" boolean NOT NULL DEFAULT false, "idCardFront" character varying, "idCardBack" character varying, "images" text array NOT NULL DEFAULT '{}', "request_user_id" integer, "confirm_user_id" integer, CONSTRAINT "PK_74fc746edd7142e7de0154e7f42" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE TABLE "friend_requests" ("id" SERIAL NOT NULL, "status" character varying NOT NULL, "pin_id" character varying, "creator_id" integer, "receiver_id" integer, CONSTRAINT "PK_3827ba86ce64ecb4b90c92eeea6" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
+      `CREATE TABLE "doctor_specialties" ("id" SERIAL NOT NULL, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "label" character varying NOT NULL, CONSTRAINT "PK_28e3c8a89299955a87ece809dbe" PRIMARY KEY ("id"))`,
+    );
+    await queryRunner.query(
       `CREATE TYPE "public"."users_role_enum" AS ENUM('admin', 'patient', 'doctor')`,
     );
     await queryRunner.query(
-      `CREATE TABLE "users" ("id" SERIAL NOT NULL, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "email" character varying, "phone_number" character varying NOT NULL, "password" character varying NOT NULL, "deactivated" boolean NOT NULL DEFAULT false, "refresh_token" character varying, "avatar" character varying, "gender" character varying, "birthdate" TIMESTAMP, "address" character varying, "height" integer, "weight" integer, "first_name" character varying NOT NULL, "last_name" character varying NOT NULL, "role" "public"."users_role_enum" NOT NULL DEFAULT 'patient', CONSTRAINT "UQ_17d1817f241f10a3dbafb169fd2" UNIQUE ("phone_number"), CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "users" ("id" SERIAL NOT NULL, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "email" character varying, "phone_number" character varying NOT NULL, "password" character varying NOT NULL, "deactivated" boolean NOT NULL DEFAULT false, "refresh_token" character varying, "avatar" character varying, "gender" character varying, "birthdate" TIMESTAMP, "address" character varying, "height" integer, "weight" integer, "first_name" character varying NOT NULL, "last_name" character varying NOT NULL, "role" "public"."users_role_enum" NOT NULL DEFAULT 'patient', "metadata" jsonb, CONSTRAINT "UQ_17d1817f241f10a3dbafb169fd2" UNIQUE ("phone_number"), CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433" PRIMARY KEY ("id"))`,
+    );
+    await queryRunner.query(
+      `CREATE TABLE "users_specialties_doctor_specialties" ("usersId" integer NOT NULL, "doctorSpecialtiesId" integer NOT NULL, CONSTRAINT "PK_d3d63a10d186acacf11e79f856e" PRIMARY KEY ("usersId", "doctorSpecialtiesId"))`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_7a4778928ea73d561d0f1bcbc5" ON "users_specialties_doctor_specialties" ("usersId") `,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_fc6c89e190aaa68bf7f1026200" ON "users_specialties_doctor_specialties" ("doctorSpecialtiesId") `,
     );
     await queryRunner.query(
       `ALTER TABLE "diagnoses" ADD CONSTRAINT "FK_fa77352d862d1d498424c939f10" FOREIGN KEY ("prescription_id") REFERENCES "prescriptions"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
@@ -82,9 +94,21 @@ export class InitTable1718762128938 implements MigrationInterface {
     await queryRunner.query(
       `ALTER TABLE "friend_requests" ADD CONSTRAINT "FK_781744f1014838837741581a8b7" FOREIGN KEY ("receiver_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
     );
+    await queryRunner.query(
+      `ALTER TABLE "users_specialties_doctor_specialties" ADD CONSTRAINT "FK_7a4778928ea73d561d0f1bcbc56" FOREIGN KEY ("usersId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "users_specialties_doctor_specialties" ADD CONSTRAINT "FK_fc6c89e190aaa68bf7f1026200c" FOREIGN KEY ("doctorSpecialtiesId") REFERENCES "doctor_specialties"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(
+      `ALTER TABLE "users_specialties_doctor_specialties" DROP CONSTRAINT "FK_fc6c89e190aaa68bf7f1026200c"`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "users_specialties_doctor_specialties" DROP CONSTRAINT "FK_7a4778928ea73d561d0f1bcbc56"`,
+    );
     await queryRunner.query(
       `ALTER TABLE "friend_requests" DROP CONSTRAINT "FK_781744f1014838837741581a8b7"`,
     );
@@ -133,8 +157,18 @@ export class InitTable1718762128938 implements MigrationInterface {
     await queryRunner.query(
       `ALTER TABLE "diagnoses" DROP CONSTRAINT "FK_fa77352d862d1d498424c939f10"`,
     );
+    await queryRunner.query(
+      `DROP INDEX "public"."IDX_fc6c89e190aaa68bf7f1026200"`,
+    );
+    await queryRunner.query(
+      `DROP INDEX "public"."IDX_7a4778928ea73d561d0f1bcbc5"`,
+    );
+    await queryRunner.query(
+      `DROP TABLE "users_specialties_doctor_specialties"`,
+    );
     await queryRunner.query(`DROP TABLE "users"`);
     await queryRunner.query(`DROP TYPE "public"."users_role_enum"`);
+    await queryRunner.query(`DROP TABLE "doctor_specialties"`);
     await queryRunner.query(`DROP TABLE "friend_requests"`);
     await queryRunner.query(`DROP TABLE "doctor_requests"`);
     await queryRunner.query(`DROP TABLE "reports"`);

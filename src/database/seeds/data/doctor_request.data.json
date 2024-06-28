@@ -1,11 +1,8 @@
 [
   {
     "id": 1,
-    "confirmUser": {
-      "id": 1
-    },
     "requestUser": {
-      "id": 2
+      "id": 3
     },
     "metadata": {},
     "specialties": [1, 2, 3, 4]

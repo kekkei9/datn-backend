@@ -1,30 +1,37 @@
 [
   {
     "id": 1,
-    "firstName": "admin",
-    "lastName": "admin",
-    "email": "admin@gmail.com",
+    "firstName": "Hạnh",
+    "lastName": "Lê Thị",
+    "email": "lethihanh@gmail.com",
     "password": "admin",
     "role": "admin",
-    "phoneNumber": "admin"
+    "phoneNumber": "+84000000000",
+    "avatar": "https://cdn.vectorstock.com/i/500p/50/89/user-profile-or-my-account-avatar-login-icon-vector-31775089.jpg"
   },
   {
     "id": 2,
-    "firstName": "Leanne",
-    "lastName": "Graham",
-    "email": "doctor@gmail.com",
+    "firstName": "Huy",
+    "lastName": "Trần Vũ",
+    "email": "tranvuhuy@gmail.com",
     "password": "doctor",
     "role": "doctor",
-    "phoneNumber": "doctor"
+    "phoneNumber": "+84111111111",
+    "avatar": "https://as2.ftcdn.net/v2/jpg/01/34/29/31/1000_F_134293169_ymHT6Lufl0i94WzyE0NNMyDkiMCH9HWx.jpg"
   },
   {
     "id": 3,
-    "firstName": "Caleb",
-    "lastName": "Barrows",
+    "firstName": "Hồng",
+    "lastName": "Nguyễn Thị",
     "email": "patient@gmail.com",
     "password": "patient",
     "role": "patient",
-    "phoneNumber": "patient"
+    "phoneNumber": "+84222222222",
+    "address": "Số 15 Đường 19/5 khóm 2, thị Trấn Cái Nước, huyện Cái Nước, tỉnh Cà Mau",
+    "weight": 60,
+    "gender": "male",
+    "birthdate": "1999-01-01",
+    "avatar": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEt4lId3wZS5qsRVq9uL3BiJcTaU2kVFgkmQ&s"
   },
   {
     "id": 4,

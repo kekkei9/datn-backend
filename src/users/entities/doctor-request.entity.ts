@@ -39,7 +39,6 @@ export class DoctorRequestEntity {
 
   @Column({
     default: false,
-    select: false,
   })
   isDone: boolean;
 

@@ -7,7 +7,7 @@
     "createdBy": {
       "id": 3
     },
-    "reason": "Late"
+    "reason": "Declined appointment request less than 24 hours before the appointment"
   },
   {
     "id": 2,
@@ -17,7 +17,7 @@
     "createdBy": {
       "id": 3
     },
-    "reason": "Late"
+    "reason": "Declined appointment request less than 24 hours before the appointment"
   },
   {
     "id": 3,
@@ -27,7 +27,7 @@
     "createdBy": {
       "id": 3
     },
-    "reason": "Late"
+    "reason": "Declined appointment request less than 24 hours before the appointment"
   },
   {
     "id": 4,
@@ -37,7 +37,7 @@
     "createdBy": {
       "id": 2
     },
-    "reason": "Late"
+    "reason": "Declined appointment request less than 24 hours before the appointment"
   },
   {
     "id": 5,
@@ -47,6 +47,6 @@
     "createdBy": {
       "id": 2
     },
-    "reason": "Late"
+    "reason": "Declined appointment request less than 24 hours before the appointment"
   }
 ]
