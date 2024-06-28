@@ -5,8 +5,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import dayjs from 'dayjs';
 import { Repository } from 'typeorm';
 import { PayloadToken } from '../../auth/models/token.model';
+import { NotificationType } from '../../notifications/entities/notification.entity';
+import { NotificationsService } from '../../notifications/services/notifications.service';
+import { ReportsService } from '../../reports/services/reports.service';
+import { Role } from '../../users/entities/user.entity';
 import { UsersService } from '../../users/services/users.service';
 import {
   CreateAppointmentRequestDto,
@@ -18,11 +23,6 @@ import {
   AppointmentEntity,
   AppointmentStatus,
 } from '../entities/appointment.entity';
-import { NotificationsService } from '../../notifications/services/notifications.service';
-import { NotificationType } from '../../notifications/entities/notification.entity';
-import dayjs from 'dayjs';
-import { ReportsService } from '../../reports/services/reports.service';
-import { Role } from '../../users/entities/user.entity';
 
 @Injectable()
 export class AppointmentsService {
@@ -171,26 +171,25 @@ export class AppointmentsService {
       );
     }
 
+    if (user.id !== appointment.confirmUser.id)
+      throw new ForbiddenException(
+        'You cannot respond to this appointment request',
+      );
     if (action === ResponseAppointmentAction.COMPLETE) {
+      if (appointment.status !== AppointmentStatus.ONGOING) {
+        throw new ForbiddenException('Appointment is not ongoing');
+      }
+
       return this.update(appointmentId, {
         status: AppointmentStatus.COMPLETED,
       });
     }
 
-    if (user.id !== appointment.confirmUser.id)
-      throw new ForbiddenException(
-        'You cannot respond to this appointment request',
-      );
-
-    if (appointment.status !== AppointmentStatus.PENDING)
-      throw new ForbiddenException('Appointment request is not pending');
-
-    if (action === ResponseAppointmentAction.ACCEPT) {
-      return this.update(appointmentId, { status: AppointmentStatus.ONGOING });
-    }
-
     if (action === ResponseAppointmentAction.DECLINE) {
-      if (appointment.beginTimestamp - dayjs().unix() < 24 * 60 * 60 * 1000) {
+      if (
+        appointment.beginTimestamp - dayjs().unix() < 24 * 60 * 60 * 1000 &&
+        appointment.status === AppointmentStatus.ONGOING
+      ) {
         this.reportsService.create({
           reason:
             'Declined appointment request less than 24 hours before the appointment',
@@ -198,6 +197,13 @@ export class AppointmentsService {
         });
       }
       return this.update(appointmentId, { status: AppointmentStatus.DECLINED });
+    }
+
+    if (appointment.status !== AppointmentStatus.PENDING)
+      throw new ForbiddenException('Appointment request is not pending');
+
+    if (action === ResponseAppointmentAction.ACCEPT) {
+      return this.update(appointmentId, { status: AppointmentStatus.ONGOING });
     }
 
     if (action === ResponseAppointmentAction.RESCHEDULE) {

@@ -40,6 +40,7 @@ import {
   FriendRequestStatus,
 } from '../entities/friend-request.interface';
 import { Role, UserEntity } from '../entities/user.entity';
+import { DefaultPaginationDto } from '../../utils/dto/default.dto';
 
 @Injectable()
 export class UsersService {
@@ -110,9 +111,14 @@ export class UsersService {
     return saveUser;
   }
 
-  async findAll() {
+  async findAll({ page, pageSize }: DefaultPaginationDto) {
     return this.userRepository.find({
       relations: ['reports'],
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+      order: {
+        updatedAt: 'DESC',
+      },
     });
   }
 

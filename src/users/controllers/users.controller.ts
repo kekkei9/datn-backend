@@ -49,6 +49,7 @@ import { SearchUserDto } from '../dto/search-user.dto';
 import { FriendRequestStatus } from '../entities/friend-request.interface';
 import { Role } from '../entities/user.entity';
 import { UsersService } from '../services/users.service';
+import { DefaultPaginationDto } from '../../utils/dto/default.dto';
 
 @ApiTags('users') // put the name of the controller in swagger
 @Controller('users')
@@ -116,8 +117,8 @@ export class UsersController {
   @ApiBearerAuth('access-token')
   @Roles(Role.ADMIN)
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@Query() query: DefaultPaginationDto) {
+    return this.usersService.findAll(query);
   }
 
   @ApiBearerAuth('access-token')
