@@ -1,6 +1,10 @@
-import { DataSource, DeepPartial } from 'typeorm';
+import * as dayjs from 'dayjs';
+import { DataSource } from 'typeorm';
 import { Seeder } from 'typeorm-extension';
-import { AppointmentEntity } from '../../appointments/entities/appointment.entity';
+import {
+  AppointmentEntity,
+  AppointmentStatus,
+} from '../../appointments/entities/appointment.entity';
 import * as appointmentData from './data/appointment.data.json';
 
 export default class AppointmentSeeder implements Seeder {
@@ -18,7 +22,11 @@ export default class AppointmentSeeder implements Seeder {
     const appointmentRepository = dataSource.getRepository(AppointmentEntity);
 
     await appointmentRepository.upsert(
-      appointmentData as DeepPartial<AppointmentEntity>[],
+      appointmentData.map((appointment, index) => ({
+        ...appointment,
+        beginTimestamp: dayjs().add(index, 'day').unix(),
+        status: appointment.status as AppointmentStatus,
+      })),
       {
         conflictPaths: ['id'],
       },

@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import dayjs from 'dayjs';
+import * as dayjs from 'dayjs';
 import { Repository } from 'typeorm';
 import { PayloadToken } from '../../auth/models/token.model';
 import { NotificationType } from '../../notifications/entities/notification.entity';
