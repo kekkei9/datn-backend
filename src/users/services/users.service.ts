@@ -118,6 +118,9 @@ export class UsersService {
   async findAll({ page, pageSize }: DefaultPaginationDto) {
     return this.userRepository.find({
       relations: ['reports'],
+      where: {
+        role: Not(Role.ADMIN),
+      },
       skip: (page - 1) * pageSize,
       take: pageSize,
       order: {

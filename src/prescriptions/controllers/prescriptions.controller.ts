@@ -28,6 +28,7 @@ export class PrescriptionsController {
   constructor(private readonly prescriptionsService: PrescriptionsService) {}
 
   @Get()
+  @ApiTags('cms')
   @ApiBearerAuth('access-token')
   getAll(@Query() query: GetAllPrescriptionDto, @Request() req) {
     return this.prescriptionsService.findAll({
@@ -116,6 +117,7 @@ export class PrescriptionsController {
   }
 
   @Get('/diagnoses')
+  @ApiTags('cms')
   @ApiBearerAuth('access-token')
   findAllDiagnoses(@Query() query: GetAllDiagnoses, @Request() req) {
     return this.prescriptionsService.findAllDiagnoses({

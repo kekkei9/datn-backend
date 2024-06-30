@@ -28,6 +28,7 @@ export class DiariesController {
 
   @Get()
   @ApiBearerAuth('access-token')
+  @ApiTags('cms')
   findAll(@Query() query: GetAllDiariesDto, @Request() req) {
     return this.diariesService.findAll({ ...query, currentUser: req.user });
   }

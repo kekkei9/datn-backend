@@ -6,6 +6,7 @@ import {
   Post,
   Param,
   Body,
+  Query,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
@@ -14,6 +15,7 @@ import { ReportsService } from '../services/reports.service';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { CreateReportDto } from '../dto/create-report.dto';
 import { Role } from '../../users/entities/user.entity';
+import { DefaultPaginationDto } from '../../utils/dto/default.dto';
 
 @ApiTags('reports') // put the name of the controller in swagger
 @Controller('reports')
@@ -25,8 +27,8 @@ export class ReportsController {
   @ApiTags('cms')
   @ApiBearerAuth('access-token')
   @Roles(Role.ADMIN)
-  getAllReports() {
-    return this.reportsService.getAllReports();
+  getAllReports(@Query() query: DefaultPaginationDto) {
+    return this.reportsService.getAllReports(query);
   }
 
   @Get('/:userId')
