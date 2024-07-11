@@ -124,7 +124,7 @@ export class UsersService {
       skip: (page - 1) * pageSize,
       take: pageSize,
       order: {
-        updatedAt: 'DESC',
+        id: 'ASC',
       },
     });
   }

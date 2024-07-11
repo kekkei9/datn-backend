@@ -13,6 +13,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UsersService } from '../../users/services/users.service';
 import {
+  ChangePasswordDto,
   ForgotPasswordDto,
   ResetPasswordDto,
 } from '../dto/forgot-password.dto';
@@ -88,5 +89,24 @@ export class AuthController {
     }
     const phoneNumber = '+' + this.jwtService.decode(token)['phoneNumber'];
     return this.usersService.resetPassword(phoneNumber, newPassword);
+  }
+
+  @ApiBearerAuth('access-token')
+  @UseGuards(JwtAuthGuard)
+  @Post('change-password')
+  async changePassword(
+    @Body() { password, newPassword }: ChangePasswordDto,
+    @Request() req,
+  ) {
+    console.log('ehe');
+    const user = await this.usersService.findUserById(req.user.id);
+    const authUser = await this.authService.validateUser(
+      user.phoneNumber,
+      password,
+    );
+    if (!authUser) {
+      throw new BadRequestException('Invalid password');
+    }
+    return this.usersService.resetPassword(user.phoneNumber, newPassword);
   }
 }

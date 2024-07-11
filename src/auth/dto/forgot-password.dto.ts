@@ -16,3 +16,13 @@ export class ResetPasswordDto {
   @IsString()
   newPassword: string;
 }
+
+export class ChangePasswordDto {
+  @ApiProperty()
+  @IsString()
+  password: string;
+
+  @ApiProperty()
+  @IsString()
+  newPassword: string;
+}
