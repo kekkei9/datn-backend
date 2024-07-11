@@ -98,7 +98,6 @@ export class AuthController {
     @Body() { password, newPassword }: ChangePasswordDto,
     @Request() req,
   ) {
-    console.log('ehe');
     const user = await this.usersService.findUserById(req.user.id);
     const authUser = await this.authService.validateUser(
       user.phoneNumber,
