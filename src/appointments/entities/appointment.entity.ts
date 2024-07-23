@@ -47,6 +47,16 @@ export class AppointmentEntity {
   })
   beginTimestamp: number;
 
+  @Column({
+    nullable: true,
+  })
+  note: string;
+
+  @Column({
+    nullable: true,
+  })
+  cancelReason: string;
+
   @OneToOne(
     () => PrescriptionEntity,
     (prescriptionEntity) => prescriptionEntity.appointment,

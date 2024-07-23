@@ -8,6 +8,12 @@ import {
 import { DefaultEntity } from '../../utils/entities/default.entity';
 import { UserEntity } from '../../users/entities/user.entity';
 
+export enum DiaryType {
+  FOOD = 'food',
+  BLOOD_PRESSURE = 'blood_pressure',
+  BLOOD_SUGAR = 'blood_sugar',
+}
+
 @Entity('diaries')
 export class DiaryEntity extends DefaultEntity {
   @PrimaryGeneratedColumn()
@@ -28,4 +34,9 @@ export class DiaryEntity extends DefaultEntity {
     name: 'images',
   })
   images: string[];
+
+  @Column({
+    enum: DiaryType,
+  })
+  type: DiaryType;
 }

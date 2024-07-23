@@ -21,7 +21,7 @@ export class DiariesService {
   ) {}
 
   async create(
-    { data }: CreateDiaryDto,
+    { data, type }: CreateDiaryDto,
     files: Express.Multer.File[],
     user: PayloadToken,
   ) {
@@ -39,6 +39,7 @@ export class DiariesService {
       user: {
         id: user.id,
       },
+      type,
       images: images.map((image) => image.url),
     });
 
@@ -79,6 +80,7 @@ export class DiariesService {
     pageSize,
     userId: targetUserId,
     currentUser,
+    type,
   }: GetAllDiariesDto & {
     currentUser: PayloadToken;
   }) {
@@ -101,7 +103,7 @@ export class DiariesService {
       skip: (page - 1) * pageSize,
       take: pageSize,
       ...(targetUserId
-        ? { where: { user: { id: targetUserId } } }
+        ? { where: { user: { id: targetUserId }, ...(type ? { type } : {}) } }
         : { relations: ['user'] }),
     });
   }

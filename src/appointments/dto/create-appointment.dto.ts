@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { UserEntity } from '../../users/entities/user.entity';
 import { AppointmentStatus } from '../entities/appointment.entity';
 
@@ -41,12 +47,22 @@ export class ResponseAppointmentRequestDto {
   readonly action: ResponseAppointmentAction;
 
   @ApiProperty()
+  @IsString()
+  @IsOptional()
+  readonly cancelReason: string;
+
+  @ApiProperty()
   @IsNumber()
   @IsOptional()
   readonly beginTimestamp: number;
 }
 
 export class CreateAppointmentRequestDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  readonly note: string;
+
   @ApiProperty()
   @IsNotEmpty()
   @IsNumber()
@@ -61,6 +77,10 @@ export class UpdateAppointmentDto {
   @ApiProperty()
   @IsNumber()
   readonly beginTimestamp?: number;
+
+  @ApiProperty()
+  @IsString()
+  readonly cancelReason?: string;
 
   @ApiProperty()
   readonly requestUser?: UserEntity;

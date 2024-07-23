@@ -1,6 +1,6 @@
 import { DataSource } from 'typeorm';
 import { Seeder } from 'typeorm-extension';
-import { DiaryEntity } from '../../diaries/entities/diary.entity';
+import { DiaryEntity, DiaryType } from '../../diaries/entities/diary.entity';
 import * as diaryData from './data/diary.data.json';
 
 export default class DiarySeeder implements Seeder {
@@ -17,8 +17,14 @@ export default class DiarySeeder implements Seeder {
   ): Promise<any> {
     const diaryRepository = dataSource.getRepository(DiaryEntity);
 
-    await diaryRepository.upsert(diaryData, {
-      conflictPaths: ['id'],
-    });
+    await diaryRepository.upsert(
+      diaryData.map((diary) => ({
+        ...diary,
+        type: diary.type as DiaryType,
+      })),
+      {
+        conflictPaths: ['id'],
+      },
+    );
   }
 }

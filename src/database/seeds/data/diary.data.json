@@ -7,7 +7,8 @@
     "images": [],
     "data": {
       "mockKey": "mockValue"
-    }
+    },
+    "type": "food"
   },
   {
     "id": 2,
@@ -17,7 +18,8 @@
     "images": [],
     "data": {
       "mockKey": "mockValue"
-    }
+    },
+    "type": "food"
   },
   {
     "id": 3,
@@ -27,7 +29,8 @@
     "images": [],
     "data": {
       "mockKey": "mockValue"
-    }
+    },
+    "type": "food"
   },
   {
     "id": 4,
@@ -37,6 +40,7 @@
     "images": [],
     "data": {
       "mockKey": "mockValue"
-    }
+    },
+    "type": "food"
   }
 ]

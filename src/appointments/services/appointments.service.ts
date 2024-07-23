@@ -97,10 +97,14 @@ export class AppointmentsService {
     }
 
     const createdAppointment = await this.appointmentRepository.save({
+      note: createAppointmentRequestDto.note,
       beginTimestamp: createAppointmentRequestDto.beginTimestamp,
       confirmUser: user,
       requestUser: currentUser,
-      status: AppointmentStatus.PENDING,
+      status:
+        currentUser.role === Role.DOCTOR
+          ? AppointmentStatus.ONGOING
+          : AppointmentStatus.PENDING,
     });
 
     this.notificationsService.create({
@@ -160,7 +164,8 @@ export class AppointmentsService {
     responseAppointmentRequestDto: ResponseAppointmentRequestDto,
   ) {
     const appointment = await this.findAppointmentById(appointmentId);
-    const { action, beginTimestamp } = responseAppointmentRequestDto;
+    const { action, beginTimestamp, cancelReason } =
+      responseAppointmentRequestDto;
     if (
       ![appointment.confirmUser.id, appointment.requestUser.id].includes(
         user.id,
@@ -196,7 +201,10 @@ export class AppointmentsService {
           userId: user.id,
         });
       }
-      return this.update(appointmentId, { status: AppointmentStatus.DECLINED });
+      return this.update(appointmentId, {
+        status: AppointmentStatus.DECLINED,
+        cancelReason,
+      });
     }
 
     if (appointment.status !== AppointmentStatus.PENDING)

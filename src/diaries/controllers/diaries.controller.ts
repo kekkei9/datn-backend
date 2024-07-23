@@ -19,6 +19,7 @@ import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { GetAllDiariesDto } from '../dto/find-diaries.dto';
 import { DiariesService } from '../services/diaries.service';
 import { Role } from '../../users/entities/user.entity';
+import { DiaryType } from '../entities/diary.entity';
 
 @ApiTags('diaries')
 @Controller('diaries')
@@ -54,6 +55,10 @@ export class DiariesController {
             type: 'string',
             format: 'binary',
           },
+        },
+        type: {
+          type: 'string',
+          enum: Object.values(DiaryType),
         },
         data: {
           type: 'object',
