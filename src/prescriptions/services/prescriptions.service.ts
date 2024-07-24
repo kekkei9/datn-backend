@@ -138,7 +138,12 @@ export class PrescriptionsService {
       skip: (page - 1) * pageSize,
       take: pageSize,
       ...(targetUserId
-        ? { where: { belongTo: { id: targetUserId } } }
+        ? {
+            where: {
+              belongTo: { id: targetUserId },
+            },
+            relations: ['createdBy'],
+          }
         : { relations: ['createdBy', 'belongTo'] }),
     });
   }
