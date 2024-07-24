@@ -176,10 +176,6 @@ export class AppointmentsService {
       );
     }
 
-    if (user.id !== appointment.confirmUser.id)
-      throw new ForbiddenException(
-        'You cannot respond to this appointment request',
-      );
     if (action === ResponseAppointmentAction.COMPLETE) {
       if (appointment.status !== AppointmentStatus.ONGOING) {
         throw new ForbiddenException('Appointment is not ongoing');
