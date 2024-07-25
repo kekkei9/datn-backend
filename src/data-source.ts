@@ -36,7 +36,7 @@ const options: DataSourceOptions & SeederOptions = {
     DoctorSpecialtyEntity,
   ],
   // ssl: true,
-  ssl: { rejectUnauthorized: false },
+  // ssl: { rejectUnauthorized: false },
   connectTimeoutMS: 0,
   seedTracking: true,
   factories: ['src/database/factories/**/*{.ts,.js}'],
