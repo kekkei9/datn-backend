@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as dayjs from 'dayjs';
-import { Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 import { PayloadToken } from '../../auth/models/token.model';
 import { NotificationType } from '../../notifications/entities/notification.entity';
 import { NotificationsService } from '../../notifications/services/notifications.service';
@@ -93,6 +93,37 @@ export class AppointmentsService {
     if ([user.role, currentUser.role].includes(Role.ADMIN)) {
       throw new ForbiddenException(
         'You cannot send appointment request to admin',
+      );
+    }
+
+    const existingAppointment = await this.appointmentRepository.findOne({
+      where: [
+        {
+          beginTimestamp: Between(
+            createAppointmentRequestDto.beginTimestamp,
+            createAppointmentRequestDto.beginTimestamp + 60 * 60 * 1000,
+          ),
+          confirmUser: {
+            id: userId,
+          },
+          status: AppointmentStatus.ONGOING,
+        },
+        {
+          beginTimestamp: Between(
+            createAppointmentRequestDto.beginTimestamp,
+            createAppointmentRequestDto.beginTimestamp + 60 * 60 * 1000,
+          ),
+          requestUser: {
+            id: userId,
+          },
+          status: AppointmentStatus.ONGOING,
+        },
+      ],
+    });
+
+    if (existingAppointment) {
+      throw new ForbiddenException(
+        'There is already an appointment within 1 hour',
       );
     }
 
