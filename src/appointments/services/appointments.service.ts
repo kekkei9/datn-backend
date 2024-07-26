@@ -107,13 +107,15 @@ export class AppointmentsService {
           : AppointmentStatus.PENDING,
     });
 
-    this.notificationsService.create({
-      message: `You have a new appointment request from ${currentUser.firstName} ${currentUser.lastName}`,
-      belongTo: user,
-      createdBy: currentUser,
-      type: NotificationType.APPOINTMENT,
-      referenceId: createdAppointment.id,
-    });
+    if (currentUser.role === Role.PATIENT) {
+      this.notificationsService.create({
+        message: `You have a new appointment request from ${currentUser.firstName} ${currentUser.lastName}`,
+        belongTo: user,
+        createdBy: currentUser,
+        type: NotificationType.APPOINTMENT,
+        referenceId: createdAppointment.id,
+      });
+    }
 
     return createdAppointment;
   }

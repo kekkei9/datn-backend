@@ -5,10 +5,8 @@
       "id": 3
     },
     "images": [],
-    "data": {
-      "mockKey": "mockValue"
-    },
-    "type": "food"
+    "data": { "bloodPressure": "115", "time": "26/07/2024 09:01 AM" },
+    "type": "blood_pressure"
   },
   {
     "id": 2,
@@ -16,10 +14,8 @@
       "id": 3
     },
     "images": [],
-    "data": {
-      "mockKey": "mockValue"
-    },
-    "type": "food"
+    "data": { "bloodSugar": "60", "time": "26/07/2024 09:01 AM" },
+    "type": "blood_sugar"
   },
   {
     "id": 3,
@@ -28,7 +24,9 @@
     },
     "images": [],
     "data": {
-      "mockKey": "mockValue"
+      "morning": "Bún riêu",
+      "afternoon": "Bún bò",
+      "evening": "Cơm gia đình"
     },
     "type": "food"
   },
@@ -39,7 +37,9 @@
     },
     "images": [],
     "data": {
-      "mockKey": "mockValue"
+      "morning": "Bánh canh",
+      "afternoon": "Cơm gia đình",
+      "evening": "Xôi gà"
     },
     "type": "food"
   }
