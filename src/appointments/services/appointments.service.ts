@@ -258,4 +258,18 @@ export class AppointmentsService {
       status: AppointmentStatus.ONGOING,
     });
   }
+
+  async getAppointmentById(appointmentId: number, user: PayloadToken) {
+    const appointment = await this.findAppointmentById(appointmentId);
+
+    if (
+      ![appointment.confirmUser.id, appointment.requestUser.id].includes(
+        user.id,
+      )
+    ) {
+      throw new ForbiddenException('You cannot get this appointment');
+    }
+
+    return appointment;
+  }
 }

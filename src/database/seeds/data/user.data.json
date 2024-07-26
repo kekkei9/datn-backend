@@ -40,7 +40,8 @@
     "email": "anh.tran@gmail.com",
     "password": "admin",
     "role": "admin",
-    "phoneNumber": "+84912345681"
+    "phoneNumber": "+84912345681",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 5,
@@ -49,7 +50,8 @@
     "email": "quang.do@gmail.com",
     "password": "doctor",
     "role": "doctor",
-    "phoneNumber": "+84912345682"
+    "phoneNumber": "+84912345682",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 6,
@@ -58,7 +60,8 @@
     "email": "hanh.hoang@gmail.com",
     "password": "patient",
     "role": "patient",
-    "phoneNumber": "+84912345683"
+    "phoneNumber": "+84912345683",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 7,
@@ -67,7 +70,8 @@
     "email": "vu.vo@gmail.com",
     "password": "admin",
     "role": "admin",
-    "phoneNumber": "+84912345684"
+    "phoneNumber": "+84912345684",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 8,
@@ -76,7 +80,8 @@
     "email": "hai.dinh@gmail.com",
     "password": "doctor",
     "role": "doctor",
-    "phoneNumber": "+84912345685"
+    "phoneNumber": "+84912345685",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 9,
@@ -85,7 +90,8 @@
     "email": "duy.ngo@gmail.com",
     "password": "patient",
     "role": "patient",
-    "phoneNumber": "+84912345686"
+    "phoneNumber": "+84912345686",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 10,
@@ -94,7 +100,8 @@
     "email": "phuong.ly@gmail.com",
     "password": "admin",
     "role": "admin",
-    "phoneNumber": "+84912345687"
+    "phoneNumber": "+84912345687",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 11,
@@ -103,7 +110,8 @@
     "email": "thao.bui@gmail.com",
     "password": "doctor",
     "role": "doctor",
-    "phoneNumber": "+84912345688"
+    "phoneNumber": "+84912345688",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 12,
@@ -112,7 +120,8 @@
     "email": "linh.nguyen@gmail.com",
     "password": "patient",
     "role": "patient",
-    "phoneNumber": "+84912345689"
+    "phoneNumber": "+84912345689",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 13,
@@ -121,7 +130,8 @@
     "email": "tu.lam@gmail.com",
     "password": "admin",
     "role": "admin",
-    "phoneNumber": "+84912345690"
+    "phoneNumber": "+84912345690",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 14,
@@ -130,7 +140,8 @@
     "email": "nhung.phan@gmail.com",
     "password": "doctor",
     "role": "doctor",
-    "phoneNumber": "+84912345691"
+    "phoneNumber": "+84912345691",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 15,
@@ -139,7 +150,8 @@
     "email": "duc.ha@gmail.com",
     "password": "patient",
     "role": "patient",
-    "phoneNumber": "+84912345692"
+    "phoneNumber": "+84912345692",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 16,
@@ -148,7 +160,8 @@
     "email": "trang.to@gmail.com",
     "password": "admin",
     "role": "admin",
-    "phoneNumber": "+84912345693"
+    "phoneNumber": "+84912345693",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 17,
@@ -157,7 +170,8 @@
     "email": "tuan.vu@gmail.com",
     "password": "doctor",
     "role": "doctor",
-    "phoneNumber": "+84912345694"
+    "phoneNumber": "+84912345694",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 18,
@@ -166,7 +180,8 @@
     "email": "duyen.dao@gmail.com",
     "password": "patient",
     "role": "patient",
-    "phoneNumber": "+84912345695"
+    "phoneNumber": "+84912345695",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 19,
@@ -175,7 +190,8 @@
     "email": "phuc.luu@gmail.com",
     "password": "admin",
     "role": "admin",
-    "phoneNumber": "+84912345696"
+    "phoneNumber": "+84912345696",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 20,
@@ -184,7 +200,8 @@
     "email": "huong.dang@gmail.com",
     "password": "doctor",
     "role": "doctor",
-    "phoneNumber": "+84912345697"
+    "phoneNumber": "+84912345697",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 21,
@@ -193,7 +210,8 @@
     "email": "loc.cao@gmail.com",
     "password": "patient",
     "role": "patient",
-    "phoneNumber": "+84912345698"
+    "phoneNumber": "+84912345698",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 22,
@@ -202,7 +220,8 @@
     "email": "hien.pham@gmail.com",
     "password": "admin",
     "role": "admin",
-    "phoneNumber": "+84912345699"
+    "phoneNumber": "+84912345699",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 23,
@@ -211,7 +230,8 @@
     "email": "huy.le@gmail.com",
     "password": "doctor",
     "role": "doctor",
-    "phoneNumber": "0914754230"
+    "phoneNumber": "0914754230",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 24,
@@ -220,7 +240,8 @@
     "email": "hoang.nguyen@gmail.com",
     "password": "patient",
     "role": "patient",
-    "phoneNumber": "+84912345700"
+    "phoneNumber": "+84912345700",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 25,
@@ -229,7 +250,8 @@
     "email": "ha.tran@gmail.com",
     "password": "admin",
     "role": "admin",
-    "phoneNumber": "+84912345701"
+    "phoneNumber": "+84912345701",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 26,
@@ -238,7 +260,8 @@
     "email": "thuy.pham@gmail.com",
     "password": "doctor",
     "role": "doctor",
-    "phoneNumber": "+84912345702"
+    "phoneNumber": "+84912345702",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 27,
@@ -247,7 +270,8 @@
     "email": "cuong.le@gmail.com",
     "password": "patient",
     "role": "patient",
-    "phoneNumber": "+84912345703"
+    "phoneNumber": "+84912345703",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 28,
@@ -256,7 +280,8 @@
     "email": "thinh.do@gmail.com",
     "password": "admin",
     "role": "admin",
-    "phoneNumber": "+84912345704"
+    "phoneNumber": "+84912345704",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 29,
@@ -265,7 +290,8 @@
     "email": "vy.vo@gmail.com",
     "password": "doctor",
     "role": "doctor",
-    "phoneNumber": "+84912345705"
+    "phoneNumber": "+84912345705",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 30,
@@ -274,7 +300,8 @@
     "email": "giang.hoang@gmail.com",
     "password": "patient",
     "role": "patient",
-    "phoneNumber": "+84912345706"
+    "phoneNumber": "+84912345706",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 31,
@@ -283,7 +310,8 @@
     "email": "tai.dinh@gmail.com",
     "password": "admin",
     "role": "admin",
-    "phoneNumber": "+84912345707"
+    "phoneNumber": "+84912345707",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 32,
@@ -292,7 +320,8 @@
     "email": "chau.ngo@gmail.com",
     "password": "doctor",
     "role": "doctor",
-    "phoneNumber": "+84912345708"
+    "phoneNumber": "+84912345708",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 33,
@@ -301,7 +330,8 @@
     "email": "phat.ly@gmail.com",
     "password": "patient",
     "role": "patient",
-    "phoneNumber": "+84912345709"
+    "phoneNumber": "+84912345709",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 34,
@@ -310,7 +340,8 @@
     "email": "khoi.bui@gmail.com",
     "password": "admin",
     "role": "admin",
-    "phoneNumber": "+84912345710"
+    "phoneNumber": "+84912345710",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 35,
@@ -319,7 +350,8 @@
     "email": "my.nguyen@gmail.com",
     "password": "doctor",
     "role": "doctor",
-    "phoneNumber": "+84912345711"
+    "phoneNumber": "+84912345711",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 36,
@@ -328,7 +360,8 @@
     "email": "duong.lam@gmail.com",
     "password": "patient",
     "role": "patient",
-    "phoneNumber": "+84912345712"
+    "phoneNumber": "+84912345712",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 37,
@@ -337,7 +370,8 @@
     "email": "thanh.phan@gmail.com",
     "password": "admin",
     "role": "admin",
-    "phoneNumber": "+84912345713"
+    "phoneNumber": "+84912345713",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 38,
@@ -346,7 +380,8 @@
     "email": "ngoc.ha@gmail.com",
     "password": "doctor",
     "role": "doctor",
-    "phoneNumber": "+84912345714"
+    "phoneNumber": "+84912345714",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 39,
@@ -355,7 +390,8 @@
     "email": "son.to@gmail.com",
     "password": "patient",
     "role": "patient",
-    "phoneNumber": "+84912345715"
+    "phoneNumber": "+84912345715",
+    "avatar": "https://i.pravatar.cc/300"
   },
   {
     "id": 40,
@@ -364,6 +400,7 @@
     "email": "khoa.vu@gmail.com",
     "password": "admin",
     "role": "admin",
-    "phoneNumber": "+84912345716"
+    "phoneNumber": "+84912345716",
+    "avatar": "https://i.pravatar.cc/300"
   }
 ]
